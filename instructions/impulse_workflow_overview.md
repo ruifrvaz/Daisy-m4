@@ -1,0 +1,100 @@
+# Impulse Workflow and Modular Architecture Overview
+
+This document outlines the architecture and operational flow of the orchestration engine based on the `Impulse` object and modular plugin structure. It serves as a guide for agents extending or debugging the engine.
+
+---
+
+## Core Concept: `Impulse`
+
+`Impulse` is the central data structure that flows through the system. It is:
+
+- Created by a **Receiver**
+- Processed by one or more **Abilities** (via `Paths`)
+- Consumed by **Transmitters**
+
+---
+
+## Workflow Overview
+
+### 1. **Receivers**
+
+Receivers ingest external input and initialize the `Impulse`.
+
+- Example: `OcrReceiver` populates `Impulse.Input` from an image file path like `FilePath:*`
+
+### 2. **Abilities and Path Traversal**
+
+An **Ability** contains one or more `Paths`, which are dynamically selected and executed based on `TraverseRules`.
+
+Each `Path` contains:
+
+- `TraverseRules`: Determines if the `Impulse` qualifies for this path.
+- `HasBeenTraversedRules`: Prevents re-processing of the same path.
+- A `TraverseOrder`: Optional order hint for sequential processing.
+- Processing logic that enriches or transforms the `Impulse`.
+
+Example:
+
+```csharp
+[TraverseRule(PathType = typeof(ImageToTextPath))]
+public class ImageToTextTraverseRule : ITraverseRule {
+    public bool RuleApplies(Impulse impulse) =>
+        impulse.Input.StartsWith("FilePath:");
+}
+```
+
+### 3. **PathFinder and Orchestration**
+
+The `PathFinder` scans all registered `Paths`:
+
+- Matches based on `TraverseRules`
+- Filters previously traversed paths
+- Executes qualifying paths in priority order
+
+### 4. **Transmitters**
+
+Once traversal is complete (no more paths apply), **Transmitters** are triggered to consume the `Impulse.Output`.
+
+Examples:
+
+- `AzureDevOpsTransmitter`: Creates DevOps work items
+- `GitTransmitter`: Commits and opens pull requests
+- `PipelineRunnerTransmitter`: Executes build and deployment pipelines
+- `PipelineRunnerReceiver`: Polls Azure DevOps for pipeline run completion
+
+---
+
+## Startup Initialization
+
+Startup is managed via `Program.cs` and `StartupFactory`:
+
+```csharp
+var settings = StartupFactory.AppSettingsConfiguration.LoadApplicationSettings();
+var serviceProvider = StartupFactory.LoadServices(settings);
+
+AbilityFactory.LoadAbilities(settings, serviceProvider);
+TransmitterFactory.LoadTransmitters(settings, serviceProvider);
+ReceiverFactory.LoadReceivers(settings, serviceProvider);
+```
+
+### Dependency Injection & Reflection
+
+- All Receivers, Abilities, Paths, and Transmitters are registered via DI.
+- `[TraverseRule]` and other attributes allow discovery via reflection.
+
+---
+
+## Summary
+
+This architecture supports:
+
+- Modular, pluggable logic
+- Rule-driven traversal
+- Eventual hand-off to external systems
+
+It enables flexible workflows based on dynamically evaluated conditions and priorities.
+
+---
+
+For further extension or debugging, refer to the `Impulse`, `ITraverseRule`, `APath`, and `TransmitterBase` implementations.
+

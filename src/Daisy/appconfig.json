@@ -1,0 +1,27 @@
+{
+  "ApplicationSettings": {
+    "SolutionName": "Daisy-m4",
+    "Receivers": [
+      "Daisy.Receivers.Console",
+      "Daisy.Receivers.Event"
+    ],
+    "Transmitters": [
+      "Daisy.Transmitters.Console"
+    ],
+    "Abilities": [
+      "Daisy.Abilities.Start",
+      "Daisy.Abilities.Terminate",
+      "Daisy.Abilities.OutputValidator"
+    ],
+    "Workflows": [
+      "Daisy.Workflows.Starter"
+    ],
+    "Apis": {
+    },
+    "PathTraverseOrder": {
+      "StartPath": 1,
+      "TerminatePath": 2,
+      "OutputValidatorPath": 9999
+    }
+  }
+}

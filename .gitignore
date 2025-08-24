@@ -1,0 +1,22 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+directory.build.props
+
+# Build output
+bin/
+obj/
+
+# Test artifacts
+TestResults/
+*.trx
+*.coverage*
+coverage/
+
+# Other common
+*.log
+*.cache
+*.pdb
+
+# custom

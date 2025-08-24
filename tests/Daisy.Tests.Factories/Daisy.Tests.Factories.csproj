@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.OutputValidator\Daisy.Abilities.OutputValidator.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Start\Daisy.Abilities.Start.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Terminate\Daisy.Abilities.Terminate.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Factories\Daisy.Factories.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.Console\Daisy.Receivers.Console.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.Event\Daisy.Receivers.Event.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Resources\Daisy.Resources.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Transmitters\Daisy.Transmitters.Console\Daisy.Transmitters.Console.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,34 @@
+<Project>
+  <!-- Anchor to the folder containing this .targets file (solution root).
+       More reliable than $(SolutionDir) when using `dotnet build`. -->
+  <PropertyGroup>
+    <RepoRoot>$([MSBuild]::EnsureTrailingSlash('$(MSBuildThisFileDirectory)'))</RepoRoot>
+  </PropertyGroup>
+
+  <!-- Run once per TFM, only on the project that collects plugins (set a flag in that csproj). -->
+  <Target Name="CopyDlls"
+          AfterTargets="Build"
+          Condition="'$(TargetFramework)' != '' and '$(MSBuildProjectName)' == 'Daisy'">
+    
+    <ItemGroup>
+      <!-- Only copy the plugin assemblies themselves (not all dependencies) -->
+      <AbilityDlls Include="$(RepoRoot)**/Daisy.Abilities.*/bin/$(Configuration)/$(TargetFramework)/Daisy.Abilities.*.dll" />
+      <ReceiverDlls Include="$(RepoRoot)**/Daisy.Receivers.*/bin/$(Configuration)/$(TargetFramework)/Daisy.Receivers.*.dll" />
+      <TransmitterDlls Include="$(RepoRoot)**/Daisy.Transmitters.*/bin/$(Configuration)/$(TargetFramework)/Daisy.Transmitters.*.dll" />
+      <WorkflowDlls Include="$(RepoRoot)**/Daisy.Workflows.*/bin/$(Configuration)/$(TargetFramework)/Daisy.Workflows.*.dll" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(AbilityDlls)"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ReceiverDlls)"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(TransmitterDlls)"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(WorkflowDlls)"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+</Project>
