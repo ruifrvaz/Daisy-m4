@@ -1,26 +1,71 @@
 {
   "ApplicationSettings": {
-    "SolutionName": "Daisy-m4",
+    "SolutionName": "Daisy-m3",
     "Receivers": [
       "Daisy.Receivers.Console",
+      "Daisy.Receivers.AzureDevops",
+      "Daisy.Receivers.FileUpload",
+      "Daisy.Receivers.PipelineRunner",
       "Daisy.Receivers.Event"
     ],
     "Transmitters": [
-      "Daisy.Transmitters.Console"
+      "Daisy.Transmitters.Console",
+      "Daisy.Transmitters.AzureDevOps",
+      "Daisy.Transmitters.FileUpload",
+      "Daisy.Transmitters.GitTransmitter",
+      "Daisy.Transmitters.PipelineRunner",
+      "Daisy.Transmitters.Speech"
     ],
     "Abilities": [
+      "Daisy.Abilities.Assistant.Coder",
+      "Daisy.Abilities.Assistant.StoryParser",
+      "Daisy.Abilities.Assistant.Operator",
       "Daisy.Abilities.Start",
       "Daisy.Abilities.Terminate",
-      "Daisy.Abilities.OutputValidator"
+      "Daisy.Abilities.OutputValidator",
+      "Daisy.Abilities.ImageToText",
+      "Daisy.Abilities.GitManager"
     ],
     "Workflows": [
+      "Daisy.Workflows.SDLC",
       "Daisy.Workflows.Starter"
     ],
     "Apis": {
+      "OpenAI": {
+        "ApiBaseUrl": "https://api.openai.com/v1",
+        "ApiKey": ""
+      },
+      "OcrService": {
+        "Endpoint": "",
+        "Key": ""
+      },
+      "AzureDevOps": {
+        "Organization": "",
+        "Project": "",
+        "PersonalAccessToken": ""
+      },
+      "Git": {
+        "Organization": "",
+        "Project": "",
+        "PersonalAccessToken": ""
+      },
+      "CognitiveServicesSpeech": {
+        "SpeechKey": "",
+        "SpeechRegion": "westeurope",
+        "SpeechLanguage": "en-GB",
+        "SpeechSynthesisVoiceName": "en-GB-RyanNeural"
+      }
     },
     "PathTraverseOrder": {
       "StartPath": 1,
       "TerminatePath": 2,
+      "OperatorPath": 5,
+      "ImageToTextPath": 10,
+      "StoryParserPath": 55,
+      "GitRepositoryFetcherPath": 60,
+      "CoderPath": 110,
+      "CodeParserPath": 120,
+      "HealthCheckPath": 150,
       "OutputValidatorPath": 9999
     }
   }
