@@ -9,7 +9,7 @@ General-purpose workflow orchestration engine that can:
 -----------------------------------------------------
 
 ## High-Level System Architecture
-Modular solution where Impulses flow from Receivers through rule-based Ability paths to Transmitters, guided by centralized factories and a path-finding helper.
+Modular solution where **Impulses** flow from **Receivers** through rule-based **Abilities** to **Transmitters**, guided by centralized factories and a path-finding helper.
 
 ### Outer Loop: Macro Cycle (Input-Process-Output Iterations)
 Receivers (1-N): Entry point(s) to the system. Populate a single Impulse object.
