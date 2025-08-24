@@ -4,7 +4,7 @@ using Daisy.Resources.Models;
 using Daisy.Resources.Signals;
 using System;
 
-namespace Daisy.Abilites.Terminate.Rules
+namespace Daisy.Abilities.Terminate.Rules
 {
     [TraverseRule(PathType = typeof(TerminatePath))]
     public class TerminateCanTraverse : ITraverseRule
