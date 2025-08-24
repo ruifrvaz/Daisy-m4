@@ -21,7 +21,11 @@ namespace Daisy.Tests.Factory.Receiver
         {
             Settings = new ApplicationSettings
             {
-                Receivers = new List<string>() { "Daisy.Receivers.Console", "Daisy.Receivers.Event" },
+                Receivers = new Dictionary<string, ReceiverConfiguration>()
+                {
+                    { "Daisy.Receivers.Console", new ReceiverConfiguration() },
+                    { "Daisy.Receivers.Event", new ReceiverConfiguration() }
+                },
                 Abilities = new List<string>()
             };
             ServiceProvider = StartupFactory.LoadServices(Settings);

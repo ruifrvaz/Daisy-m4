@@ -56,7 +56,7 @@ namespace Daisy
 
             var assemblies = new List<string>();
             assemblies.AddRange(settings.Abilities);
-            assemblies.AddRange(settings.Receivers);
+            assemblies.AddRange(settings.Receivers.Keys);
             assemblies.AddRange(settings.Transmitters);
             foreach (var daisyAssembly in assemblies)
             {
