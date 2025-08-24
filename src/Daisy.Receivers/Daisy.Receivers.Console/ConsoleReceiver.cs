@@ -22,7 +22,7 @@ namespace Daisy.Receivers.Console
             System.Console.WriteLine($"--------------------------------------------------------");
             string input = System.Console.ReadLine();
 
-            var trimmedInput = string.Format(input).Trim(' ');
+            var trimmedInput = input.Trim();
 
             var impulse = new Impulse
             {
