@@ -1,4 +1,4 @@
-# Daisy-m3
+# Daisy-m4
 General-purpose workflow orchestration engine that can:
 - Iterate indefinitely or halt by rule.
 - Statically select abilities per iteration.
