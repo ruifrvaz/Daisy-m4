@@ -1,8 +1,9 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System.IO;
+using System.Text.Json;
+using System.Xml;
 
 namespace Daisy.Resources.Startup
 {
@@ -31,7 +32,11 @@ namespace Daisy.Resources.Startup
         public void SaveApplicationSettings(ApplicationSettings settings)
         {
             // Serialize the updated object back to JSON
-            var updatedJson = JsonConvert.SerializeObject(new Root { ApplicationSettings = settings }, Formatting.Indented);
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            var updatedJson = JsonSerializer.Serialize(new Root { ApplicationSettings = settings }, options);
 
             var appSettingsPath = $"..\\..\\..\\appconfig.json";
 

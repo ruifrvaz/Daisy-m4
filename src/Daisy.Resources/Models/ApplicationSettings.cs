@@ -1,6 +1,5 @@
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Daisy.Resources.Models
 {
@@ -27,8 +26,8 @@ namespace Daisy.Resources.Models
 
         public T GetApiSettings<T>(string apiName)
         {
-            var json = JsonConvert.SerializeObject(Apis[apiName]);
-            return JsonConvert.DeserializeObject<T>(json);
+            var json = JsonSerializer.Serialize(Apis[apiName]);
+            return JsonSerializer.Deserialize<T>(json);
         }
     }
 }
