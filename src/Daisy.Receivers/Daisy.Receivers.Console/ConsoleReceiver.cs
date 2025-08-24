@@ -17,6 +17,9 @@ namespace Daisy.Receivers.Console
 
         public override Task<Impulse> ReceiveAsync()
         {
+            System.Console.WriteLine($"--------------------------------------------------------");
+            System.Console.WriteLine($"Type \"start\" to list workflows. Type \"bye\" to terminate.");
+            System.Console.WriteLine($"--------------------------------------------------------");
             string input = System.Console.ReadLine();
 
             var trimmedInput = string.Format(input).Trim(' ');

@@ -9,7 +9,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3260DD3C-95FF-4C5A-A2A0-8734A8F9EBE3}"
 	ProjectSection(SolutionItems) = preProject
 		agents.md = agents.md
+		instructions\impulse_workflow_overview.md = instructions\impulse_workflow_overview.md
 		README.md = README.md
+		instructions\workflows.md = instructions\workflows.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy", "src\Daisy\Daisy.csproj", "{3F381290-C6DA-5C11-55A8-8EEB96AE898E}"
@@ -121,7 +123,7 @@ Global
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		        SolutionGuid = "B38FD6B0-1FEF-445A-9DE2-E88316E1FF0E"
 		SolutionGuid = {6CE73F47-9022-4481-A576-2D8C495804BD}
+		        SolutionGuid = "B38FD6B0-1FEF-445A-9DE2-E88316E1FF0E"
 	EndGlobalSection
 EndGlobal

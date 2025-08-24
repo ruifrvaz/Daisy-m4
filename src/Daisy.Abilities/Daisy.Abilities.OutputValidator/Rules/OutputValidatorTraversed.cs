@@ -8,13 +8,11 @@ using Daisy.Resources.Models;
 namespace Daisy.Abilities.OutputValidator.Rules
 {
     [TraversedRule(PathType = typeof(OutputValidatorPath))]
-    public class ValidateOutputTraversedRule : ITraverseRule
+    public class OutputValidatorTraversed : ITraverseRule
     {
-
-
         private ApplicationSettings _settings;
 
-        public ValidateOutputTraversedRule(ApplicationSettings settings)
+        public OutputValidatorTraversed(ApplicationSettings settings)
         {
             _settings = settings;
         }

@@ -7,12 +7,11 @@ using Daisy.Resources.Signals;
 namespace Daisy.Abilities.OutputValidator.Rules
 {
     [TraverseRule(PathType = typeof(OutputValidatorPath))]
-    public class OutputValidatorRule : ITraverseRule
+    public class OutputValidatorCanTraverse : ITraverseRule
     {
-
         private ApplicationSettings _settings;
 
-        public OutputValidatorRule(ApplicationSettings settings)
+        public OutputValidatorCanTraverse(ApplicationSettings settings)
         {
             _settings = settings;
         }

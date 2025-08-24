@@ -6,18 +6,18 @@ using Daisy.Resources.Signals;
 namespace Daisy.Abilities.Start.Rules
 {
     [TraverseRule(PathType = typeof(StartPath))]
-    public class StartCanTraverseRule : ITraverseRule
+    public class StartCanTraverse : ITraverseRule
     {
         private ApplicationSettings _settings;
 
-        public StartCanTraverseRule(ApplicationSettings settings)
+        public StartCanTraverse(ApplicationSettings settings)
         {
             _settings = settings;
         }
 
         public bool RuleApplies(Impulse impulse)
         {
-            return impulse.Input == "start";
+            return impulse.Input.Equals("start",System.StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

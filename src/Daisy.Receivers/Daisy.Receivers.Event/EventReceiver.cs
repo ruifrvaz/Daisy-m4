@@ -9,7 +9,7 @@ namespace Daisy.Receivers.Event
 {
     public class EventInput : AEventReceiver
     {
-        public override IEnumerable<string> RunOnCores => new[] { "Daisy.Workflows.SDLC" };
+        public override IEnumerable<string> RunOnCores => new[] { "Daisy.Workflows.Default" };
 
         private static readonly ConcurrentQueue<Impulse> _inputQueue = new();
 

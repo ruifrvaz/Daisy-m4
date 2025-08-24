@@ -18,11 +18,7 @@ namespace Daisy.Abilities.Start
             IEnumerable<ITraverseRule> hasBeenTraversedRules,
             string pathName,
             int traverseOrder,
-            ApplicationSettings settings) 
-            : base(serviceProvider, traverseRules, hasBeenTraversedRules, pathName, traverseOrder, settings)
-        {
-            Console.WriteLine($"Type \"start\" to list workflows. Type \"bye\" to terminate.");
-        }
+            ApplicationSettings settings)  : base(serviceProvider, traverseRules, hasBeenTraversedRules, pathName, traverseOrder, settings) { }
 
         public override Task Traverse(Impulse impulse)
         {
@@ -33,7 +29,10 @@ namespace Daisy.Abilities.Start
         private string GenerateStartOptions()
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("These are the currently active workflows:");
+            stringBuilder.AppendLine("----------------------------------------");
+            stringBuilder.AppendLine("--------------- Daisy-m4 ---------------");
+            stringBuilder.AppendLine("----------------------------------------");
+            stringBuilder.AppendLine("These are the currently active workflows");
             for (int i = 0; i < Cores.Instance.Pool.Count; i++)
             {
                 stringBuilder.AppendLine(Cores.Instance.Pool[i].GetType().Namespace.RemoveSubstring("Daisy.Workflows.", true));

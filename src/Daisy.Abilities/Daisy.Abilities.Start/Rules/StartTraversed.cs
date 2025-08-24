@@ -4,21 +4,21 @@ using Daisy.Resources.Models;
 using Daisy.Resources.Signals;
 using System;
 
-namespace Daisy.Abilites.Terminate.Rules
+namespace Daisy.Abilities.Start.Rules
 {
-    [TraverseRule(PathType = typeof(TerminatePath))]
-    public class TerminateTraverseRule : ITraverseRule
+    [TraversedRule(PathType = typeof(StartPath))]
+    public class StartTraversed : ITraverseRule
     {
         private ApplicationSettings _settings;
 
-        public TerminateTraverseRule(ApplicationSettings settings)
+        public StartTraversed(ApplicationSettings settings)
         {
             _settings = settings;
         }
 
         public bool RuleApplies(Impulse impulse)
         {
-            return impulse.Input.StartsWith("bye", StringComparison.InvariantCultureIgnoreCase);
+            return impulse.Output.StartsWith("----------------------------------------", StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

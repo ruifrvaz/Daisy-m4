@@ -27,7 +27,7 @@ namespace Daisy.Abilites.Terminate
 
             var eventImpulse = new Impulse
             {
-                Output = "CICD workflow terminating."
+                Output = "Workflow terminating."
             };
 
             EventReceivers.Instance.Pool.ForEach(receiver => receiver.RaiseEvent(eventImpulse));
