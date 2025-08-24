@@ -12,7 +12,7 @@ namespace Daisy.Resources.Models
     {
         public string SolutionName { get; set; }
 
-        public List<string> Receivers { get; set; } = new List<string>();
+        public Dictionary<string, ReceiverConfiguration> Receivers { get; set; } = new Dictionary<string, ReceiverConfiguration>();
 
         public List<string> Transmitters { get; set; } = new List<string>();
 
@@ -29,5 +29,10 @@ namespace Daisy.Resources.Models
             var json = JsonSerializer.Serialize(Apis[apiName]);
             return JsonSerializer.Deserialize<T>(json);
         }
+    }
+
+    public class ReceiverConfiguration
+    {
+        public List<string> RunOnCores { get; set; } = new List<string>();
     }
 }

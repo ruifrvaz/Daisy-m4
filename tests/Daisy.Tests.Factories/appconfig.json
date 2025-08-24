@@ -1,9 +1,15 @@
 {
   "ApplicationSettings": {
-    "Receivers": [
-      "Daisy.Receivers.Console",
-      "Daisy.Receivers.Event"
-    ],
+    "Receivers": {
+      "Daisy.Receivers.Console": {
+        "RunOnCores": [
+          "Daisy.Workflows.Starter"
+        ]
+      },
+      "Daisy.Receivers.Event": {
+        "RunOnCores": []
+      }
+    },
     "Transmitters": [
       "Daisy.Transmitters.Console"
     ],
@@ -20,7 +26,6 @@
       "TerminatePath": 2,
       "OutputValidatorPath": 9999
     },
-    "Apis": {
-    }
+    "Apis": {}
   }
 }

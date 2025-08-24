@@ -1,10 +1,16 @@
 {
   "ApplicationSettings": {
     "SolutionName": "Daisy-m4",
-    "Receivers": [
-      "Daisy.Receivers.Console",
-      "Daisy.Receivers.Event"
-    ],
+    "Receivers": {
+      "Daisy.Receivers.Console": {
+        "RunOnCores": [
+          "Daisy.Workflows.Starter"
+        ]
+      },
+      "Daisy.Receivers.Event": {
+        "RunOnCores": []
+      }
+    },
     "Transmitters": [
       "Daisy.Transmitters.Console"
     ],
@@ -16,8 +22,7 @@
     "Workflows": [
       "Daisy.Workflows.Starter"
     ],
-    "Apis": {
-    },
+    "Apis": {},
     "PathTraverseOrder": {
       "StartPath": 1,
       "TerminatePath": 2,

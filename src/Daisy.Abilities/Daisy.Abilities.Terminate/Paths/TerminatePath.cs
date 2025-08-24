@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Daisy.Abilites.Terminate
+namespace Daisy.Abilities.Terminate
 {
     public class TerminatePath : APath
     {
