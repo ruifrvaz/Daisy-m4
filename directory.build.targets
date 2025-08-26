@@ -7,27 +7,18 @@
   <!-- Run once per TFM, only for your host project (adjust the Condition to your host name) -->
   <Target Name="PublishPlugins"
           AfterTargets="Build"
-          Condition="'$(TargetFramework)' != '' and '$(MSBuildProjectName)' == 'Daisy'">
+          Condition="'$(TargetFramework)' != '' and '$(DaisyPluginCollector)' == 'true'">
     
     <ItemGroup>
       <!-- All plugin projects -->
       <PluginProjects Include="$(RepoRoot)**/Daisy.Abilities.*/*.csproj" />
-      <PluginProjects Include="$(RepoRoot)**/Daisy.Ability.*/*.csproj" />
       <PluginProjects Include="$(RepoRoot)**/Daisy.Receivers.*/*.csproj" />
       <PluginProjects Include="$(RepoRoot)**/Daisy.Transmitters.*/*.csproj" />
       <PluginProjects Include="$(RepoRoot)**/Daisy.Workflows.*/*.csproj" />
-      <PluginProjects Include="$(RepoRoot)**/Daisy.Abilities.OpenAI.Assistants/*/*.csproj" />
 
       <!-- Just in case the host matches any pattern -->
       <PluginProjects Remove="$(MSBuildProjectFullPath)" />
     </ItemGroup>
-
-    <!-- Optional: clean old plugin outputs to avoid stale files -->
-    <ItemGroup>
-      <PluginDirs Include="$(TargetDir)plugins\%(PluginProjects.Filename)\" />
-    </ItemGroup>
-    <RemoveDir Directories="@(PluginDirs)" />
-    <MakeDir   Directories="@(PluginDirs)" />
 
     <!-- Publish each plugin into its own folder under /plugins -->
     <MSBuild Projects="@(PluginProjects)"

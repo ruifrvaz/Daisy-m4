@@ -1,6 +1,8 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
+using Daisy.Resources.Startup;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -12,9 +14,13 @@ namespace Daisy.Factories
         public static void LoadCores(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
             var coreInterface = typeof(ICore);
-            foreach (var coreAssemblyName in settings.Workflows)
+
+            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
+            var assemblies = Directory.Exists(pluginsRoot)
+                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Workflows).ToList()
+                : throw new Exception("Error loading modules: plugins folder not found.");
+            foreach (var assembly in assemblies)
             {
-                var assembly = Assembly.LoadFrom($"{coreAssemblyName}.dll");
                 var coreTypes = assembly.GetTypes()
                                             .Where(type => coreInterface.IsAssignableFrom(type) && type.IsClass)
                                             .ToList();

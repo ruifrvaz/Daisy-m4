@@ -3,6 +3,12 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
+  
+  <!-- Ensures that plugins are loaded into the binary folder to allow ingestion during runtime -->
+  <PropertyGroup>
+    <DaisyPluginCollector>true</DaisyPluginCollector>
+  </PropertyGroup>
+  
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>

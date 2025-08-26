@@ -5,6 +5,7 @@ using Daisy.Resources.Startup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -26,13 +27,13 @@ namespace Daisy
             }
         }
 
-        public static void LoadService(ApplicationSettings settings, IServiceProvider serviceProvider, string assistantName)
+        public static void LoadService(ApplicationSettings settings, IServiceProvider serviceProvider, string agentNameSpace)
         {
             var serviceInterface = typeof(IDaisyService);
 
-            var assembly = Assembly.LoadFrom($"Daisy.Abilities.Assistant.{assistantName}.dll");
+            var agentAssembly = Assembly.LoadFrom($"{agentNameSpace}.dll");
 
-            var serviceTypes = assembly.GetTypes().Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass);
+            var serviceTypes = agentAssembly.GetTypes().Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass);
 
             foreach (var serviceType in serviceTypes)
             {
@@ -54,15 +55,18 @@ namespace Daisy
 
             var serviceInterface = typeof(IDaisyService);
 
-            var assemblies = new List<string>();
-            assemblies.AddRange(settings.Abilities);
-            assemblies.AddRange(settings.Receivers.Keys);
-            assemblies.AddRange(settings.Transmitters);
+            var configuredAssemblies = new List<string>();
+            configuredAssemblies.AddRange(settings.Abilities);
+            configuredAssemblies.AddRange(settings.Receivers.Keys);
+            configuredAssemblies.AddRange(settings.Transmitters);
+
+            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
+            var assemblies = Directory.Exists(pluginsRoot)
+                            ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, configuredAssemblies).ToList()
+                            : throw new Exception("Error loading modules: plugins folder not found.");
             foreach (var daisyAssembly in assemblies)
             {
-                var assembly = Assembly.LoadFrom($"{daisyAssembly}.dll");
-
-                var serviceTypes = assembly.GetTypes().Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass);
+                var serviceTypes = daisyAssembly.GetTypes().Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass);
 
                 foreach (var serviceType in serviceTypes)
                 {
