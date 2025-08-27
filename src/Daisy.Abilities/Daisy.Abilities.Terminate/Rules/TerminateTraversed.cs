@@ -5,7 +5,7 @@ using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
 using System.Linq;
 
-namespace Daisy.Abilites.Terminate.Rules
+namespace Daisy.Abilities.Terminate.Rules
 {
     [TraversedRule(PathType = typeof(TerminatePath))]
     public class TerminateTraversed : ITraverseRule

@@ -2,10 +2,12 @@ using Daisy.Factories;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Services;
+using Daisy.Resources.Startup;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Daisy.Tests.Factory.Receiver
@@ -21,7 +23,11 @@ namespace Daisy.Tests.Factory.Receiver
         {
             Settings = new ApplicationSettings
             {
-                Receivers = new List<string>() { "Daisy.Receivers.Console", "Daisy.Receivers.Event" },
+                Receivers = new Dictionary<string, ReceiverConfiguration>()
+                {
+                    { "Daisy.Receivers.Console", new ReceiverConfiguration() },
+                    { "Daisy.Receivers.Event", new ReceiverConfiguration() }
+                },
                 Abilities = new List<string>()
             };
             ServiceProvider = StartupFactory.LoadServices(Settings);
@@ -33,7 +39,11 @@ namespace Daisy.Tests.Factory.Receiver
             ReceiverFactory.LoadExternalReceivers(Settings, ServiceProvider);
 
             var receiverInterface = typeof(IExternalReceiver);
-            var receiverAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(ass => ass.GetName().Name.StartsWith("Daisy.Receivers")).ToList();
+
+            var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
+            var receiverAssemblies = Directory.Exists(pluginsRoot)
+                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+
             receiverAssemblies.Should().NotBeEmpty();
 
             var receiverTypes = new List<Type>();
@@ -42,10 +52,10 @@ namespace Daisy.Tests.Factory.Receiver
                 receiverTypes.AddRange(assembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass));
             }
 
-            var receivers = Resources.Pools.ExternalReceivers.Instance.Pool.Select(p => p.GetType());
+            var receivers = Resources.Pools.ExternalReceivers.Instance.Pool.Select(p => p.GetType().Name);
 
             receivers.Count().Should().BeGreaterThanOrEqualTo(receiverTypes.Count());
-            receivers.Except(receiverTypes).Should().BeEmpty();
+            receivers.Except(receiverTypes.Select(rt => rt.Name).ToList()).Should().BeEmpty();
         }
 
         [TestMethod]
@@ -54,7 +64,11 @@ namespace Daisy.Tests.Factory.Receiver
             ReceiverFactory.LoadLoopBackReceivers(Settings, ServiceProvider);
 
             var receiverInterface = typeof(ILoopBackReceiver);
-            var receiverAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(ass => ass.GetName().Name.StartsWith("Daisy.Receivers")).ToList();
+
+            var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
+            var receiverAssemblies = Directory.Exists(pluginsRoot)
+                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+
             receiverAssemblies.Should().NotBeEmpty();
 
             var receiverTypes = new List<Type>();

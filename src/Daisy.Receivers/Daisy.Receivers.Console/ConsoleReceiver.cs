@@ -1,14 +1,31 @@
 using Daisy.Resources.Abstracts;
+using Daisy.Resources.Attributes;
 using Daisy.Resources.Signals;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Daisy.Receivers.Console
 {
+    [RunOnCores("Daisy.Workflows.Starter")]
     public class ConsoleInput : AExternalReceiver
     {
-        //TODO: improve loading. use attributes or apssettings configuration
-        public override IEnumerable<string> RunOnCores => new[] { "Daisy.Workflows.Starter" };
+        private readonly IEnumerable<string> _runOnCores;
+
+        public override IEnumerable<string> RunOnCores => _runOnCores;
+
+        public ConsoleInput(IEnumerable<string> runOnCores)
+        {
+            _runOnCores = runOnCores;
+        }
+
+        public ConsoleInput() : this(GetAttributeCores()) { }
+
+        private static IEnumerable<string> GetAttributeCores()
+        {
+            return typeof(ConsoleInput).GetCustomAttribute<RunOnCoresAttribute>()?.Cores ?? Array.Empty<string>();
+        }
 
         public override Impulse Receive()
         {
@@ -22,7 +39,7 @@ namespace Daisy.Receivers.Console
             System.Console.WriteLine($"--------------------------------------------------------");
             string input = System.Console.ReadLine();
 
-            var trimmedInput = string.Format(input).Trim(' ');
+            var trimmedInput = input.Trim();
 
             var impulse = new Impulse
             {

@@ -1,7 +1,9 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Startup;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -11,11 +13,15 @@ namespace Daisy.Factories
     {
         public static void LoadExternalTransmitters(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
+            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
+            var assemblies = Directory.Exists(pluginsRoot)
+                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
+                : throw new Exception("Error loading modules: plugins folder not found.");
+
             // look in the assembly and find all classes that implement IExternalTransmitter
             var transmitterInterface = typeof(IExternalTransmitter);
-            foreach (var transmitterAssemblyName in settings.Transmitters)
+            foreach (var assembly in assemblies)
             {
-                var assembly = Assembly.Load(transmitterAssemblyName);
                 var transmitterTypes = assembly.GetTypes().Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass).ToList();
                 foreach (var transmitterType in transmitterTypes)
                 {
@@ -34,9 +40,14 @@ namespace Daisy.Factories
         {
             // look in the assembly and find all classes that implement ILoopBackTransmitter
             var transmitterInterface = typeof(ILoopBackTransmitter);
-            foreach (var transmitterAssemblyName in settings.Transmitters)
+
+            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
+            var assemblies = Directory.Exists(pluginsRoot)
+                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
+                : throw new Exception("Error loading modules: plugins folder not found.");
+
+            foreach (var assembly in assemblies)
             {
-                var assembly = Assembly.Load(transmitterAssemblyName);
                 var receiverTypes = assembly.GetTypes().Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass).ToList();
                 foreach (var transmitterType in receiverTypes)
                 {

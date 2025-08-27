@@ -1,13 +1,25 @@
 {
   "ApplicationSettings": {
-    "SolutionName": "Daisy-m3",
-    "Receivers": [
-      "Daisy.Receivers.Console",
-      "Daisy.Receivers.AzureDevops",
-      "Daisy.Receivers.FileUpload",
-      "Daisy.Receivers.PipelineRunner",
-      "Daisy.Receivers.Event"
-    ],
+    "SolutionName": "Daisy-m4",
+    "Receivers": {
+      "Daisy.Receivers.Console": {
+        "RunOnCores": [
+          "Daisy.Workflows.Starter"
+        ]
+      },
+      "Daisy.Receivers.Event": {
+        "RunOnCores": []
+      },
+      "Daisy.Receivers.AzureDevops": {
+        "RunOnCores": []
+      },
+      "Daisy.Receivers.FileUpload": {
+        "RunOnCores": []
+      },
+      "Daisy.Receivers.PipelineRunner": {
+        "RunOnCores": []
+      }
+    },
     "Transmitters": [
       "Daisy.Transmitters.Console",
       "Daisy.Transmitters.AzureDevOps",

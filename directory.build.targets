@@ -1,34 +1,36 @@
 <Project>
-  <!-- Anchor to the folder containing this .targets file (solution root).
-       More reliable than $(SolutionDir) when using `dotnet build`. -->
   <PropertyGroup>
+    <!-- Works in VS and dotnet CLI -->
     <RepoRoot>$([MSBuild]::EnsureTrailingSlash('$(MSBuildThisFileDirectory)'))</RepoRoot>
   </PropertyGroup>
 
-  <!-- Run once per TFM, only on the project that collects plugins (set a flag in that csproj). -->
-  <Target Name="CopyDlls"
+  <!-- Run once per TFM, only for your host project (adjust the Condition to your host name) -->
+  <Target Name="PublishPlugins"
           AfterTargets="Build"
-          Condition="'$(TargetFramework)' != '' and '$(MSBuildProjectName)' == 'Daisy'">
+          Condition="'$(TargetFramework)' != '' and '$(DaisyPluginCollector)' == 'true'">
     
     <ItemGroup>
-      <!-- Only copy the plugin assemblies themselves (not all dependencies) -->
-      <AbilityDlls Include="$(RepoRoot)**/Daisy.Abilities.*/bin/$(Configuration)/$(TargetFramework)/Daisy.Abilities.*.dll" />
-      <ReceiverDlls Include="$(RepoRoot)**/Daisy.Receivers.*/bin/$(Configuration)/$(TargetFramework)/Daisy.Receivers.*.dll" />
-      <TransmitterDlls Include="$(RepoRoot)**/Daisy.Transmitters.*/bin/$(Configuration)/$(TargetFramework)/Daisy.Transmitters.*.dll" />
-      <WorkflowDlls Include="$(RepoRoot)**/Daisy.Workflows.*/bin/$(Configuration)/$(TargetFramework)/Daisy.Workflows.*.dll" />
+      <!-- All plugin projects -->
+      <PluginProjects Include="$(RepoRoot)**/Daisy.Abilities.*/*.csproj" />
+      <PluginProjects Include="$(RepoRoot)**/Daisy.Receivers.*/*.csproj" />
+      <PluginProjects Include="$(RepoRoot)**/Daisy.Transmitters.*/*.csproj" />
+      <PluginProjects Include="$(RepoRoot)**/Daisy.Workflows.*/*.csproj" />
+
+      <!-- Just in case the host matches any pattern -->
+      <PluginProjects Remove="$(MSBuildProjectFullPath)" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(AbilityDlls)"
-          DestinationFolder="$(OutDir)"
-          SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(ReceiverDlls)"
-          DestinationFolder="$(OutDir)"
-          SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(TransmitterDlls)"
-          DestinationFolder="$(OutDir)"
-          SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(WorkflowDlls)"
-          DestinationFolder="$(OutDir)"
-          SkipUnchangedFiles="true" />
+    <!-- Publish each plugin into its own folder under /plugins -->
+    <MSBuild Projects="@(PluginProjects)"
+             Targets="Publish"
+             Properties="
+               Configuration=$(Configuration);
+               TargetFramework=$(TargetFramework);
+               SelfContained=false;
+               PublishSingleFile=false;
+               PublishDir=$(TargetDir)plugins\%(PluginProjects.Filename)\"
+    />
+
+    <Message Importance="High" Text="Published @(PluginProjects->'%(Filename)') to $(TargetDir)plugins\" />
   </Target>
 </Project>

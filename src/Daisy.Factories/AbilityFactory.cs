@@ -2,8 +2,10 @@ using Daisy.Resources.Attributes;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Startup;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -28,9 +30,9 @@ namespace Daisy.Factories
                                         .GetTypes()
                                         .Where(type => traverseRuleInterface.IsAssignableFrom(type) && type.IsClass);
 
-                var traverseRules = LoadTraverseRules(traverseRuleTypes, abilityPath, settings);
+                var traverseRules = LoadCanTraverseRules(traverseRuleTypes, abilityPath, settings);
 
-                var hasBeenTraversedRules = LoadHasBeenTraversedRules(traverseRuleTypes, abilityPath, settings);
+                var hasBeenTraversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
 
                 var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
 
@@ -46,39 +48,41 @@ namespace Daisy.Factories
             var abilityInterface = typeof(IPath);
             var traverseRuleInterface = typeof(ITraverseRule);
 
-            foreach (var abilityAssemblyName in settings.Abilities)
-            {
-                // load the ability assembly
-                var assembly = Assembly.LoadFrom($"{abilityAssemblyName}.dll");
-                var abilityPaths = assembly.GetTypes()
-                                           .Where(type => abilityInterface.IsAssignableFrom(type)
-                                                       && type.IsClass
-                                                       && settings.PathTraverseOrder.Keys.Contains(type.Name));
+            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
+            var assemblies = Directory.Exists(pluginsRoot)
+                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Abilities).ToList()
+                : throw new Exception("Error loading modules: plugins folder not found.");
 
+            foreach (var assembly in assemblies)
+            {
+                var types = AssemblyModulesLoader.SafeGetExportedTypes(assembly);
+
+                var abilityPaths = types
+                    .Where(t => t is { IsClass: true, IsAbstract: false }
+                                && abilityInterface.IsAssignableFrom(t)
+                                && settings.PathTraverseOrder.ContainsKey(t.Name));
 
                 foreach (var abilityPath in abilityPaths)
                 {
+                    var traverseRuleTypes = types
+                        .Where(t => t is { IsClass: true, IsAbstract: false }
+                                    && traverseRuleInterface.IsAssignableFrom(t));
 
-                    // load the traverse rules for the current ability
-                    var traverseRuleTypes = assembly
-                                            .GetTypes()
-                                            .Where(type => traverseRuleInterface.IsAssignableFrom(type) && type.IsClass);
-
-                    var traverseRules = LoadTraverseRules(traverseRuleTypes, abilityPath, settings);
-
-                    var hasBeenTraversedRules = LoadHasBeenTraversedRules(traverseRuleTypes, abilityPath, settings);
-
+                    var traverseRules = LoadCanTraverseRules(traverseRuleTypes, abilityPath, settings);
+                    var hasBeenTraversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
                     var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
 
-                    dynamic pathObject = Activator.CreateInstance(abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules, abilityPath.Name, traverseOrder, settings);
-                    var path = pathObject as IPath;
-                    Paths.Instance.Pool.Add(path);
+                    // ctor: (IServiceProvider, traverseRules, hasBeenTraversedRules, name, order, settings)
+                    dynamic instance = Activator.CreateInstance(
+                        abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules,
+                        abilityPath.Name, traverseOrder, settings)!;
 
+                    Paths.Instance.Pool.Add((IPath)instance);
                 }
             }
         }
 
-        private static IEnumerable<ITraverseRule> LoadTraverseRules(IEnumerable<Type> traverseRuleTypes, Type pathType, ApplicationSettings settings)
+        private static IEnumerable<ITraverseRule> LoadCanTraverseRules(IEnumerable<Type> traverseRuleTypes, Type pathType, ApplicationSettings settings)
         {
             var pathTraverseRuleTypes = from traverseRuleType in traverseRuleTypes
                                         from attribute in traverseRuleType.GetCustomAttributes(typeof(TraverseRuleAttribute), false)
@@ -99,7 +103,7 @@ namespace Daisy.Factories
             return traverseRules;
         }
 
-        private static IEnumerable<ITraverseRule> LoadHasBeenTraversedRules(IEnumerable<Type> hasBeenTraversedRuleTypes, Type pathType, ApplicationSettings settings)
+        private static IEnumerable<ITraverseRule> LoadTraversedRules(IEnumerable<Type> hasBeenTraversedRuleTypes, Type pathType, ApplicationSettings settings)
         {
             var pathHasBeenTraversedRuleTypes = from hasBeenTraversedRuleType in hasBeenTraversedRuleTypes
                                                 from attribute in hasBeenTraversedRuleType.GetCustomAttributes(typeof(TraversedRuleAttribute), false)
