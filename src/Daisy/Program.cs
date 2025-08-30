@@ -1,3 +1,6 @@
+// Copyright (c) 2025 Rui Filipe Rodrigues Vaz
+// Licensed under the Apache License, Version 2.0
+
 using Daisy.Factories;
 using Daisy.Resources.Services;
 using System.Linq;
