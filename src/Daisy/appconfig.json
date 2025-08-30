@@ -15,7 +15,7 @@
       "Daisy.Transmitters.Console"
     ],
     "Abilities": [
-      "Daisy.Abilities.Start",
+      "Daisy.Abilities.ConsoleStart",
       "Daisy.Abilities.Terminate",
       "Daisy.Abilities.OutputValidator"
     ],
@@ -24,7 +24,7 @@
     ],
     "Apis": {},
     "PathTraverseOrder": {
-      "StartPath": 1,
+      "ConsoleStartPath": 1,
       "TerminatePath": 2,
       "OutputValidatorPath": 9999
     }

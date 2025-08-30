@@ -1,4 +1,5 @@
-﻿using Daisy.Resources.Helpers;
+﻿using Daisy.Resources.Extensions;
+using Daisy.Resources.Helpers;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
@@ -26,11 +27,12 @@ namespace Daisy.Resources.Abstracts
         {
             IsActive = true;
             var nrExceptions = 0;
+            var impulse = new Impulse();
             do
             {
                 try
                 {
-                    var impulse = await ReceiveAsync();
+                    impulse = await ReceiveAsync();
                     var nextPath = PathFinder.FindNextPathToTraverse(impulse);
                     if (nextPath != null)
                     {
@@ -44,7 +46,7 @@ namespace Daisy.Resources.Abstracts
                 }
                 catch (Exception ex)
                 {
-                    System.Console.WriteLine($"{this}, {ex}");
+                    impulse.Error = impulse.Error.AddPrefix($"{this}, {ex}");
                     nrExceptions++;
                 }
             } while (IsActive && nrExceptions < 3);

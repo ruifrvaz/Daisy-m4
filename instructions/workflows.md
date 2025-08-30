@@ -11,7 +11,7 @@ Starter workflow that picks up inputs and triggers other workflows. Can be integ
 	- Daisy.Receivers.Console
 
 2. List available workflows when impulse.input starts with start (optional)
-	- Daisy.Abilities.Start
+	- Daisy.Abilities.ConsoleStart
 
 3. Terminate the workflow if impulse.input starts with bye (optional)
 	- Daisy.Abilities.Terminate

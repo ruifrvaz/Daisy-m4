@@ -4,6 +4,7 @@ using Daisy.Resources.Signals;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Daisy.Receivers.Console
@@ -34,9 +35,15 @@ namespace Daisy.Receivers.Console
 
         public override Task<Impulse> ReceiveAsync()
         {
-            System.Console.WriteLine($"--------------------------------------------------------");
-            System.Console.WriteLine($"Type \"start\" to list workflows. Type \"bye\" to terminate.");
-            System.Console.WriteLine($"--------------------------------------------------------");
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("-----------------------------------------------------------");
+            stringBuilder.AppendLine("------------------------- Daisy-m4 ------------------------");
+            stringBuilder.AppendLine("-----------------------------------------------------------");
+            stringBuilder.AppendLine("\"start\" to list workflows.");
+            stringBuilder.AppendLine("\"bye\" to terminate.");
+            stringBuilder.AppendLine("Workflow name to start workflow (append args when required)");
+            stringBuilder.AppendLine("-----------------------------------------------------------");
+            System.Console.Write(stringBuilder.ToString());
             string input = System.Console.ReadLine();
 
             var trimmedInput = input.Trim();
