@@ -1,3 +1,6 @@
+## License
+Apache License 2.0. See LICENSE and NOTICE for details.
+
 # Daisy-m4
 General-purpose workflow orchestration engine that can:
 - Iterate indefinitely or halt by rule.
