@@ -1,6 +1,3 @@
-## License
-Apache License 2.0. See LICENSE and NOTICE for details.
-
 # Daisy-m4
 General-purpose workflow orchestration engine that can:
 - Iterate indefinitely or halt by rule.
@@ -52,3 +49,7 @@ As it passes through each connection, it chains inputs and outputs, which allows
 - Deterministic halting via Transmitter or Ability rules.
 
 - External stimulus (e.g., webhooks, CI/CD) to kick off new Receivers.
+
+## License
+Apache License 2.0 © 2025 Rui Filipe Rodrigues Vaz.  
+See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for details.
