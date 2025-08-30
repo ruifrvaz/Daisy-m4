@@ -36,13 +36,14 @@ namespace Daisy.Receivers.Console
         public override Task<Impulse> ReceiveAsync()
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("-----------------------------------------------------------");
-            stringBuilder.AppendLine("------------------------- Daisy-m4 ------------------------");
-            stringBuilder.AppendLine("-----------------------------------------------------------");
+            stringBuilder.AppendLine("------------------------------------------------------------");
+            stringBuilder.AppendLine("------------------------- Daisy-m4 -------------------------");
+            stringBuilder.AppendLine("------------------------------------------------------------");
+            stringBuilder.AppendLine("Options:");
             stringBuilder.AppendLine("\"start\" to list workflows.");
             stringBuilder.AppendLine("\"bye\" to terminate.");
-            stringBuilder.AppendLine("Workflow name to start workflow (append args when required)");
-            stringBuilder.AppendLine("-----------------------------------------------------------");
+            stringBuilder.AppendLine("{WorkflowName} to start workflow (append args when required)");
+            stringBuilder.AppendLine("------------------------------------------------------------");
             System.Console.Write(stringBuilder.ToString());
             string input = System.Console.ReadLine();
 
