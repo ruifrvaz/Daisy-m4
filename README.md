@@ -30,7 +30,6 @@ Abilities (1-N): Process or mutate the Impulse.
 - Can optionally trigger new Receivers (updating the impulse) via a loopback mechanism, restarting the whole macro-cycle.
 
 ## Key features
-
 - Infinite Turing-like iteration.
 - Statically select abilities per iteration.
 - Evaluate exit conditions after each iteration.
@@ -39,6 +38,10 @@ Abilities (1-N): Process or mutate the Impulse.
 - Communicate between workflows.
 - Recursion or chaining across multiple receivers/abilities/transmitters.
 - External stimulus (e.g., webhooks, CI/CD) to kick off new Receivers.
+
+## How to create your workflows using prompt-driven development (PDD):
+- Add your workflow to the workflows.md file.
+- Instruct your coding agent of choice to analyze the documentation and implement the workflow, step-by-step.
 
 ## License
 Apache License 2.0 © 2025 Rui Filipe Rodrigues Vaz.  
