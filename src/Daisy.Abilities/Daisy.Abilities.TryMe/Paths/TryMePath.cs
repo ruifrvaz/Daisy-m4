@@ -28,7 +28,7 @@ namespace Daisy.Abilities.TryMe.Paths
 
         public override async Task Traverse(Impulse impulse)
         {
-            var cityName = impulse.Input.GetChainByKey("cityName");
+            var cityName = impulse.GetChainByKey("cityName");
             var weather = cityName == null ? null : await _weatherService.GetWeatherAsync(cityName);
 
             if (string.IsNullOrWhiteSpace(weather))
