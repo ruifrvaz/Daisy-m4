@@ -2,6 +2,7 @@ using Daisy.Receivers.TryMeEvent;
 using Daisy.Resources.Signals;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Daisy.Tests.Receivers
@@ -12,7 +13,7 @@ namespace Daisy.Tests.Receivers
         [TestMethod]
         public async Task ReceiveAsync_returns_enqueued_impulse()
         {
-            var receiver = new TryMeEventReceiver();
+            var receiver = new TryMeEventReceiver(new List<string>());
             var impulse = new Impulse { Input = "Lisbon" };
 
             receiver.RaiseEvent(impulse);

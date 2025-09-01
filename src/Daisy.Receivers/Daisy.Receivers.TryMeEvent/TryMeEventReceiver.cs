@@ -23,9 +23,18 @@ namespace Daisy.Receivers.TryMeEvent
 
         public override IEnumerable<string> RunOnCores => _runOnCores;
 
-
         private static readonly ConcurrentQueue<Impulse> _inputQueue = new();
         private static readonly SemaphoreSlim _signal = new(0);
+
+
+        /// <summary>
+        /// Standard constructor that will be used during assembly injection
+        /// </summary>
+        /// <param name="runOnCores"></param>
+        public TryMeEventReceiver(IEnumerable<string> runOnCores)
+        {
+            _runOnCores = runOnCores;
+        }
 
         /// <summary>
         /// Synchronously receives an impulse when available.
