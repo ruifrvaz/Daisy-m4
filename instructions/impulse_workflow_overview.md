@@ -4,13 +4,26 @@ This document outlines the architecture and operational flow of the orchestratio
 
 ---
 
-## Core Concept: `Impulse`
+## Main Concepts
+
+### 1. **Impulse**
 
 `Impulse` is the central data structure that flows through the system. It is:
 
 - Created by a **Receiver**
 - Processed by one or more **Abilities** (via `Paths`)
 - Consumed by **Transmitters**
+
+### 2. **Core**
+
+`Core` is the central object where the workflow lives. It:
+- Runs in parallel with other cores.
+- Can communicate with other cores via Pools.
+
+### 3. **Pool**
+`Pool` is the collection of module instances that are currently running. They are singletons that:
+- Can be used between cores.
+- Can be used to communicate between modules.
 
 ---
 
