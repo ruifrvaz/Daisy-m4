@@ -49,6 +49,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Workflows.Starter", "src\Daisy.Workflows\Daisy.Workflows.Starter\Daisy.Workflows.Starter.csproj", "{53CC1CDB-A620-DE5E-B9BE-E82CCB5A8EA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Workflows.TryMe", "src\Daisy.Workflows\Daisy.Workflows.TryMe\Daisy.Workflows.TryMe.csproj", "{AD1B5EA2-1A0E-4512-8B7C-72F246F1E56A}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Abilities.OutputValidator", "src\Daisy.Abilities\Daisy.Abilities.OutputValidator\Daisy.Abilities.OutputValidator.csproj", "{E3C00D10-0089-D40D-B3F6-9D0C137C2B73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Abilities.ConsoleStart", "src\Daisy.Abilities\Daisy.Abilities.ConsoleStart\Daisy.Abilities.ConsoleStart.csproj", "{E46ED649-F17C-6323-4DC8-BFB7A8EB3AE8}"
@@ -107,6 +109,10 @@ Global
 		{53CC1CDB-A620-DE5E-B9BE-E82CCB5A8EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53CC1CDB-A620-DE5E-B9BE-E82CCB5A8EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53CC1CDB-A620-DE5E-B9BE-E82CCB5A8EA5}.Release|Any CPU.Build.0 = Release|Any CPU
+                {AD1B5EA2-1A0E-4512-8B7C-72F246F1E56A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {AD1B5EA2-1A0E-4512-8B7C-72F246F1E56A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {AD1B5EA2-1A0E-4512-8B7C-72F246F1E56A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {AD1B5EA2-1A0E-4512-8B7C-72F246F1E56A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -136,6 +142,7 @@ Global
 		{86EBEB28-0D2E-4495-A531-105EBCD0FDEE} = {1E21ED11-9D7C-4680-A679-743FD5CE4500}
 		{A595291C-D5C9-427B-B25F-A64484C7B9A1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{53CC1CDB-A620-DE5E-B9BE-E82CCB5A8EA5} = {A595291C-D5C9-427B-B25F-A64484C7B9A1}
+                {AD1B5EA2-1A0E-4512-8B7C-72F246F1E56A} = {A595291C-D5C9-427B-B25F-A64484C7B9A1}
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
 		{E46ED649-F17C-6323-4DC8-BFB7A8EB3AE8} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
 	EndGlobalSection
