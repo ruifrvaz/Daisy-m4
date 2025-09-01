@@ -19,7 +19,8 @@
     "Abilities": [
       "Daisy.Abilities.ConsoleStart",
       "Daisy.Abilities.Terminate",
-      "Daisy.Abilities.OutputValidator"
+      "Daisy.Abilities.OutputValidator",
+      "Daisy.Abilities.TryMe"
     ],
     "Workflows": [
       "Daisy.Workflows.Starter",
@@ -29,7 +30,8 @@
     "PathTraverseOrder": {
       "ConsoleStartPath": 1,
       "TerminatePath": 2,
-      "OutputValidatorPath": 9999
+      "OutputValidatorPath": 9999,
+      "TryMePath": 1
     }
   }
 }
