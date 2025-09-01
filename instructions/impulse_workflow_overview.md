@@ -25,9 +25,17 @@ This document outlines the architecture and operational flow of the orchestratio
 - Can be used between cores.
 - Can be used to communicate between modules.
 
+### 3. **Paths and PathFinder**
+
+The `PathFinder` scans all registered `Paths`:
+
+- Matches based on `TraverseRules`
+- Filters previously traversed paths
+- Executes qualifying paths in priority order
+
 ---
 
-## Workflow Overview
+## Workflow Overview: Modules
 
 ### 1. **Receivers**
 
@@ -55,14 +63,6 @@ public class ImageToTextTraverseRule : ITraverseRule {
         impulse.Input.StartsWith("FilePath:");
 }
 ```
-
-### 3. **PathFinder and Orchestration**
-
-The `PathFinder` scans all registered `Paths`:
-
-- Matches based on `TraverseRules`
-- Filters previously traversed paths
-- Executes qualifying paths in priority order
 
 ### 4. **Transmitters**
 
