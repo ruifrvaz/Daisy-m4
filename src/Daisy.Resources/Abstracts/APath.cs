@@ -53,8 +53,8 @@ namespace Daisy.Resources.Abstracts
 
         protected virtual bool ReadyToTransmit(Impulse impulse)
         {
-            // i could create an error recovery mechanism instead of straight out transmitting the error when an ability fails
-            return PathFinder.FindNextPathToTraverse(impulse) == null || !string.IsNullOrEmpty(impulse.Error); 
+            //TODO: create a recovery mechanism instead of straight out transmitting the error when an ability fails
+            return PathFinder.FindNextPathToTraverse(impulse) == null || !string.IsNullOrWhiteSpace(impulse.Error); 
         }
 
         public virtual bool CanTraverse(Impulse impulse)

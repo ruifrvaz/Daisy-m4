@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Daisy.Abilities.TryMe.Paths
 {
-    public class TryMePath : APath
+    public class GetWeatherByCityPath : APath
     {
         private readonly WeatherService _weatherService;
 
-        public TryMePath(IServiceProvider serviceProvider,
+        public GetWeatherByCityPath(IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> hasBeenTraversedRules,
             string pathName,
@@ -33,7 +33,7 @@ namespace Daisy.Abilities.TryMe.Paths
 
             if (string.IsNullOrWhiteSpace(weather))
             {
-                impulse.Output = $"Unable to retrieve weather for {cityName}.";
+                impulse.Error = $"Unable to retrieve weather for {cityName}.";
             }
             else
             {

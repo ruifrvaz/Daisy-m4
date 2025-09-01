@@ -20,7 +20,7 @@
       "Daisy.Abilities.ConsoleStart",
       "Daisy.Abilities.Terminate",
       "Daisy.Abilities.OutputValidator",
-      "Daisy.Abilities.TryMe"
+      "Daisy.Abilities.Weather"
     ],
     "Workflows": [
       "Daisy.Workflows.Starter",
@@ -30,7 +30,7 @@
     "PathTraverseOrder": {
       "ConsoleStartPath": 1,
       "TerminatePath": 2,
-      "TryMePath": 50,
+      "GetWeatherByCityPath": 50,
       "OutputValidatorPath": 9999
     }
   }

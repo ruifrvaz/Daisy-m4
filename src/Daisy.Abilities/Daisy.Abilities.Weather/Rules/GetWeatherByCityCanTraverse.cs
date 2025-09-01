@@ -7,12 +7,12 @@ using Daisy.Resources.Signals;
 
 namespace Daisy.Abilities.TryMe.Rules
 {
-    [TraverseRule(PathType = typeof(TryMePath))]
-    public class TryMeCanTraverse : ITraverseRule
+    [TraverseRule(PathType = typeof(GetWeatherByCityPath))]
+    public class GetWeatherByCityCanTraverse : ITraverseRule
     {
         private readonly ApplicationSettings _settings;
 
-        public TryMeCanTraverse(ApplicationSettings settings)
+        public GetWeatherByCityCanTraverse(ApplicationSettings settings)
         {
             _settings = settings;
         }
