@@ -25,9 +25,9 @@ Starter workflow that picks up inputs and triggers other workflows. Can be integ
 Weather workflow that given a city name, fetches the weather from a public weather API (pick one). Each module should have appropriate comments regarding its implementation and integration into the workflow.
 
 0. Initialize the workflow core project
-        - Daisy.Workflows.TryMe
+    - Daisy.Workflows.TryMe
 1. Receive event that is sent from the Starter workflow. The received event has a city name in its impulse input.
-        - Daisy.Receivers.TryMeEvent
+    - Daisy.Receivers.TryMeEvent
 2. Perform an HTTP GET request on the weather API with the city name. Validate if weather has been received correctly. If not, Emit error to impulse output.
 	- Daisy.Abilities.TryMe
 3. Return the weather information

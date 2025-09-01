@@ -79,7 +79,7 @@ Examples:
 
 ## Startup Initialization
 
-Startup is managed via `Program.cs` and `StartupFactory`:
+### Startup is managed via specific Factories:
 
 ```csharp
 var settings = StartupFactory.AppSettingsConfiguration.LoadApplicationSettings();
@@ -89,6 +89,19 @@ AbilityFactory.LoadAbilities(settings, serviceProvider);
 TransmitterFactory.LoadTransmitters(settings, serviceProvider);
 ReceiverFactory.LoadReceivers(settings, serviceProvider);
 ```
+
+### Application Settings (appconfig.json)
+
+`AppSettingsConfiguration` loads `ApplicationSettings` from `appconfig.json` and optional secrets.
+This configuration file drives which modules and workflows are active:
+
+- `Receivers` and their associated cores
+- Lists of `Transmitters`, `Abilities`, and `Workflows`
+- `Apis` for external dependencies
+- `PathTraverseOrder` for module integration and execution order
+
+Updating `appconfig.json` alters the modules loaded at startup.
+
 
 ### Dependency Injection & Reflection
 

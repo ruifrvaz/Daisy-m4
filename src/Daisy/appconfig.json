@@ -22,7 +22,8 @@
       "Daisy.Abilities.OutputValidator"
     ],
     "Workflows": [
-      "Daisy.Workflows.Starter"
+      "Daisy.Workflows.Starter",
+      "Daisy.Workflows.TryMe"
     ],
     "Apis": {},
     "PathTraverseOrder": {

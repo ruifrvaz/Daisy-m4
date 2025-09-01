@@ -17,7 +17,7 @@ namespace Daisy.Abilities.Start.Rules
 
         public bool RuleApplies(Impulse impulse)
         {
-            return impulse.Input.Equals("start",System.StringComparison.InvariantCultureIgnoreCase);
+            return impulse.Input.Equals("start", System.StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }
