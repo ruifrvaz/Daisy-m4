@@ -97,17 +97,5 @@ ReceiverFactory.LoadReceivers(settings, serviceProvider);
 
 ---
 
-## Summary
-
-This architecture supports:
-
-- Modular, pluggable logic
-- Rule-driven traversal
-- Eventual hand-off to external systems
-
-It enables flexible workflows based on dynamically evaluated conditions and priorities.
-
----
-
 For further extension or debugging, refer to the `Impulse`, `ITraverseRule`, `APath`, and `TransmitterBase` implementations.
 
