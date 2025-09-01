@@ -1,20 +1,37 @@
+using Daisy.Abilities.Weather.Models;
+using Daisy.Abilities.Weather.Services;
+using Daisy.Resources.Models;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Runtime;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Daisy.Abilities.TryMe.Services
 {
-    public class WeatherService
+    public class WeatherService : IWeatherService
     {
-        private readonly HttpClient _httpClient;
+        private readonly WeatherSettings _settings;
+        private HttpClient _httpClient = null!;
 
-        public WeatherService(HttpClient httpClient)
+        public WeatherService(ApplicationSettings settings)
         {
-            _httpClient = httpClient;
+            _settings = settings.GetApiSettings<WeatherSettings>("Weather");
         }
+
+        public void Initialize(IServiceProvider serviceProvider)
+        {
+            _httpClient = serviceProvider.GetService<IHttpClientFactory>()!.CreateClient("DefaultClient");
+
+            _httpClient.BaseAddress = new Uri(_settings.Url);
+        }
+
 
         public async Task<string?> GetWeatherAsync(string city)
         {
-            var response = await _httpClient.GetAsync($"https://wttr.in/{city}?format=3");
+            var response = await _httpClient.GetAsync($"{city}?format=3");
             if (!response.IsSuccessStatusCode)
             {
                 return null;
@@ -22,5 +39,6 @@ namespace Daisy.Abilities.TryMe.Services
 
             return await response.Content.ReadAsStringAsync();
         }
+
     }
 }

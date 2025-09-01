@@ -26,7 +26,11 @@
       "Daisy.Workflows.Starter",
       "Daisy.Workflows.TryMe"
     ],
-    "Apis": {},
+    "Apis": {
+      "Weather": {
+        "Url": "https://wttr.in/"
+      }
+    },
     "PathTraverseOrder": {
       "ConsoleStartPath": 1,
       "TerminatePath": 2,
