@@ -7,8 +7,10 @@
           "Daisy.Workflows.Starter"
         ]
       },
-      "Daisy.Receivers.Event": {
-        "RunOnCores": []
+      "Daisy.Receivers.TryMeEvent": {
+        "RunOnCores": [
+          "Daisy.Workflows.TryMe"
+        ]
       }
     },
     "Transmitters": [

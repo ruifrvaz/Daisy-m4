@@ -1,4 +1,5 @@
 using Daisy.Resources.Abstracts;
+using Daisy.Resources.Attributes;
 using Daisy.Resources.Signals;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -12,12 +13,16 @@ namespace Daisy.Receivers.TryMeEvent
     /// Waits for a city name event raised by the Starter workflow and
     /// forwards the impulse to the TryMe workflow.
     /// </summary>
-    public class TryMeEventInput : AEventReceiver
+    [RunOnCores("Daisy.Workflows.TryMe")]
+    public class TryMeEventReceiver : AEventReceiver
     {
         /// <summary>
         /// Only runs on the TryMe workflow core.
         /// </summary>
-        public override IEnumerable<string> RunOnCores => new[] { "Daisy.Workflows.TryMe" };
+        private readonly IEnumerable<string> _runOnCores;
+
+        public override IEnumerable<string> RunOnCores => _runOnCores;
+
 
         private static readonly ConcurrentQueue<Impulse> _inputQueue = new();
         private static readonly SemaphoreSlim _signal = new(0);

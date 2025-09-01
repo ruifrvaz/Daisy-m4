@@ -12,7 +12,7 @@ namespace Daisy.Tests.Receivers
         [TestMethod]
         public async Task ReceiveAsync_returns_enqueued_impulse()
         {
-            var receiver = new TryMeEventInput();
+            var receiver = new TryMeEventReceiver();
             var impulse = new Impulse { Input = "Lisbon" };
 
             receiver.RaiseEvent(impulse);
