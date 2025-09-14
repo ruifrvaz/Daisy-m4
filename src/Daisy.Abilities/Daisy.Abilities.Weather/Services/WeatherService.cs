@@ -11,7 +11,7 @@ namespace Daisy.Abilities.TryMe.Services
     public class WeatherService : IWeatherService
     {
         private readonly WeatherSettings _settings;
-        private HttpClient _httpClient = null!;
+        private HttpClient _httpClient;
 
         public WeatherService(ApplicationSettings settings)
         {
@@ -20,7 +20,7 @@ namespace Daisy.Abilities.TryMe.Services
 
         public void Initialize(IServiceProvider serviceProvider)
         {
-            _httpClient = serviceProvider.GetService<IHttpClientFactory>()!.CreateClient("DefaultClient");
+            _httpClient = serviceProvider.GetService<IHttpClientFactory>().CreateClient("DefaultClient");
 
             _httpClient.BaseAddress = new Uri(_settings.Url);
         }
