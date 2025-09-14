@@ -1,19 +1,20 @@
 using Daisy.Abilities.TryMe.Services;
+using Daisy.Abilities.Weather.Services;
 using Daisy.Resources.Abstracts;
 using Daisy.Resources.Extensions;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Daisy.Abilities.TryMe.Paths
 {
     public class GetWeatherByCityPath : APath
     {
-        private readonly WeatherService _weatherService;
+        private readonly IWeatherService _weatherService;
 
         public GetWeatherByCityPath(IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
@@ -23,7 +24,7 @@ namespace Daisy.Abilities.TryMe.Paths
             ApplicationSettings settings)
             : base(serviceProvider, traverseRules, hasBeenTraversedRules, pathName, traverseOrder, settings)
         {
-            _weatherService = new WeatherService(new HttpClient());
+            _weatherService = ServiceContainer.Instance.GetService<IWeatherService>() as IWeatherService;
         }
 
         public override async Task Traverse(Impulse impulse)

@@ -4,9 +4,6 @@ using Daisy.Resources.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Runtime;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Daisy.Abilities.TryMe.Services
