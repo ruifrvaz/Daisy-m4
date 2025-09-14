@@ -13,24 +13,21 @@ namespace Daisy.Resources.Startup
 
         private static readonly List<AssemblyModulesLoader> _pluginContexts = new();
 
-        // Assemblies that MUST come from the host to keep type identity
-        private static readonly HashSet<string> Shared = new(StringComparer.OrdinalIgnoreCase)
-        {
-            "Daisy.Resources",
-            "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "Microsoft.Extensions.DependencyInjection",
-            "Microsoft.Extensions.Logging.Abstractions",
-            "Microsoft.Extensions.Logging"
-        };
-
         public AssemblyModulesLoader(string pluginMainAssemblyPath)
             : base(isCollectible: true) => _resolver = new AssemblyDependencyResolver(pluginMainAssemblyPath);
 
         protected override Assembly? Load(AssemblyName assemblyName)
         {
-            if (Shared.Contains(assemblyName.Name!)) return null; // resolve from Default
-            var path = _resolver.ResolveAssemblyToPath(assemblyName);
-            return path is null ? null : LoadFromAssemblyPath(path);
+            try
+            {
+                // Always prefer assemblies already known to the host to keep type identity consistent
+                return AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyName);
+            }
+            catch (FileNotFoundException)
+            {
+                var path = _resolver.ResolveAssemblyToPath(assemblyName);
+                return path is null ? null : LoadFromAssemblyPath(path);
+            }
         }
 
         protected override IntPtr LoadUnmanagedDll(string name)
