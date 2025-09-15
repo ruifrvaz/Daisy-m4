@@ -19,7 +19,7 @@ namespace Daisy.Abilities.TryMe.Rules
 
         public bool RuleApplies(Impulse impulse)
         {
-            return !string.IsNullOrEmpty(impulse.Input.GetChainByKey("cityName"));
+            return !string.IsNullOrEmpty(impulse.GetChainByKey("cityName"));
         }
     }
 }
