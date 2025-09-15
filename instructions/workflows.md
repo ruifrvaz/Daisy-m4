@@ -28,7 +28,7 @@ Weather workflow that given a city name, fetches the weather from a public weath
     - Daisy.Workflows.Weather
 1. Receive event that is sent from the Starter workflow. The received event has a city name in its impulse input. Generate a new chain with impulse.AddChain("cityName: {cityName}") extension method.
     - Daisy.Receivers.WeatherEvent
-2. Perform an HTTP GET request on the weather API with the city name. Validate if weather has been received correctly. If not, Emit error to impulse output. 
+2. Perform an HTTP GET request on the weather API with cityName as parameter. Validate if the weather response has been received correctly. If not, Emit error to impulse output. 
    Place HttpClient inside a WeatherService. PathTraverseOrder is 50. Can traverse when input chain contains "cityName: {cityName}"
 	- Daisy.Abilities.Weather
 3. Return the weather information
