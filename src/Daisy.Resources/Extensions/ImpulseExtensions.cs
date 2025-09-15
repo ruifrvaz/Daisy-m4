@@ -25,13 +25,16 @@ namespace Daisy.Resources.Extensions
 
             var formatted = $"<{chain}>";
 
-            if (field == ImpulseField.Input)
+            switch (field)
             {
-                impulse.Input = string.IsNullOrEmpty(impulse.Input) ? formatted : impulse.Input + formatted;
-            }
-            else
-            {
-                impulse.Output = string.IsNullOrEmpty(impulse.Output) ? formatted : impulse.Output + formatted;
+                case ImpulseField.Input:
+                    impulse.Input = string.IsNullOrEmpty(impulse.Input) ? formatted : impulse.Input + formatted;
+                    break;
+                case ImpulseField.Output:
+                    impulse.Output = string.IsNullOrEmpty(impulse.Output) ? formatted : impulse.Output + formatted;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(field), field, null);
             }
         }
 
@@ -42,7 +45,12 @@ namespace Daisy.Resources.Extensions
                 throw new ArgumentNullException(nameof(impulse));
             }
 
-            var source = field == ImpulseField.Input ? impulse.Input : impulse.Output;
+            string source = field switch
+            {
+                ImpulseField.Input => impulse.Input,
+                ImpulseField.Output => impulse.Output,
+                _ => throw new ArgumentOutOfRangeException(nameof(field), field, null)
+            };
 
             return source.GetChainByKey(key);
         }
