@@ -18,7 +18,7 @@ namespace Daisy.Resources.Abstracts
 
         public virtual List<IReceiver> _receivers { get; set; }
 
-        public virtual async Task Start(CancellationToken token)
+        public virtual Task Start(CancellationToken token)
         {
             IsActive = true;
 
@@ -33,7 +33,7 @@ namespace Daisy.Resources.Abstracts
                 .Select(receiver => Task.Run(() => receiver.Start(token), token))
                 .ToList();
 
-            await Task.WhenAll(receiverTasks);
+            return Task.WhenAll(receiverTasks);
         }
 
         public virtual void Stop()

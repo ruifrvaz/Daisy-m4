@@ -6,7 +6,7 @@ namespace Daisy.Workflows.Weather
 {
     public class WeatherCore : ACore
     {
-        public override async Task Start(CancellationToken token)
+        public override Task Start(CancellationToken token)
         {
             IsActive = true;
 
@@ -21,7 +21,7 @@ namespace Daisy.Workflows.Weather
                 .Select(receiver => Task.Run(() => receiver.Start(token), token))
                 .ToList();
 
-            await Task.WhenAll(receiverTasks);
+            return Task.WhenAll(receiverTasks);
         }
     }
 }
