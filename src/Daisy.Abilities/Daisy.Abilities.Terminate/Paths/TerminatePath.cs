@@ -12,7 +12,6 @@ namespace Daisy.Abilities.Terminate
 {
     public class TerminatePath : APath
     {
-
         public TerminatePath(IServiceProvider serviceProvider, 
             IEnumerable<ITraverseRule> traverseRules, 
             IEnumerable<ITraverseRule> hasBeenTraversedRules,

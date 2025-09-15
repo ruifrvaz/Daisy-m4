@@ -1,11 +1,11 @@
-using Daisy.Abilities.TryMe.Paths;
+using Daisy.Abilities.Weather.Paths;
 using Daisy.Resources.Attributes;
 using Daisy.Resources.Extensions;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Signals;
 
-namespace Daisy.Abilities.TryMe.Rules
+namespace Daisy.Abilities.Weather.Rules
 {
     [TraverseRule(PathType = typeof(GetWeatherByCityPath))]
     public class GetWeatherByCityCanTraverse : ITraverseRule

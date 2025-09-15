@@ -1,4 +1,4 @@
-using Daisy.Abilities.TryMe.Services;
+using Daisy.Abilities.Weather.Services;
 using Daisy.Abilities.Weather.Services;
 using Daisy.Resources.Abstracts;
 using Daisy.Resources.Extensions;
@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Daisy.Abilities.TryMe.Paths
+namespace Daisy.Abilities.Weather.Paths
 {
     public class GetWeatherByCityPath : APath
     {

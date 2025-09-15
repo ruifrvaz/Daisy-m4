@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.Console\Daisy.Receivers.Console.csproj" />
-    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.TryMeEvent\Daisy.Receivers.TryMeEvent.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.WeatherEvent\Daisy.Receivers.WeatherEvent.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Daisy.Abilities.TryMe.Services
+namespace Daisy.Abilities.Weather.Services
 {
     public class WeatherService : IWeatherService
     {

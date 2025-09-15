@@ -2,9 +2,9 @@ using Daisy.Resources.Abstracts;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
 
-namespace Daisy.Workflows.TryMe
+namespace Daisy.Workflows.Weather
 {
-    public class TryMeCore : ACore
+    public class WeatherCore : ACore
     {
         public override async Task Start(CancellationToken token)
         {

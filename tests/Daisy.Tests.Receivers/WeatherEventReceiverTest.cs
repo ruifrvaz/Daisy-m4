@@ -1,4 +1,4 @@
-using Daisy.Receivers.TryMeEvent;
+using Daisy.Receivers.WeatherEvent;
 using Daisy.Resources.Signals;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace Daisy.Tests.Receivers
 {
     [TestClass]
-    public class TryMeEventReceiverTest
+    public class WeatherEventReceiverTest
     {
         [TestMethod]
         public async Task ReceiveAsync_returns_enqueued_impulse()
         {
-            var receiver = new TryMeEventReceiver(new List<string>());
+            var receiver = new WeatherEventReceiver(new List<string>());
             var impulse = new Impulse { Input = "Lisbon" };
 
             receiver.RaiseEvent(impulse);

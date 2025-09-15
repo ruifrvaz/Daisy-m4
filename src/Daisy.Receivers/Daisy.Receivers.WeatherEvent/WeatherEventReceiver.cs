@@ -6,18 +6,18 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Daisy.Receivers.TryMeEvent
+namespace Daisy.Receivers.WeatherEvent
 {
     /// <summary>
-    /// Event-based receiver for the TryMe workflow.
+    /// Event-based receiver for the Weather workflow.
     /// Waits for a city name event raised by the Starter workflow and
-    /// forwards the impulse to the TryMe workflow.
+    /// forwards the impulse to the Weather workflow.
     /// </summary>
-    [RunOnCores("Daisy.Workflows.TryMe")]
-    public class TryMeEventReceiver : AEventReceiver
+    [RunOnCores("Daisy.Workflows.Weather")]
+    public class WeatherEventReceiver : AEventReceiver
     {
         /// <summary>
-        /// Only runs on the TryMe workflow core.
+        /// Only runs on the Weather workflow core.
         /// </summary>
         private readonly IEnumerable<string> _runOnCores;
 
@@ -31,7 +31,7 @@ namespace Daisy.Receivers.TryMeEvent
         /// Standard constructor that will be used during assembly injection
         /// </summary>
         /// <param name="runOnCores"></param>
-        public TryMeEventReceiver(IEnumerable<string> runOnCores)
+        public WeatherEventReceiver(IEnumerable<string> runOnCores)
         {
             _runOnCores = runOnCores;
         }

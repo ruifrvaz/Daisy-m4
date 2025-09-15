@@ -7,9 +7,9 @@
           "Daisy.Workflows.Starter"
         ]
       },
-      "Daisy.Receivers.TryMeEvent": {
+      "Daisy.Receivers.WeatherEvent": {
         "RunOnCores": [
-          "Daisy.Workflows.TryMe"
+          "Daisy.Workflows.Weather"
         ]
       }
     },
@@ -24,7 +24,7 @@
     ],
     "Workflows": [
       "Daisy.Workflows.Starter",
-      "Daisy.Workflows.TryMe"
+      "Daisy.Workflows.Weather"
     ],
     "Apis": {
       "Weather": {
