@@ -38,7 +38,7 @@ namespace Daisy.Tests.Factory.Transmitter
             var transmitterInterface = typeof(IExternalTransmitter);
             var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
             var transmitterAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Transmitters).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Transmitters).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             transmitterAssemblies.Should().NotBeEmpty();
 

@@ -7,13 +7,13 @@ using System.Runtime.Loader;
 
 namespace Daisy.Resources.Startup
 {
-    public class AssemblyModulesLoader : AssemblyLoadContext
+    public class AssemblyPluginsLoader : AssemblyLoadContext
     {
         private readonly AssemblyDependencyResolver _resolver;
 
-        private static readonly List<AssemblyModulesLoader> _pluginContexts = new();
+        private static readonly List<AssemblyPluginsLoader> _pluginContexts = new();
 
-        public AssemblyModulesLoader(string pluginMainAssemblyPath)
+        public AssemblyPluginsLoader(string pluginMainAssemblyPath)
             : base(isCollectible: true) => _resolver = new AssemblyDependencyResolver(pluginMainAssemblyPath);
 
         protected override Assembly? Load(AssemblyName assemblyName)
@@ -21,7 +21,7 @@ namespace Daisy.Resources.Startup
             try
             {
                 // Always prefer assemblies already known to the host to keep type identity consistent
-                return AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyName);
+                return Default.LoadFromAssemblyName(assemblyName);
             }
             catch (FileNotFoundException)
             {
@@ -41,7 +41,8 @@ namespace Daisy.Resources.Startup
             foreach (var name in names)
             {
                 var dir = Path.Combine(pluginsRoot, name);
-                if (!Directory.Exists(dir)) continue;
+                if (!Directory.Exists(dir)) 
+                    continue;
 
                 // Prefer <Name>.dll; fall back to any dll that has a .deps.json next to it
                 var mainDll = Path.Combine(dir, $"{name}.dll");
@@ -49,10 +50,12 @@ namespace Daisy.Resources.Startup
                 {
                     mainDll = Directory.EnumerateFiles(dir, "*.dll", SearchOption.TopDirectoryOnly)
                                        .FirstOrDefault(f => File.Exists(Path.ChangeExtension(f, ".deps.json")));
-                    if (mainDll is null) continue;
+
+                    if (mainDll is null) 
+                        continue;
                 }
 
-                var alc = new AssemblyModulesLoader(mainDll);
+                var alc = new AssemblyPluginsLoader(mainDll);
                 _pluginContexts.Add(alc);                   // keep context alive
                 yield return alc.LoadFromAssemblyPath(mainDll);
             }

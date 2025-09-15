@@ -50,12 +50,12 @@ namespace Daisy.Factories
 
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Abilities).ToList()
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Abilities).ToList()
                 : throw new Exception("Error loading modules: plugins folder not found.");
 
             foreach (var assembly in assemblies)
             {
-                var types = AssemblyModulesLoader.SafeGetExportedTypes(assembly);
+                var types = AssemblyPluginsLoader.SafeGetExportedTypes(assembly);
 
                 var abilityPaths = types
                     .Where(t => t is { IsClass: true, IsAbstract: false }

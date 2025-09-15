@@ -17,7 +17,7 @@ namespace Daisy.Factories
 
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Workflows).ToList()
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Workflows).ToList()
                 : throw new Exception("Error loading modules: plugins folder not found.");
             foreach (var assembly in assemblies)
             {

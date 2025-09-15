@@ -15,7 +15,7 @@ namespace Daisy.Factories
         {
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
                 : throw new Exception("Error loading modules: plugins folder not found.");
 
             // look in the assembly and find all classes that implement IExternalTransmitter
@@ -43,7 +43,7 @@ namespace Daisy.Factories
 
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
                 : throw new Exception("Error loading modules: plugins folder not found.");
 
             foreach (var assembly in assemblies)

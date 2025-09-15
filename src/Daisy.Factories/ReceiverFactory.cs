@@ -18,7 +18,7 @@ namespace Daisy.Factories
 
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             foreach (var receiverAssembly in assemblies)
             {
@@ -50,7 +50,7 @@ namespace Daisy.Factories
             
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             foreach (var assembly in assemblies)
             {
@@ -74,7 +74,7 @@ namespace Daisy.Factories
 
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             foreach (var receiverAssembly in assemblies)
             {

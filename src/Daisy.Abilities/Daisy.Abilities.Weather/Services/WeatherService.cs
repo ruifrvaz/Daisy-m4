@@ -20,9 +20,7 @@ namespace Daisy.Abilities.TryMe.Services
 
         public void Initialize(IServiceProvider serviceProvider)
         {
-            _httpClient = serviceProvider
-                .GetRequiredService<IHttpClientFactory>()
-                .CreateClient("DefaultClient");
+            _httpClient = serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient("DefaultClient");
 
             _httpClient.BaseAddress = new Uri(_settings.Url);
         }

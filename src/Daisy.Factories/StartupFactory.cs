@@ -62,8 +62,8 @@ namespace Daisy
 
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
-                            ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, configuredAssemblies).ToList()
-                            : throw new Exception("Error loading modules: plugins folder not found.");
+                            ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, configuredAssemblies).ToList()
+                            : throw new Exception("Error loading assemblies: plugins folder not found.");
             foreach (var daisyAssembly in assemblies)
             {
                 var serviceTypes = daisyAssembly.GetTypes().Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass);

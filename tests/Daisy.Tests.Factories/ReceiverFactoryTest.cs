@@ -42,7 +42,7 @@ namespace Daisy.Tests.Factory.Receiver
 
             var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
             var receiverAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             receiverAssemblies.Should().NotBeEmpty();
 
@@ -67,7 +67,7 @@ namespace Daisy.Tests.Factory.Receiver
 
             var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
             var receiverAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyModulesLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             receiverAssemblies.Should().NotBeEmpty();
 
