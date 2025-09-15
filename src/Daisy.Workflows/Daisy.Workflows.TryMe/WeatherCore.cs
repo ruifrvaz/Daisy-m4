@@ -17,7 +17,9 @@ namespace Daisy.Workflows.Weather
                .Cast<IReceiver>()
                .ToList();
 
-            var receiverTasks = _receivers.Select(receiver => receiver.Start(token));
+            var receiverTasks = _receivers
+                .Select(receiver => Task.Run(() => receiver.Start(token), token))
+                .ToList();
 
             await Task.WhenAll(receiverTasks);
         }
