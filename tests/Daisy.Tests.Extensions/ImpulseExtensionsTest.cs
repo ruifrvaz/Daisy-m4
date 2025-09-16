@@ -43,5 +43,52 @@ namespace Daisy.Tests.Extensions
             var city = impulse.GetChainByKey("cityName", ImpulseExtensions.ImpulseField.Output);
             city.Should().Be("Paris");
         }
+
+        [TestMethod]
+        public void GetLastChain_FromOutput_ReturnsLastChain()
+        {
+            var impulse = new Impulse();
+            impulse.AddChain("cityName: Paris", ImpulseExtensions.ImpulseField.Output);
+            impulse.AddChain("cityName: London", ImpulseExtensions.ImpulseField.Output);
+
+            var chain = impulse.GetLastChain("cityName", ImpulseExtensions.ImpulseField.Output);
+
+            chain.Should().Be("cityName: London");
+        }
+
+        [TestMethod]
+        public void GetLastChain_FromInput_ReturnsLastChain()
+        {
+            var impulse = new Impulse();
+            impulse.AddChain("cityName: Paris", ImpulseExtensions.ImpulseField.Input);
+            impulse.AddChain("cityName: Madrid", ImpulseExtensions.ImpulseField.Input);
+
+            var chain = impulse.GetLastChain("cityName", ImpulseExtensions.ImpulseField.Input);
+
+            chain.Should().Be("cityName: Madrid");
+        }
+
+        [TestMethod]
+        public void GetLastChain_WithoutField_PrefersOutput()
+        {
+            var impulse = new Impulse();
+            impulse.AddChain("cityName: Berlin", ImpulseExtensions.ImpulseField.Input);
+            impulse.AddChain("cityName: Rome", ImpulseExtensions.ImpulseField.Output);
+
+            var chain = impulse.GetLastChain("cityName");
+
+            chain.Should().Be("cityName: Rome");
+        }
+
+        [TestMethod]
+        public void GetLastChain_WhenKeyNotFound_ReturnsNull()
+        {
+            var impulse = new Impulse();
+            impulse.AddChain("cityName: Lisbon", ImpulseExtensions.ImpulseField.Input);
+
+            var chain = impulse.GetLastChain("countryName");
+
+            chain.Should().BeNull();
+        }
     }
 }
