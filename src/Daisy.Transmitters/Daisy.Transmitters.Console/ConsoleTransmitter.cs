@@ -3,7 +3,7 @@ using Daisy.Resources.Signals;
 
 namespace Daisy.Transmitters.Console
 {
-    public class ConsoleOutput : IExternalTransmitter
+    public class ConsoleTransmitter : IExternalTransmitter
     {
         public bool CanTransmit(Impulse impulse)
         {

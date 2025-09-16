@@ -10,30 +10,13 @@ using System.Threading.Tasks;
 namespace Daisy.Receivers.Console
 {
     [RunOnCores("Daisy.Workflows.Starter")]
-    public class ConsoleInput : AExternalReceiver
+    public class ConsoleReceiver : AExternalReceiver
     {
         private readonly IEnumerable<string> _runOnCores;
 
         public override IEnumerable<string> RunOnCores => _runOnCores;
 
-        public ConsoleInput(IEnumerable<string> runOnCores)
-        {
-            _runOnCores = runOnCores;
-        }
-
-        public ConsoleInput() : this(GetAttributeCores()) { }
-
-        private static IEnumerable<string> GetAttributeCores()
-        {
-            return typeof(ConsoleInput).GetCustomAttribute<RunOnCoresAttribute>()?.Cores ?? Array.Empty<string>();
-        }
-
-        public override Impulse Receive()
-        {
-            return ReceiveAsync().GetAwaiter().GetResult();
-        }
-
-        public override Task<Impulse> ReceiveAsync()
+        public ConsoleReceiver(IEnumerable<string> runOnCores)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("------------------------------------------------------------");
@@ -45,6 +28,24 @@ namespace Daisy.Receivers.Console
             stringBuilder.AppendLine("{WorkflowName} to start workflow (append args when required)");
             stringBuilder.AppendLine("------------------------------------------------------------");
             System.Console.Write(stringBuilder.ToString());
+
+            _runOnCores = runOnCores;
+        }
+
+        public ConsoleReceiver() : this(GetAttributeCores()) { }
+
+        private static IEnumerable<string> GetAttributeCores()
+        {
+            return typeof(ConsoleReceiver).GetCustomAttribute<RunOnCoresAttribute>()?.Cores ?? Array.Empty<string>();
+        }
+
+        public override Impulse Receive()
+        {
+            return ReceiveAsync().GetAwaiter().GetResult();
+        }
+
+        public override Task<Impulse> ReceiveAsync()
+        {
             string input = System.Console.ReadLine();
 
             var trimmedInput = input.Trim();
