@@ -17,7 +17,7 @@
       "Daisy.Transmitters.Console"
     ],
     "Abilities": [
-      "Daisy.Abilities.ConsoleStart",
+      "Daisy.Abilities.Operator",
       "Daisy.Abilities.Terminate",
       "Daisy.Abilities.OutputValidator",
       "Daisy.Abilities.Weather"
@@ -32,7 +32,7 @@
       }
     },
     "PathTraverseOrder": {
-      "ConsoleStartPath": 1,
+      "WorkflowsPath": 1,
       "TerminatePath": 2,
       "GetWeatherByCityPath": 50,
       "OutputValidatorPath": 9999

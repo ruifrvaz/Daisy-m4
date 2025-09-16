@@ -5,12 +5,12 @@ using Daisy.Resources.Signals;
 
 namespace Daisy.Abilities.Start.Rules
 {
-    [TraverseRule(PathType = typeof(ConsoleStartPath))]
-    public class ConsoleStartCanTraverse : ITraverseRule
+    [TraverseRule(PathType = typeof(WorkflowsPath))]
+    public class WorkflowsCanTraverse : ITraverseRule
     {
         private ApplicationSettings _settings;
 
-        public ConsoleStartCanTraverse(ApplicationSettings settings)
+        public WorkflowsCanTraverse(ApplicationSettings settings)
         {
             _settings = settings;
         }

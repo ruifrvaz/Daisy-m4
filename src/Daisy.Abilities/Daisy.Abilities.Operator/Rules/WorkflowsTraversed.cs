@@ -6,19 +6,19 @@ using System;
 
 namespace Daisy.Abilities.Start.Rules
 {
-    [TraversedRule(PathType = typeof(ConsoleStartPath))]
-    public class ConsoleStartTraversed : ITraverseRule
+    [TraversedRule(PathType = typeof(WorkflowsPath))]
+    public class WorkflowsTraversed : ITraverseRule
     {
         private ApplicationSettings _settings;
 
-        public ConsoleStartTraversed(ApplicationSettings settings)
+        public WorkflowsTraversed(ApplicationSettings settings)
         {
             _settings = settings;
         }
 
         public bool RuleApplies(Impulse impulse)
         {
-            return impulse.Output.StartsWith("ConsoleStartPath", StringComparison.InvariantCultureIgnoreCase);
+            return impulse.Output.StartsWith("WorkflowsPath:", StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

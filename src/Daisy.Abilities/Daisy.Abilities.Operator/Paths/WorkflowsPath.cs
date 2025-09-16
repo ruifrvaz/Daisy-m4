@@ -9,12 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Daisy.Resources.Extensions.ImpulseExtensions;
 
 namespace Daisy.Abilities.Start
 {
-    public class ConsoleStartPath : APath
+    public class WorkflowsPath : APath
     {
-        public ConsoleStartPath(IServiceProvider serviceProvider,
+        public WorkflowsPath(IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> hasBeenTraversedRules,
             string pathName,
@@ -23,11 +24,12 @@ namespace Daisy.Abilities.Start
 
         public override Task Traverse(Impulse impulse)
         {
-            impulse.Output = impulse.Output.AddPrefix($"ConsoleStartPath: {GenerateStartOptions()}");
+            impulse.AddChain($"WorkflowsPath: {GenerateOptions()}", ImpulseField.Output);
+
             return Emit(impulse);
         }
 
-        private string GenerateStartOptions()
+        private string GenerateOptions()
         {
             var stringBuilder = new StringBuilder();
 

@@ -9,8 +9,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3260DD3C-95FF-4C5A-A2A0-8734A8F9EBE3}"
 	ProjectSection(SolutionItems) = preProject
 		agents.md = agents.md
-		instructions\impulse_workflow_overview.md = instructions\impulse_workflow_overview.md
 		README.md = README.md
+		instructions\engine_design.md = instructions\engine_design.md
 		instructions\workflows.md = instructions\workflows.md
 	EndProjectSection
 EndProject
@@ -49,11 +49,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Workflows.Weather", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Abilities.OutputValidator", "src\Daisy.Abilities\Daisy.Abilities.OutputValidator\Daisy.Abilities.OutputValidator.csproj", "{E3C00D10-0089-D40D-B3F6-9D0C137C2B73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Abilities.ConsoleStart", "src\Daisy.Abilities\Daisy.Abilities.ConsoleStart\Daisy.Abilities.ConsoleStart.csproj", "{E46ED649-F17C-6323-4DC8-BFB7A8EB3AE8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Abilities.Weather", "src\Daisy.Abilities\Daisy.Abilities.Weather\Daisy.Abilities.Weather.csproj", "{AFDFAC74-A222-86E6-32BC-8359EE2B9024}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Receivers.WeatherEvent", "src\Daisy.Receivers\Daisy.Receivers.WeatherEvent\Daisy.Receivers.WeatherEvent.csproj", "{15143932-2845-DB44-F19D-5AE9907FF3E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Abilities.Operator", "src\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj", "{87621898-FA97-1F45-D69A-2FA6EC9E11B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,10 +109,6 @@ Global
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E46ED649-F17C-6323-4DC8-BFB7A8EB3AE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E46ED649-F17C-6323-4DC8-BFB7A8EB3AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E46ED649-F17C-6323-4DC8-BFB7A8EB3AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E46ED649-F17C-6323-4DC8-BFB7A8EB3AE8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AFDFAC74-A222-86E6-32BC-8359EE2B9024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AFDFAC74-A222-86E6-32BC-8359EE2B9024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFDFAC74-A222-86E6-32BC-8359EE2B9024}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -121,6 +117,10 @@ Global
 		{15143932-2845-DB44-F19D-5AE9907FF3E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15143932-2845-DB44-F19D-5AE9907FF3E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15143932-2845-DB44-F19D-5AE9907FF3E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87621898-FA97-1F45-D69A-2FA6EC9E11B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87621898-FA97-1F45-D69A-2FA6EC9E11B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87621898-FA97-1F45-D69A-2FA6EC9E11B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87621898-FA97-1F45-D69A-2FA6EC9E11B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,12 +142,12 @@ Global
 		{53CC1CDB-A620-DE5E-B9BE-E82CCB5A8EA5} = {A595291C-D5C9-427B-B25F-A64484C7B9A1}
 		{AD1B5EA2-1A0E-4512-8B7C-72F246F1E56A} = {A595291C-D5C9-427B-B25F-A64484C7B9A1}
 		{E3C00D10-0089-D40D-B3F6-9D0C137C2B73} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
-		{E46ED649-F17C-6323-4DC8-BFB7A8EB3AE8} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
 		{AFDFAC74-A222-86E6-32BC-8359EE2B9024} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
 		{15143932-2845-DB44-F19D-5AE9907FF3E9} = {D1553D37-87BF-4C9B-B686-099ADD2EA4D3}
+		{87621898-FA97-1F45-D69A-2FA6EC9E11B2} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6CE73F47-9022-4481-A576-2D8C495804BD}
 		        SolutionGuid = "B38FD6B0-1FEF-445A-9DE2-E88316E1FF0E"
+		SolutionGuid = {6CE73F47-9022-4481-A576-2D8C495804BD}
 	EndGlobalSection
 EndGlobal
