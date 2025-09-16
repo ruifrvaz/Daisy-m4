@@ -1,4 +1,4 @@
-# Workflow and Modular Design Overview
+# Engine Design Overview
 
 This document outlines the design of the Daisy orchestration engine.  
 It describes how the central `Impulse` object flows across modular plugins and provides technical guidance for extending or debugging the engine.
