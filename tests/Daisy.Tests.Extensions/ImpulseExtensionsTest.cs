@@ -1,6 +1,7 @@
 using Daisy.Resources.Extensions;
 using Daisy.Resources.Signals;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Daisy.Tests.Extensions
 {

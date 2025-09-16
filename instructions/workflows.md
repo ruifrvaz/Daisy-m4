@@ -2,15 +2,14 @@
 
 Below are the current available workflows and respective modules. Each workflow is described step-by-step with each respective module listed below each step.
 
-
 ## Daisy.Workflows.Starter
 
 Starter workflow that picks up inputs and triggers other workflows. Can be integrated with an agent (ie. openAI Assistant) to communicate with user, interpret user requests and invoke other workflows.
 
 0. Initialize the workflow core project
-        - Daisy.Workflows.Starter
+    - Daisy.Workflows.Starter
 1. Receive external input via System.Console and send Impulse to the PathFinder
-        - Daisy.Receivers.Console
+	- Daisy.Receivers.Console
 2. List available workflows when impulse.input starts with start (optional)
 	- Daisy.Abilities.ConsoleStart
 3. Terminate the workflow if impulse.input starts with bye (optional)
