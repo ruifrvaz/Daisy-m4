@@ -1,4 +1,5 @@
-﻿using Daisy.Resources.Attributes;
+using Daisy.Resources.Attributes;
+using Daisy.Resources.Extensions;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Signals;
@@ -18,7 +19,9 @@ namespace Daisy.Abilities.Start.Rules
 
         public bool RuleApplies(Impulse impulse)
         {
-            return impulse.Output.StartsWith("WorkflowsPath:", StringComparison.InvariantCultureIgnoreCase);
+            var lastChain = impulse.GetLastChain("WorkflowsPath", ImpulseExtensions.ImpulseField.Output);
+
+            return !string.IsNullOrEmpty(lastChain);
         }
     }
 }

@@ -54,5 +54,38 @@ namespace Daisy.Resources.Extensions
 
             return source.GetChainByKey(key);
         }
+
+        public static string GetLastChain(this Impulse impulse, string key)
+        {
+            if (impulse == null)
+            {
+                throw new ArgumentNullException(nameof(impulse));
+            }
+
+            var outputChain = impulse.GetLastChain(key, ImpulseField.Output);
+            if (!string.IsNullOrEmpty(outputChain))
+            {
+                return outputChain;
+            }
+
+            return impulse.GetLastChain(key, ImpulseField.Input);
+        }
+
+        public static string GetLastChain(this Impulse impulse, string key, ImpulseField field)
+        {
+            if (impulse == null)
+            {
+                throw new ArgumentNullException(nameof(impulse));
+            }
+
+            string source = field switch
+            {
+                ImpulseField.Input => impulse.Input,
+                ImpulseField.Output => impulse.Output,
+                _ => throw new ArgumentOutOfRangeException(nameof(field), field, null)
+            };
+
+            return source.GetLastChain(key);
+        }
     }
 }

@@ -75,5 +75,34 @@ namespace Daisy.Resources.Extensions
             // Use string.Concat to add the prefix
             return string.Concat(prefix, originalString);
         }
+
+        public static string GetLastChain(this string output, string key)
+        {
+            if (string.IsNullOrEmpty(output) || string.IsNullOrEmpty(key))
+            {
+                return null;
+            }
+
+            string prefix = key + ":";
+
+            int prefixIndex = output.LastIndexOf(prefix, StringComparison.OrdinalIgnoreCase);
+            if (prefixIndex == -1)
+            {
+                return null;
+            }
+
+            int start = output.LastIndexOf('<', prefixIndex);
+            start = start == -1 ? prefixIndex : start + 1;
+
+            int end = output.IndexOf('>', prefixIndex);
+            if (end == -1)
+            {
+                end = output.Length;
+            }
+
+            var chain = output.Substring(start, end - start);
+
+            return chain.Trim();
+        }
     }
 }
