@@ -41,7 +41,7 @@ namespace Daisy.Resources.Startup
             foreach (var name in names)
             {
                 var dir = Path.Combine(pluginsRoot, name);
-                if (!Directory.Exists(dir)) 
+                if (!Directory.Exists(dir))
                     continue;
 
                 // Prefer <Name>.dll; fall back to any dll that has a .deps.json next to it
@@ -51,7 +51,7 @@ namespace Daisy.Resources.Startup
                     mainDll = Directory.EnumerateFiles(dir, "*.dll", SearchOption.TopDirectoryOnly)
                                        .FirstOrDefault(f => File.Exists(Path.ChangeExtension(f, ".deps.json")));
 
-                    if (mainDll is null) 
+                    if (mainDll is null)
                         continue;
                 }
 

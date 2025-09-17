@@ -13,7 +13,7 @@ namespace Daisy.Resources.Pools
         private ExternalReceivers()
         {
             Pool = new List<IExternalReceiver>();
-        } 
+        }
 
         public static ExternalReceivers Instance
         {

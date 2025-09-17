@@ -12,13 +12,13 @@ namespace Daisy.Abilities.Terminate
 {
     public class TerminatePath : APath
     {
-        public TerminatePath(IServiceProvider serviceProvider, 
-            IEnumerable<ITraverseRule> traverseRules, 
+        public TerminatePath(IServiceProvider serviceProvider,
+            IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> hasBeenTraversedRules,
             string pathName,
             int traverseOrder,
             ApplicationSettings settings) : base(serviceProvider, traverseRules, hasBeenTraversedRules, pathName, traverseOrder, settings) { }
-        
+
         public override Task Traverse(Impulse impulse)
         {
             var activeCores = Cores.Instance.Pool.Where(core => core.IsActive).ToList();

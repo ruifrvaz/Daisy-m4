@@ -13,7 +13,7 @@ namespace Daisy.Resources.Pools
         private EventReceivers()
         {
             Pool = new List<IEventReceiver>();
-        } 
+        }
 
         public static EventReceivers Instance
         {

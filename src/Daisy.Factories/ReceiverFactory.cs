@@ -47,7 +47,7 @@ namespace Daisy.Factories
             // find all assemblies that implement ILoopBackReceiver, create an instance for each of them
             // and load them into receiver pool
             var receiverInterface = typeof(ILoopBackReceiver);
-            
+
             var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
             var assemblies = Directory.Exists(pluginsRoot)
                 ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
