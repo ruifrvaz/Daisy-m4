@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Receivers.WeatherEven
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Abilities.Operator", "src\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj", "{87621898-FA97-1F45-D69A-2FA6EC9E11B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Tests.Abilities", "tests\Daisy.Tests.Abilities\Daisy.Tests.Abilities.csproj", "{2A49BD31-ED84-48E8-AA07-B88CE39FFF5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{87621898-FA97-1F45-D69A-2FA6EC9E11B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87621898-FA97-1F45-D69A-2FA6EC9E11B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87621898-FA97-1F45-D69A-2FA6EC9E11B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A49BD31-ED84-48E8-AA07-B88CE39FFF5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A49BD31-ED84-48E8-AA07-B88CE39FFF5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A49BD31-ED84-48E8-AA07-B88CE39FFF5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A49BD31-ED84-48E8-AA07-B88CE39FFF5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +151,7 @@ Global
 		{AFDFAC74-A222-86E6-32BC-8359EE2B9024} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
 		{15143932-2845-DB44-F19D-5AE9907FF3E9} = {D1553D37-87BF-4C9B-B686-099ADD2EA4D3}
 		{87621898-FA97-1F45-D69A-2FA6EC9E11B2} = {75F06B28-2D8E-4D81-A4E2-EDD911007101}
+		{2A49BD31-ED84-48E8-AA07-B88CE39FFF5F} = {1E21ED11-9D7C-4680-A679-743FD5CE4500}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		        SolutionGuid = "B38FD6B0-1FEF-445A-9DE2-E88316E1FF0E"
