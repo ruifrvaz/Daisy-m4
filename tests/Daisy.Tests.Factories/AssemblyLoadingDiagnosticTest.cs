@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using System.Runtime.Loader;
 
 namespace Daisy.Tests.Factory.Path
 {
@@ -34,6 +35,7 @@ namespace Daisy.Tests.Factory.Path
             {
                 Console.WriteLine($"Service type: {service.GetType().FullName}");
                 Console.WriteLine($"Assembly: {service.GetType().Assembly.FullName}");
+                Console.WriteLine($"Assembly LoadContext: {AssemblyLoadContext.GetLoadContext(service.GetType().Assembly)}");
                 Console.WriteLine($"Implements IDaisyService: {service is IDaisyService}");
                 Console.WriteLine($"Implements IWeatherService: {service is IWeatherService}");
                 Console.WriteLine("---");
@@ -43,13 +45,15 @@ namespace Daisy.Tests.Factory.Path
             var weatherServiceType = typeof(IWeatherService);
             Console.WriteLine($"IWeatherService type: {weatherServiceType.FullName}");
             Console.WriteLine($"IWeatherService assembly: {weatherServiceType.Assembly.FullName}");
+            Console.WriteLine($"IWeatherService LoadContext: {AssemblyLoadContext.GetLoadContext(weatherServiceType.Assembly)}");
 
             // Check which assemblies are loaded in the current AppDomain
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             Console.WriteLine($"Loaded assemblies in AppDomain:");
-            foreach (var asm in loadedAssemblies)
+            foreach (var asm in loadedAssemblies.Where(a => a.FullName.Contains("Daisy")))
             {
                 Console.WriteLine($"  - {asm.FullName}");
+                Console.WriteLine($"    LoadContext: {AssemblyLoadContext.GetLoadContext(asm)}");
             }
 
             // Test the actual issue: GetService method
@@ -62,6 +66,15 @@ namespace Daisy.Tests.Factory.Path
                 var serviceType = service.GetType();
                 var isAssignable = typeof(IWeatherService).IsAssignableFrom(serviceType);
                 Console.WriteLine($"typeof(IWeatherService).IsAssignableFrom({serviceType.Name}): {isAssignable}");
+                
+                // Let's also check if the interface types are actually the same
+                var serviceInterfaces = serviceType.GetInterfaces();
+                foreach (var intf in serviceInterfaces)
+                {
+                    Console.WriteLine($"  Interface: {intf.FullName} (LoadContext: {AssemblyLoadContext.GetLoadContext(intf.Assembly)})");
+                    Console.WriteLine($"  Same type? {intf == typeof(IWeatherService)}");
+                    Console.WriteLine($"  Same assembly? {intf.Assembly == typeof(IWeatherService).Assembly}");
+                }
             }
         }
 

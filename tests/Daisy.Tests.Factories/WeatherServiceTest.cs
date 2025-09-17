@@ -22,6 +22,9 @@ namespace Daisy.Tests.Factory.Path
         [TestMethod]
         public void typeof_IWeatherService_should_not_return_null()
         {
+            // Clean up any previous state
+            ServiceContainer.Instance.CleanupServiceProvider();
+            
             // Load services first
             var serviceProvider = StartupFactory.LoadServices(_settings);
 
@@ -37,6 +40,9 @@ namespace Daisy.Tests.Factory.Path
         [TestMethod]
         public void weather_service_should_be_loaded_as_daisy_service()
         {
+            // Clean up any previous state
+            ServiceContainer.Instance.CleanupServiceProvider();
+            
             // Load services first
             var serviceProvider = StartupFactory.LoadServices(_settings);
 

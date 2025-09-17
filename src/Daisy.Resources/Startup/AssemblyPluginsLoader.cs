@@ -55,9 +55,23 @@ namespace Daisy.Resources.Startup
                         continue;
                 }
 
-                var alc = new AssemblyPluginsLoader(mainDll);
-                _pluginContexts.Add(alc);                   // keep context alive
-                yield return alc.LoadFromAssemblyPath(mainDll);
+                // Check if assembly is already loaded in the default context
+                var assemblyName = AssemblyName.GetAssemblyName(mainDll);
+                var existingAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                    .FirstOrDefault(a => AssemblyName.ReferenceMatchesDefinition(assemblyName, a.GetName()));
+                
+                if (existingAssembly != null)
+                {
+                    // Use the existing assembly from the default context to maintain type identity
+                    yield return existingAssembly;
+                }
+                else
+                {
+                    // Load in plugin context only if not already available in default context
+                    var alc = new AssemblyPluginsLoader(mainDll);
+                    _pluginContexts.Add(alc);                   // keep context alive
+                    yield return alc.LoadFromAssemblyPath(mainDll);
+                }
             }
         }
 
