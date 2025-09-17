@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RepositoryUrl>https://github.com/ruifrvaz/Daisy-m4</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj" />
+    <ProjectReference Include="..\..\Daisy.Resources\Daisy.Resources.csproj" />
+  </ItemGroup>
+</Project>
+

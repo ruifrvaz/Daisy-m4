@@ -14,7 +14,8 @@
       }
     },
     "Transmitters": [
-      "Daisy.Transmitters.Console"
+      "Daisy.Transmitters.Console",
+      "Daisy.Transmitters.WorkflowTrigger"
     ],
     "Abilities": [
       "Daisy.Abilities.Operator",
@@ -34,6 +35,7 @@
     "PathTraverseOrder": {
       "WorkflowsPath": 1,
       "TerminatePath": 2,
+      "WorkflowTriggerPath": 3,
       "GetWeatherByCityPath": 50,
       "OutputValidatorPath": 9999
     }
