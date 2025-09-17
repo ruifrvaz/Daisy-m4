@@ -5,9 +5,9 @@ using Daisy.Resources.Models;
 using Daisy.Resources.Signals;
 using System;
 
-namespace Daisy.Abilities.Start.Rules
+namespace Daisy.Abilities.Operator.Rules
 {
-    [TraversedRule(PathType = typeof(WorkflowsPath))]
+    [TraversedRule(PathType = typeof(ListWorkflowsPath))]
     public class WorkflowsTraversed : ITraverseRule
     {
         private ApplicationSettings _settings;

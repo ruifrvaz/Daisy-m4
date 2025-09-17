@@ -14,18 +14,25 @@
       "Daisy.Transmitters.Console"
     ],
     "Abilities": [
+      "Daisy.Abilities.Operator",
       "Daisy.Abilities.Terminate",
-      "Daisy.Abilities.Start",
-      "Daisy.Abilities.OutputValidator"
+      "Daisy.Abilities.OutputValidator",
+      "Daisy.Abilities.Weather"
     ],
     "Workflows": [
-      "Daisy.Workflows.Starter"
+      "Daisy.Workflows.Starter",
+      "Daisy.Workflows.Weather"
     ],
     "PathTraverseOrder": {
-      "StartPath": 1,
+      "ListWorkflowsPath": 1,
       "TerminatePath": 2,
+      "GetWeatherByCityPath": 50,
       "OutputValidatorPath": 9999
     },
-    "Apis": {}
+    "Apis": {
+      "Weather": {
+        "Url": "https://wttr.in/"
+      }
+    }
   }
 }

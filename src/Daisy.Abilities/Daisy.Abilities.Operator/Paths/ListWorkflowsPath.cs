@@ -11,11 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 using static Daisy.Resources.Extensions.ImpulseExtensions;
 
-namespace Daisy.Abilities.Start
+namespace Daisy.Abilities.Operator
 {
-    public class WorkflowsPath : APath
+    public class ListWorkflowsPath : APath
     {
-        public WorkflowsPath(IServiceProvider serviceProvider,
+        public ListWorkflowsPath(IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> hasBeenTraversedRules,
             string pathName,

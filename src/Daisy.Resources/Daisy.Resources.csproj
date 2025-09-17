@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <UserSecretsId>56ec2b2d-b44b-4378-ac65-8eb31f8935db</UserSecretsId>
+    <UserSecretsId>2a7052fe-3037-4398-955b-424fd6f5fc61</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup>
