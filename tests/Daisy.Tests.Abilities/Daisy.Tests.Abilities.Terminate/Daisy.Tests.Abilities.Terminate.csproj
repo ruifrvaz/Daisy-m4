@@ -1,14 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
@@ -19,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj" />
-    <ProjectReference Include="..\..\src\Daisy.Resources\Daisy.Resources.csproj" />
+    <ProjectReference Include="..\..\..\src\Daisy.Abilities\Daisy.Abilities.Terminate\Daisy.Abilities.Terminate.csproj" />
   </ItemGroup>
+
 </Project>

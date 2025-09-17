@@ -19,7 +19,7 @@ namespace Daisy.Abilities.Weather.Rules
 
         public bool RuleApplies(Impulse impulse)
         {
-            return !string.IsNullOrEmpty(impulse.GetChainByKey("cityName"));
+            return !string.IsNullOrEmpty(impulse.GetChainByKey("weather"));
         }
     }
 }
