@@ -1,5 +1,4 @@
 using Daisy.Abilities.Weather.Services;
-using Daisy.Abilities.Weather.Services;
 using Daisy.Resources.Abstracts;
 using Daisy.Resources.Extensions;
 using Daisy.Resources.Interfaces;
@@ -38,7 +37,7 @@ namespace Daisy.Abilities.Weather.Paths
             }
             else
             {
-                impulse.Output = weather;
+                impulse.AddChain($"Weather: {weather}", ImpulseExtensions.ImpulseField.Output);
             }
 
             await Emit(impulse);
