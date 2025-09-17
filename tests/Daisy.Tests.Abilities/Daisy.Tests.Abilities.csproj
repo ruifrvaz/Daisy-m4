@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Terminate\Daisy.Abilities.Terminate.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj" />
   </ItemGroup>
 
 </Project>
