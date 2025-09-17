@@ -25,7 +25,7 @@ namespace Daisy.Resources.Abstracts
             {
                 Parallel.ForEach(LoopBackTransmitters.Instance.Pool, p => p.TransmitLoopBack(impulse));
             }
-            else 
+            else
             {
                 Parallel.ForEach(ExternalTransmitters.Instance.Pool, transmitter => transmitter.Transmit(impulse));
             }
