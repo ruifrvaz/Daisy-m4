@@ -10,14 +10,16 @@ Starter workflow that picks up inputs and triggers other workflows. Can be integ
     - Daisy.Workflows.Starter
 1. Receive external input via System.Console and send Impulse to the PathFinder
 	- Daisy.Receivers.Console
-2. List available workflows when impulse.input starts with start (optional)
-	- Daisy.Abilities.ConsoleStart
+2. Trigger other workflows based on input patterns (e.g., "Weather: London")
+	- Daisy.Abilities.Operator
 3. Terminate the workflow if impulse.input starts with bye (optional)
 	- Daisy.Abilities.Terminate
-4. Transmit impulse.output via System.Console
-    - Daisy.Transmitters.Console
-5. Determine if an impulse.input is valid by checking if output is empty (runs last)
+4. Determine if an impulse.input is valid by checking if output is empty (runs last)
 	- Daisy.Abilities.OutputValidator
+5. Transmit impulse.output via System.Console
+    - Daisy.Transmitters.Console
+6. Trigger workflows via loopback mechanism when workflows are invoked
+    - Daisy.Transmitters.WorkflowTrigger
 
 ## Daisy.Workflows.Weather
 
@@ -30,5 +32,5 @@ Weather workflow that given a city name, fetches the weather from a public weath
 2. Perform an HTTP GET request on the weather API with cityName as parameter. Validate if the weather response has been received correctly. If not, Emit error to impulse output. 
    Place HttpClient inside a WeatherService. PathTraverseOrder is 50. Can traverse when input chain contains "cityName: {cityName}"
 	- Daisy.Abilities.Weather
-3. Return the weather information
-	- Daisy.Transmitters.WeatherOutput
+3. Return the weather information via console output
+	- Daisy.Transmitters.Console
