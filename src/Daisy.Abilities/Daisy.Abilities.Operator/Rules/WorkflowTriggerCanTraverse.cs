@@ -1,5 +1,6 @@
 using Daisy.Abilities.Operator.Paths;
 using Daisy.Resources.Attributes;
+using Daisy.Resources.Helpers;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Signals;
@@ -18,7 +19,7 @@ namespace Daisy.Abilities.Operator.Rules
 
         public bool RuleApplies(Impulse impulse)
         {
-            var availableWorkflows = WorkflowTriggerPath.GetAvailableWorkflowIdentifiers();
+            var availableWorkflows = WorkflowFinder.GetAvailableWorkflowIdentifiers();
 
             return availableWorkflows.Count > 0
                    && WorkflowTriggerPath.TryExtractWorkflowRequest(impulse.Input, availableWorkflows, out _, out _);

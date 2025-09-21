@@ -1,8 +1,8 @@
 using Daisy.Resources.Abstracts;
 using Daisy.Resources.Extensions;
+using Daisy.Resources.Helpers;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
-using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
 using System;
 using System.Collections.Generic;
@@ -13,8 +13,6 @@ namespace Daisy.Abilities.Operator.Paths
 {
     public class WorkflowTriggerPath : APath
     {
-        private const string WorkflowNamespacePrefix = "Daisy.Workflows.";
-
         public WorkflowTriggerPath(
             IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
@@ -28,7 +26,7 @@ namespace Daisy.Abilities.Operator.Paths
 
         public override Task Traverse(Impulse impulse)
         {
-            var availableWorkflows = GetAvailableWorkflowIdentifiers();
+            var availableWorkflows = WorkflowFinder.GetAvailableWorkflowIdentifiers();
 
             if (!TryExtractWorkflowRequest(impulse.Input, availableWorkflows, out var workflowIdentifier, out var workflowParameters))
             {
@@ -51,16 +49,7 @@ namespace Daisy.Abilities.Operator.Paths
             return Emit(impulse);
         }
 
-        internal static IReadOnlyList<string> GetAvailableWorkflowIdentifiers()
-        {
-            return Cores.Instance.Pool
-                .Select(core => core.GetType().Namespace)
-                .Where(ns => !string.IsNullOrWhiteSpace(ns) && ns.StartsWith(WorkflowNamespacePrefix, StringComparison.InvariantCultureIgnoreCase))
-                .Select(ns => ns!.RemoveSubstring(WorkflowNamespacePrefix, ignoreCase: true))
-                .Where(name => !string.IsNullOrWhiteSpace(name) && !name.Equals("Starter", StringComparison.InvariantCultureIgnoreCase))
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
-                .ToList();
-        }
+        
 
         internal static bool TryExtractWorkflowRequest(
             string input,
