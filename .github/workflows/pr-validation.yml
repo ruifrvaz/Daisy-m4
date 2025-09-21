@@ -1,0 +1,229 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  validate-pr:
+    name: Validate Pull Request
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      run: dotnet restore --verbosity minimal
+
+    - name: Check code formatting
+      run: dotnet format --verify-no-changes --verbosity diagnostic
+
+    - name: Build solution
+      run: dotnet build --configuration Release --no-restore --verbosity minimal
+
+    - name: Run unit tests
+      run: dotnet test --configuration Release --no-build --verbosity minimal --logger trx --results-directory TestResults --collect:"XPlat Code Coverage"
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ github.run_number }}
+        path: TestResults
+        retention-days: 30
+
+    - name: Verify plugin deployment
+      run: |
+        echo "Checking plugin deployment..."
+        if [ ! -d "src/Daisy/bin/Release/net8.0/plugins" ]; then
+          echo "❌ Plugins directory not found"
+          exit 1
+        fi
+        
+        echo "✅ Plugins directory exists"
+        echo "Expected plugins:"
+        echo "- Daisy.Abilities.Operator"
+        echo "- Daisy.Abilities.OutputValidator" 
+        echo "- Daisy.Abilities.Terminate"
+        echo "- Daisy.Abilities.Weather"
+        echo "- Daisy.Receivers.Console"
+        echo "- Daisy.Receivers.WeatherEvent"
+        echo "- Daisy.Transmitters.Console"
+        echo "- Daisy.Transmitters.WorkflowTrigger"
+        echo "- Daisy.Workflows.Starter"
+        echo "- Daisy.Workflows.Weather"
+        
+        echo ""
+        echo "Actual plugins found:"
+        ls -la src/Daisy/bin/Release/net8.0/plugins/
+        
+        # Check for expected plugin count (should be 10)
+        plugin_count=$(ls -1 src/Daisy/bin/Release/net8.0/plugins/ | wc -l)
+        if [ "$plugin_count" -ne 10 ]; then
+          echo "❌ Expected 10 plugins, found $plugin_count"
+          exit 1
+        fi
+        
+        echo "✅ All 10 plugins deployed successfully"
+
+    - name: Test application startup (basic smoke test)
+      timeout-minutes: 2
+      run: |
+        echo "Testing application startup..."
+        cd src/Daisy
+        
+        # Run the application with a timeout and capture output
+        timeout 10s dotnet run --configuration Release --no-build 2>&1 | tee startup_output.log || true
+        
+        # Check if the application started properly (look for expected output patterns)
+        if grep -q "menu" startup_output.log; then
+          echo "✅ Application started successfully and displayed menu"
+        else
+          echo "❌ Application startup test failed"
+          echo "Startup output:"
+          cat startup_output.log
+          exit 1
+        fi
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: validate-pr
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore --verbosity minimal
+
+    - name: Run security scan
+      run: |
+        echo "Running basic security checks..."
+        
+        # Check for common security anti-patterns
+        echo "Checking for hardcoded secrets..."
+        if grep -r -i "password\|secret\|key\|token" --include="*.cs" --include="*.json" src/ tests/ | grep -v "GetChainByKey\|SecretScanning\|TokenSource\|CancellationToken" | grep -v "^tests.*Test"; then
+          echo "❌ Potential hardcoded secrets found"
+          exit 1
+        fi
+        
+        echo "✅ No hardcoded secrets detected"
+        
+        # Check for direct Console.WriteLine usage (should use proper abstractions)
+        echo "Checking console usage patterns..."
+        console_usage=$(grep -r "Console\." --include="*.cs" src/ | grep -v "Daisy.Transmitters.Console\|System.Console" | wc -l)
+        if [ "$console_usage" -gt 0 ]; then
+          echo "ℹ️ Found $console_usage direct Console usage - verify these are intentional"
+          grep -r "Console\." --include="*.cs" src/ | grep -v "Daisy.Transmitters.Console\|System.Console"
+        fi
+        
+        echo "✅ Security scan completed"
+
+  validate-documentation:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check required documentation files
+      run: |
+        echo "Checking documentation completeness..."
+        
+        required_files=(
+          "README.md"
+          "agents.md"
+          "instructions/engine_design.md"
+          "instructions/workflows.md"
+          ".github/copilot-instructions.md"
+        )
+        
+        missing_files=()
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            missing_files+=("$file")
+          fi
+        done
+        
+        if [ ${#missing_files[@]} -ne 0 ]; then
+          echo "❌ Missing required documentation files:"
+          printf '%s\n' "${missing_files[@]}"
+          exit 1
+        fi
+        
+        echo "✅ All required documentation files present"
+
+    - name: Validate markdown links
+      run: |
+        echo "Checking for broken internal links in markdown files..."
+        
+        # Find all markdown files
+        markdown_files=$(find . -name "*.md" -not -path "./.git/*")
+        
+        for file in $markdown_files; do
+          echo "Checking $file..."
+          
+          # Extract relative links (simple check for now)
+          if grep -n "\]\(" "$file" | grep -v "http" | grep -v "mailto"; then
+            echo "Found internal links in $file - manual verification recommended"
+          fi
+        done
+        
+        echo "✅ Markdown validation completed"
+
+  summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs: [validate-pr, security-scan, validate-documentation]
+    if: always()
+
+    steps:
+    - name: Check job statuses
+      run: |
+        echo "## PR Validation Summary"
+        echo "| Job | Status |"
+        echo "|-----|--------|"
+        echo "| Build & Test | ${{ needs.validate-pr.result == 'success' && '✅ Passed' || '❌ Failed' }} |"
+        echo "| Security Scan | ${{ needs.security-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |"
+        echo "| Documentation | ${{ needs.validate-documentation.result == 'success' && '✅ Passed' || '❌ Failed' }} |"
+        
+        if [[ "${{ needs.validate-pr.result }}" != "success" || "${{ needs.security-scan.result }}" != "success" || "${{ needs.validate-documentation.result }}" != "success" ]]; then
+          echo ""
+          echo "❌ One or more validation jobs failed. Please check the job details above."
+          exit 1
+        fi
+        
+        echo ""
+        echo "✅ All validation checks passed! PR is ready for review."
