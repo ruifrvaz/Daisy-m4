@@ -1,5 +1,4 @@
 using Daisy.Resources.Abstracts;
-using Daisy.Resources.Attributes;
 using Daisy.Resources.Signals;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ namespace Daisy.Receivers.WeatherEvent
     /// Waits for a city name event raised by the Starter workflow and
     /// forwards the impulse to the Weather workflow.
     /// </summary>
-    [RunOnCores("Daisy.Workflows.Weather")]
     public class WeatherEventReceiver : AEventReceiver
     {
         /// <summary>

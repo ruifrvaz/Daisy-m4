@@ -17,7 +17,7 @@ namespace Daisy.Tests.Receivers
             try
             {
                 Console.SetIn(new StringReader("  trimmed  "));
-                var receiver = new ConsoleReceiver();
+                var receiver = new ConsoleReceiver(new[] { "TestCore" });
                 var impulse = await receiver.ReceiveAsync();
                 impulse.Input.Should().Be("trimmed");
             }

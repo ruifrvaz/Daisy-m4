@@ -1,15 +1,12 @@
 using Daisy.Resources.Abstracts;
-using Daisy.Resources.Attributes;
 using Daisy.Resources.Signals;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Daisy.Receivers.Console
 {
-    [RunOnCores("Daisy.Workflows.Starter")]
     public class ConsoleReceiver : AExternalReceiver
     {
         private readonly IEnumerable<string> _runOnCores;
@@ -30,13 +27,6 @@ namespace Daisy.Receivers.Console
             System.Console.Write(stringBuilder.ToString());
 
             _runOnCores = runOnCores;
-        }
-
-        public ConsoleReceiver() : this(GetAttributeCores()) { }
-
-        private static IEnumerable<string> GetAttributeCores()
-        {
-            return typeof(ConsoleReceiver).GetCustomAttribute<RunOnCoresAttribute>()?.Cores ?? Array.Empty<string>();
         }
 
         public override Impulse Receive()
