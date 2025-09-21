@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Ensures that plugins are loaded into the binary folder to allow ingestion during runtime -->
+  <PropertyGroup>
+    <DaisyPluginCollector>true</DaisyPluginCollector>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Daisy.Transmitters\Daisy.Transmitters.Console\Daisy.Transmitters.Console.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Transmitters\Daisy.Transmitters.WorkflowTrigger\Daisy.Transmitters.WorkflowTrigger.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Resources\Daisy.Resources.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj" />
+  </ItemGroup>
+
+</Project>
