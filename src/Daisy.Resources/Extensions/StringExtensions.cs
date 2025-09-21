@@ -52,13 +52,13 @@ namespace Daisy.Resources.Extensions
 
             // Case-insensitive search
             int start = output.IndexOf(prefix, StringComparison.OrdinalIgnoreCase);
-            if (start == -1) 
+            if (start == -1)
                 return null;
 
             start += prefix.Length;
 
             int end = output.IndexOf('>', start);
-            if (end == -1) 
+            if (end == -1)
                 end = output.Length;
 
             return output.Substring(start, end - start).Trim();

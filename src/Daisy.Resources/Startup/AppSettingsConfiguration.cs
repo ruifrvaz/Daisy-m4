@@ -24,7 +24,7 @@ namespace Daisy.Resources.Startup
         {
             var settings = new ApplicationSettings();
             var configuration = GetConfiguration();
-            
+
             configuration.GetSection("ApplicationSettings").Bind(settings);
             return settings;
         }

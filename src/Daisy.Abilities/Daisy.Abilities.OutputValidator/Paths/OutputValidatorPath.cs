@@ -10,13 +10,13 @@ namespace Daisy.Abilities.OutputValidator.Paths
 {
     public class OutputValidatorPath : APath
     {
-        public OutputValidatorPath(IServiceProvider serviceProvider, 
-            IEnumerable<ITraverseRule> traverseRules, 
+        public OutputValidatorPath(IServiceProvider serviceProvider,
+            IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> hasTraversedRules,
             string pathName,
             int traverseOrder,
-            ApplicationSettings settings) : 
-            base(serviceProvider, traverseRules, hasTraversedRules, pathName, traverseOrder, settings) 
+            ApplicationSettings settings) :
+            base(serviceProvider, traverseRules, hasTraversedRules, pathName, traverseOrder, settings)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Daisy.Abilities.OutputValidator.Paths
             {
                 impulse.Output = "I don't know what you mean.";
             }
-            
+
             return Emit(impulse);
         }
 
