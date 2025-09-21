@@ -7,12 +7,41 @@ using System.Threading.Tasks;
 
 namespace Daisy.Resources.Abstracts
 {
-    // Loopback Receivers are dedicated to receiving impulses from the inside.
-    // These are usually sent by transmitters and should be pushed into the pool and not directly.
+    /// <summary>
+    /// Abstract base class for internal loop-back receiver components in the Daisy workflow engine.
+    /// Loop-back receivers handle Impulses that originate from within the workflow system itself,
+    /// typically sent by transmitters that need to trigger additional processing cycles, workflow recursion,
+    /// or conditional re-processing patterns.
+    /// 
+    /// Key characteristics:
+    /// - Process impulses from internal workflow sources (not external input)
+    /// - Enable complex workflow patterns like iteration and recursive processing
+    /// - Automatically route impulses through appropriate transmitters or paths
+    /// - Should be registered in pools rather than called directly
+    /// </summary>
     public abstract class ALoopBackReceiver : ILoopBackReceiver
     {
+        /// <summary>
+        /// Determines whether this receiver can process the given impulse.
+        /// Must be implemented by derived classes to define specific reception criteria.
+        /// Evaluates internal rules to decide if the impulse should be handled by this receiver.
+        /// </summary>
+        /// <param name="impulse">The impulse to evaluate for reception capability</param>
+        /// <returns>True if the receiver can handle this impulse, false otherwise</returns>
         public abstract bool CanReceive(Impulse impulse);
 
+        /// <summary>
+        /// Asynchronously receives and processes an impulse from within the workflow system.
+        /// This method implements the core loop-back processing logic by:
+        /// 1. Finding the next path to traverse for the impulse
+        /// 2. If a path exists, enqueueing and traversing it
+        /// 3. If no path but loop-back transmitters can handle it, sending to loop-back transmitters
+        /// 4. Otherwise, sending to external transmitters for final output
+        /// 
+        /// This routing logic enables complex workflow patterns including iteration and recursion.
+        /// </summary>
+        /// <param name="impulse">The impulse to receive and process</param>
+        /// <returns>A task representing the asynchronous loop-back reception operation</returns>
         public async virtual Task ReceiveLoopBack(Impulse impulse)
         {
             var nextPath = PathFinder.FindNextPathToTraverse(impulse);
@@ -31,6 +60,12 @@ namespace Daisy.Resources.Abstracts
             }
         }
 
+        /// <summary>
+        /// Determines whether the impulse should be transmitted via loop-back transmitters.
+        /// Checks if any loop-back transmitters in the pool can handle the given impulse.
+        /// </summary>
+        /// <param name="impulse">The impulse to evaluate for loop-back transmission</param>
+        /// <returns>True if any loop-back transmitter can handle the impulse, false otherwise</returns>
         private bool TransmitLoopBack(Impulse impulse)
         {
             return LoopBackTransmitters.Instance.Pool.Where(tr => tr.CanTransmit(impulse)).Any();
