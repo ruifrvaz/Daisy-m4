@@ -11,7 +11,7 @@ namespace Daisy.Resources.Helpers
         {
             return Cores.Instance.Pool
                 .Select(core => core.GetType().Namespace)
-                .Select(ns => ns.Split('.')).Last()
+                .Select(ns => ns.Split('.').Last())
                 .Where(name => !name.Equals("Starter", StringComparison.InvariantCultureIgnoreCase))
                 .Distinct(StringComparer.InvariantCultureIgnoreCase)
                 .ToList();
