@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -62,6 +62,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Tests.Abilities.Operator", "tests\Daisy.Tests.Abilities\Daisy.Tests.Abilities.Operator\Daisy.Tests.Abilities.Operator.csproj", "{8404A873-F91E-AF71-6AA9-17DA7F057CA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Tests.Abilities.Terminate", "tests\Daisy.Tests.Abilities\Daisy.Tests.Abilities.Terminate\Daisy.Tests.Abilities.Terminate.csproj", "{948163C3-35DB-2E02-571A-20EF5600B28F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Tests.Transmitters", "tests\Daisy.Tests.Transmitters\Daisy.Tests.Transmitters.csproj", "{D601A0F5-6C80-4D8E-BD3A-B2D2F429FE66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -140,6 +142,10 @@ Global
 		{948163C3-35DB-2E02-571A-20EF5600B28F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{948163C3-35DB-2E02-571A-20EF5600B28F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{948163C3-35DB-2E02-571A-20EF5600B28F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D601A0F5-6C80-4D8E-BD3A-B2D2F429FE66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D601A0F5-6C80-4D8E-BD3A-B2D2F429FE66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D601A0F5-6C80-4D8E-BD3A-B2D2F429FE66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D601A0F5-6C80-4D8E-BD3A-B2D2F429FE66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,9 +174,10 @@ Global
 		{AE224442-1316-4F39-862D-BD1AC54DC88A} = {1E21ED11-9D7C-4680-A679-743FD5CE4500}
 		{8404A873-F91E-AF71-6AA9-17DA7F057CA5} = {AE224442-1316-4F39-862D-BD1AC54DC88A}
 		{948163C3-35DB-2E02-571A-20EF5600B28F} = {AE224442-1316-4F39-862D-BD1AC54DC88A}
+		{D601A0F5-6C80-4D8E-BD3A-B2D2F429FE66} = {1E21ED11-9D7C-4680-A679-743FD5CE4500}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6CE73F47-9022-4481-A576-2D8C495804BD}
-		        SolutionGuid = "B38FD6B0-1FEF-445A-9DE2-E88316E1FF0E"
+		SolutionGuid = "B38FD6B0-1FEF-445A-9DE2-E88316E1FF0E"
 	EndGlobalSection
 EndGlobal
