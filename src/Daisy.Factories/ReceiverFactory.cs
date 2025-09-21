@@ -26,15 +26,7 @@ namespace Daisy.Factories
                 var receiverTypes = receiverAssembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass).ToList();
                 foreach (var receiverType in receiverTypes)
                 {
-                    dynamic receiverObject;
-                    if (assemblySettings.RunOnCores.Any())
-                    {
-                        receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
-                    }
-                    else
-                    {
-                        receiverObject = Activator.CreateInstance(receiverType);
-                    }
+                    dynamic receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
                     var receiver = receiverObject as IExternalReceiver;
 
                     Resources.Pools.ExternalReceivers.Instance.Pool.Add(receiver);
@@ -83,15 +75,7 @@ namespace Daisy.Factories
                 foreach (var receiverType in receiverTypes)
                 {
                     // receivers may or may not implement event receivers
-                    dynamic receiverObject;
-                    if (assemblySettings.RunOnCores.Any())
-                    {
-                        receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
-                    }
-                    else
-                    {
-                        receiverObject = Activator.CreateInstance(receiverType);
-                    }
+                    dynamic receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
                     var receiver = receiverObject as IEventReceiver;
 
                     Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
