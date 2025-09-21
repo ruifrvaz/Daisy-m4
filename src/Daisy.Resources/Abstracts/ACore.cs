@@ -1,11 +1,10 @@
 ﻿using Daisy.Resources.Interfaces;
+using Daisy.Resources.Pools;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Daisy.Resources.Pools;
-using System.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace Daisy.Resources.Abstracts
 {
