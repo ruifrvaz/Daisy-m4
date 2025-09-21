@@ -13,7 +13,6 @@ namespace Daisy.Resources.Helpers
                 .Select(core => core.GetType().Namespace)
                 .Select(ns => ns.Split('.').Last())
                 .Where(name => !name.Equals("Starter", StringComparison.InvariantCultureIgnoreCase))
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
                 .ToList();
         }
     }
