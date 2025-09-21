@@ -49,8 +49,6 @@ namespace Daisy.Abilities.Operator.Paths
             return Emit(impulse);
         }
 
-        
-
         internal static bool TryExtractWorkflowRequest(
             string input,
             IReadOnlyCollection<string> availableWorkflowIdentifiers,
