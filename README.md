@@ -1,4 +1,9 @@
 # Daisy-m4
+
+[![PR Validation](https://github.com/ruifrvaz/Daisy-m4/actions/workflows/pr-validation.yml/badge.svg)](https://github.com/ruifrvaz/Daisy-m4/actions/workflows/pr-validation.yml)
+[![CI](https://github.com/ruifrvaz/Daisy-m4/actions/workflows/ci.yml/badge.svg)](https://github.com/ruifrvaz/Daisy-m4/actions/workflows/ci.yml)
+[![Manual Validation](https://github.com/ruifrvaz/Daisy-m4/actions/workflows/manual-validation.yml/badge.svg)](https://github.com/ruifrvaz/Daisy-m4/actions/workflows/manual-validation.yml)
+
 General-purpose workflow orchestration engine. 
 
 Supports:
@@ -42,6 +47,34 @@ Abilities (1-N): Process or mutate the Impulse.
 ## How to create your workflows using prompt-driven development (PDD):
 - Add your workflow to the workflows.md file.
 - Instruct your coding agent of choice to analyze the documentation and implement the workflow, step-by-step.
+
+## Testing and Validation
+
+This project includes comprehensive automated testing and validation workflows:
+
+- **🔄 PR Validation**: Automated checks on every pull request (build, test, formatting, security)
+- **🚀 Continuous Integration**: Full integration testing on main branch commits
+- **🔧 Manual Validation**: Flexible testing with configurable options and cross-platform support
+- **📊 Scenario Testing**: Daily automated testing of various usage scenarios
+
+### Quick Start Testing
+```bash
+# Restore dependencies and build
+dotnet restore
+dotnet build
+
+# Run all tests
+dotnet test
+
+# Check code formatting
+dotnet format --verify-no-changes
+
+# Run the application
+cd src/Daisy
+dotnet run
+```
+
+For detailed testing information, see [.github/workflows/README.md](.github/workflows/README.md).
 
 ## License
 Apache License 2.0 © 2025 Rui Filipe Rodrigues Vaz.  
