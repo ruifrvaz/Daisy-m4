@@ -1,6 +1,7 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Xml;
@@ -15,7 +16,15 @@ namespace Daisy.Resources.Startup
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appconfig.json", optional: false, reloadOnChange: true);
 
-            builder.AddUserSecrets<ApplicationSettings>();
+            // Only add user secrets in development environment
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ??
+                             Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ??
+                             "Production";
+
+            if (string.Equals(environment, "Development", StringComparison.OrdinalIgnoreCase))
+            {
+                builder.AddUserSecrets<ApplicationSettings>();
+            }
 
             return builder.Build();
         }
