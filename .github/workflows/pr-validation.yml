@@ -164,7 +164,7 @@ jobs:
         
         required_files=(
           "README.md"
-          "agents.md"
+          "AGENTS.md"
           "instructions/engine_design.md"
           "instructions/workflows.md"
           ".github/copilot-instructions.md"
