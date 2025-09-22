@@ -175,7 +175,6 @@ jobs:
         echo "| Job | Status |"
         echo "|-----|--------|"
         echo "| Build & Test | ${{ needs.validate-pr.result == 'success' && '✅ Passed' || '❌ Failed' }} |"
-        echo "| Security Scan | ${{ needs.security-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |"
         echo "| Documentation | ${{ needs.validate-documentation.result == 'success' && '✅ Passed' || '❌ Failed' }} |"
         
         if [[ "${{ needs.validate-pr.result }}" != "success" || "${{ needs.security-scan.result }}" != "success" || "${{ needs.validate-documentation.result }}" != "success" ]]; then
