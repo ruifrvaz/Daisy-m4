@@ -38,7 +38,7 @@ namespace Daisy.Receivers.Console
         {
             string input = System.Console.ReadLine();
 
-            var trimmedInput = input.Trim();
+            var trimmedInput = input?.Trim() ?? string.Empty;
 
             var impulse = new Impulse
             {
