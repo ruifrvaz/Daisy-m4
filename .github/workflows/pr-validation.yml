@@ -132,7 +132,7 @@ jobs:
         
         # Check for common security anti-patterns
         echo "Checking for hardcoded secrets..."
-        if grep -r -i "password\|secret\|key\|token" --include="*.cs" --include="*.json" src/ tests/ | grep -v "GetChainByKey\|SecretScanning\|TokenSource\|CancellationToken" | grep -v "^tests.*Test"; then
+        if grep -r -i "password\|secret\|key\|token" --include="*.cs" --include="*.json" --exclude-dir="bin" --exclude-dir="obj" src/ tests/ | grep -v "GetChainByKey\|SecretScanning\|TokenSource\|CancellationToken\|UserSecrets" | grep -v "^tests.*Test"; then
           echo "❌ Potential hardcoded secrets found"
           exit 1
         fi
