@@ -21,5 +21,5 @@ Workflows run inside **Cores** and can share state or communicate through **Pool
 - When generating code, always follow the design and patterns of the solution.  
 - When documentation does not provide enough information, follow existing implementations.  
 - When the solution does not provide clear design, follow the best practices of .NET Core development.  
-- Ensure modules respect Daisy’s traversal mechanics (`Impulse`, `Paths`, `TraverseRules`, `HasBeenTraversedRules`).  
+- Ensure modules respect Daisyâ€™s traversal mechanics (`Impulse`, `Paths`, `TraverseRules`, `HasBeenTraversedRules`).  
 - Register modules via Dependency Injection and use attribute-based discovery when extending.
