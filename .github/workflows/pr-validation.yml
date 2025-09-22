@@ -99,8 +99,8 @@ jobs:
         timeout 10s dotnet run --configuration Release --no-build 2>&1 | tee startup_output.log || true
         
         # Check if the application started properly (look for expected output patterns)
-        if grep -q "menu" startup_output.log; then
-          echo "✅ Application started successfully and displayed menu"
+        if grep -q "Options:" startup_output.log; then
+          echo "✅ Application started successfully and displayed options"
         else
           echo "❌ Application startup test failed"
           echo "Startup output:"
