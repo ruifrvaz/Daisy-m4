@@ -26,5 +26,23 @@ namespace Daisy.Tests.Receivers
                 Console.SetIn(originalIn);
             }
         }
+
+        [TestMethod]
+        public async Task ReceiveAsync_handles_null_input()
+        {
+            var originalIn = Console.In;
+            try
+            {
+                // Simulate scenario where Console.ReadLine() returns null (e.g., stdin closed)
+                Console.SetIn(new StringReader(string.Empty));
+                var receiver = new ConsoleReceiver(new[] { "TestCore" });
+                var impulse = await receiver.ReceiveAsync();
+                impulse.Input.Should().Be(string.Empty);
+            }
+            finally
+            {
+                Console.SetIn(originalIn);
+            }
+        }
     }
 }
