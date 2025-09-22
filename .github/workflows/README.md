@@ -4,7 +4,7 @@ This directory contains GitHub Actions workflows for automated testing and valid
 
 ## Workflows Overview
 
-### 🔄 PR Validation (`pr-validation.yml`)
+### PR Validation (`pr-validation.yml`)
 **Trigger:** Pull requests to `main` or `develop` branches
 
 Comprehensive validation pipeline that runs on every pull request to ensure code quality and functionality:
@@ -17,7 +17,7 @@ Comprehensive validation pipeline that runs on every pull request to ensure code
 **Duration:** ~5-10 minutes  
 **Purpose:** Prevent broken code from being merged
 
-### 🚀 Continuous Integration (`ci.yml`)
+### Continuous Integration (`ci.yml`)
 **Trigger:** Pushes to `main` branch
 
 Full integration testing pipeline for the main branch:
@@ -30,7 +30,7 @@ Full integration testing pipeline for the main branch:
 **Duration:** ~10-15 minutes  
 **Purpose:** Ensure main branch is always in a deployable state
 
-### 🔧 Manual Validation (`manual-validation.yml`)
+### Manual Validation (`manual-validation.yml`)
 **Trigger:** Manual dispatch with configurable options
 
 Flexible testing workflow for comprehensive validation:
@@ -49,35 +49,21 @@ Flexible testing workflow for comprehensive validation:
 **Duration:** ~5-20 minutes (depending on configuration)  
 **Purpose:** Thorough testing before releases or when investigating issues
 
-### 📊 Scenario Testing (`scenario-testing.yml`)
-**Trigger:** Daily schedule (2 AM UTC) or manual dispatch
-
-Automated scenario testing to catch regressions:
-
-**Scenario Types:**
-- **Basic**: Startup and workflow listing
-- **Extended**: Weather workflows and termination
-- **Stress**: Rapid startup and memory stress tests
-- **Error Handling**: Invalid input processing
-
-**Duration:** ~10-15 minutes  
-**Purpose:** Continuous monitoring and regression detection
-
 ## Workflow Features
 
-### 🛡️ Safety Features
+### Safety Features
 - **Timeouts**: All jobs have appropriate timeouts to prevent hanging
 - **Artifact Upload**: Test results and logs are preserved for analysis
 - **Failure Notifications**: Clear error reporting and status indicators
 - **Resource Cleanup**: Proper cleanup of resources and temporary files
 
-### 📈 Performance Monitoring
+### Performance Monitoring
 - Plugin deployment verification (expects 10 plugins)
 - Startup time measurement
 - Memory usage pattern analysis
 - Cross-platform compatibility checks
 
-### 🔍 Quality Assurance
+### Quality Assurance
 - Unit test execution with coverage reporting
 - Code formatting validation (`dotnet format`)
 - Security scanning for common anti-patterns
@@ -135,53 +121,3 @@ Current test suite includes:
 - Plugin deployment: All 10 plugins must be present
 - Memory usage: No obvious leaks or excessive allocation
 - Weather workflow: Should handle mock and real API calls
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Build Failures**
-   - Check for compilation errors in job logs
-   - Verify all project references are correct
-   - Ensure solution file includes all projects
-
-2. **Test Failures**
-   - Download test artifacts for detailed analysis
-   - Check for environment-specific issues
-   - Verify plugin deployment completed
-
-3. **Plugin Deployment Issues**
-   - Ensure `DaisyPluginCollector=true` property is set
-   - Check Directory.Build.targets configuration
-   - Verify all projects build successfully
-
-4. **Performance Issues**
-   - Review startup time measurements
-   - Check for memory leaks in stress tests
-   - Monitor scenario testing results
-
-### Getting Help
-
-1. Check workflow run logs for detailed error messages
-2. Download and review uploaded artifacts
-3. Run manual validation with comprehensive testing
-4. Use scenario testing to isolate specific issues
-
-## Maintenance
-
-### Adding New Tests
-1. Follow existing patterns in test projects
-2. Update expected test counts in workflow documentation
-3. Add new scenarios to scenario testing workflow
-
-### Modifying Workflows
-1. Test workflow changes in a branch first
-2. Use workflow_dispatch triggers for testing
-3. Update documentation when adding new features
-4. Consider backward compatibility for existing workflows
-
-### Performance Tuning
-1. Monitor workflow execution times
-2. Optimize caching strategies for dependencies
-3. Adjust timeouts based on actual execution patterns
-4. Balance thoroughness with execution speed
