@@ -15,7 +15,7 @@ namespace Daisy.Resources.Startup
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appconfig.json", optional: false, reloadOnChange: true);
 
-            builder.AddUserSecrets<ApplicationSettings>();
+            builder.AddUserSecrets(typeof(AppSettingsConfiguration).Assembly);
 
             return builder.Build();
         }
