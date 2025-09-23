@@ -2,10 +2,9 @@ using Daisy.Resources.Attributes;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
-using Daisy.Resources.Startup;
+using Daisy.Resources.Services;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -45,39 +44,27 @@ namespace Daisy.Factories
         // find all classes that implement IPath
         public static void LoadAbilities(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            var abilityInterface = typeof(IPath);
-            var traverseRuleInterface = typeof(ITraverseRule);
+            // Discover all types that implement IPath from loaded assemblies
+            var abilityPathTypes = PluginService.DiscoverTypes<IPath>(settings.Abilities)
+                .Where(t => settings.PathTraverseOrder.ContainsKey(t.Name));
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Abilities).ToList()
-                : throw new Exception("Error loading modules: plugins folder not found.");
+            // Discover all types that implement ITraverseRule from loaded assemblies
+            var traverseRuleTypes = PluginService.DiscoverTypes<ITraverseRule>(settings.Abilities);
 
-            foreach (var assembly in assemblies)
+            foreach (var abilityPath in abilityPathTypes)
             {
-                var types = AssemblyPluginsLoader.SafeGetExportedTypes(assembly);
+                var traverseRules = LoadCanTraverseRules(traverseRuleTypes, abilityPath, settings);
+                var hasBeenTraversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
+                var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
 
-                var abilityPaths = types
-                    .Where(t => t is { IsClass: true, IsAbstract: false }
-                                && abilityInterface.IsAssignableFrom(t)
-                                && settings.PathTraverseOrder.ContainsKey(t.Name));
+                // ctor: (IServiceProvider, traverseRules, hasBeenTraversedRules, name, order, settings)
+                var instance = PluginService.CreateInstance<IPath>(
+                    abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules,
+                    abilityPath.Name, traverseOrder, settings);
 
-                foreach (var abilityPath in abilityPaths)
+                if (instance != null)
                 {
-                    var traverseRuleTypes = types
-                        .Where(t => t is { IsClass: true, IsAbstract: false }
-                                    && traverseRuleInterface.IsAssignableFrom(t));
-
-                    var traverseRules = LoadCanTraverseRules(traverseRuleTypes, abilityPath, settings);
-                    var hasBeenTraversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
-                    var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
-
-                    // ctor: (IServiceProvider, traverseRules, hasBeenTraversedRules, name, order, settings)
-                    dynamic instance = Activator.CreateInstance(
-                        abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules,
-                        abilityPath.Name, traverseOrder, settings)!;
-
-                    Paths.Instance.Pool.Add((IPath)instance);
+                    Paths.Instance.Pool.Add(instance);
                 }
             }
         }
@@ -92,8 +79,7 @@ namespace Daisy.Factories
             var traverseRules = new List<ITraverseRule>();
             foreach (var traverseRuleType in pathTraverseRuleTypes)
             {
-                dynamic traverseRuleObject = Activator.CreateInstance(traverseRuleType, settings);
-                var traverseRule = traverseRuleObject as ITraverseRule;
+                var traverseRule = PluginService.CreateInstance<ITraverseRule>(traverseRuleType, settings);
                 if (traverseRule != null)
                 {
                     traverseRules.Add(traverseRule);
@@ -113,8 +99,7 @@ namespace Daisy.Factories
             var hasBeenTraversedRules = new List<ITraverseRule>();
             foreach (var hasBeenTraversedRuleType in pathHasBeenTraversedRuleTypes)
             {
-                dynamic traverseRuleObject = Activator.CreateInstance(hasBeenTraversedRuleType, settings);
-                var traverseRule = traverseRuleObject as ITraverseRule;
+                var traverseRule = PluginService.CreateInstance<ITraverseRule>(hasBeenTraversedRuleType, settings);
                 if (traverseRule != null)
                 {
                     hasBeenTraversedRules.Add(traverseRule);

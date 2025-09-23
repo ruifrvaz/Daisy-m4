@@ -1,10 +1,8 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
-using Daisy.Resources.Startup;
+using Daisy.Resources.Services;
 using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Daisy.Factories
 {
@@ -12,48 +10,34 @@ namespace Daisy.Factories
     {
         public static void LoadExternalReceivers(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            // find all assemblies that implement IExternalReceiver, create an instance for each of them
-            // and load them into receiver pool
-            var receiverInterface = typeof(IExternalReceiver);
+            // Discover all types that implement IExternalReceiver from loaded assemblies
+            var receiverTypes = PluginService.DiscoverTypes<IExternalReceiver>(settings.Receivers.Keys);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
-
-            foreach (var receiverAssembly in assemblies)
+            foreach (var receiverType in receiverTypes)
             {
-                var assemblySettings = settings.Receivers[receiverAssembly.GetName().Name!];
-                var receiverTypes = receiverAssembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var receiverType in receiverTypes)
+                // Get settings for this receiver's assembly
+                var assemblyName = receiverType.Assembly.GetName().Name!;
+                if (settings.Receivers.TryGetValue(assemblyName, out var assemblySettings))
                 {
-                    dynamic receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
-                    var receiver = receiverObject as IExternalReceiver;
-
-                    Resources.Pools.ExternalReceivers.Instance.Pool.Add(receiver);
+                    var receiver = PluginService.CreateInstance<IExternalReceiver>(receiverType, assemblySettings.RunOnCores);
+                    if (receiver != null)
+                    {
+                        Resources.Pools.ExternalReceivers.Instance.Pool.Add(receiver);
+                    }
                 }
             }
         }
 
         public static void LoadLoopBackReceivers(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            // find all assemblies that implement ILoopBackReceiver, create an instance for each of them
-            // and load them into receiver pool
-            var receiverInterface = typeof(ILoopBackReceiver);
+            // Discover all types that implement ILoopBackReceiver from loaded assemblies
+            var receiverTypes = PluginService.DiscoverTypes<ILoopBackReceiver>(settings.Receivers.Keys);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
-
-            foreach (var assembly in assemblies)
+            foreach (var receiverType in receiverTypes)
             {
-                var receiverTypes = assembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var receiverType in receiverTypes)
+                var receiver = PluginService.CreateInstance<ILoopBackReceiver>(receiverType);
+                if (receiver != null)
                 {
-                    // receivers may or may not implement ILoopBackReceiver receivers
-
-                    dynamic receiverObject = Activator.CreateInstance(receiverType);
-                    var receiver = receiverObject as ILoopBackReceiver;
-
                     Resources.Pools.LoopBackReceivers.Instance.Pool.Add(receiver);
                 }
             }
@@ -61,24 +45,20 @@ namespace Daisy.Factories
 
         public static void LoadEventReceivers(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            // find all assemblies that implement IEventReceiver, create an instance for each of them and load them into receiver pool
-            var receiverInterface = typeof(IEventReceiver);
+            // Discover all types that implement IEventReceiver from loaded assemblies
+            var receiverTypes = PluginService.DiscoverTypes<IEventReceiver>(settings.Receivers.Keys);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
-
-            foreach (var receiverAssembly in assemblies)
+            foreach (var receiverType in receiverTypes)
             {
-                var assemblySettings = settings.Receivers[receiverAssembly.GetName().Name!];
-                var receiverTypes = receiverAssembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var receiverType in receiverTypes)
+                // Get settings for this receiver's assembly
+                var assemblyName = receiverType.Assembly.GetName().Name!;
+                if (settings.Receivers.TryGetValue(assemblyName, out var assemblySettings))
                 {
-                    // receivers may or may not implement event receivers
-                    dynamic receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
-                    var receiver = receiverObject as IEventReceiver;
-
-                    Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
+                    var receiver = PluginService.CreateInstance<IEventReceiver>(receiverType, assemblySettings.RunOnCores);
+                    if (receiver != null)
+                    {
+                        Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
+                    }
                 }
             }
         }

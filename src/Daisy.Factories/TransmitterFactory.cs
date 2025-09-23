@@ -1,11 +1,9 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
-using Daisy.Resources.Startup;
+using Daisy.Resources.Services;
 using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Daisy.Factories
 {
@@ -13,51 +11,30 @@ namespace Daisy.Factories
     {
         public static void LoadExternalTransmitters(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
-                : throw new Exception("Error loading modules: plugins folder not found.");
+            // Discover all types that implement IExternalTransmitter from loaded assemblies
+            var transmitterTypes = PluginService.DiscoverTypes<IExternalTransmitter>(settings.Transmitters);
 
-            // look in the assembly and find all classes that implement IExternalTransmitter
-            var transmitterInterface = typeof(IExternalTransmitter);
-            foreach (var assembly in assemblies)
+            foreach (var transmitterType in transmitterTypes)
             {
-                var transmitterTypes = assembly.GetTypes().Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var transmitterType in transmitterTypes)
+                var transmitter = PluginService.CreateInstance<IExternalTransmitter>(transmitterType);
+                if (transmitter != null)
                 {
-                    // transmitters may or may not implement external IExternalTransmitter
-                    if (transmitterType != null)
-                    {
-                        dynamic transmitterObject = Activator.CreateInstance(transmitterType);
-                        var transmitter = transmitterObject as IExternalTransmitter;
-                        ExternalTransmitters.Instance.Pool.Add(transmitter);
-                    }
+                    ExternalTransmitters.Instance.Pool.Add(transmitter);
                 }
             }
         }
 
         public static void LoadLoopBackTransmitters(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            // look in the assembly and find all classes that implement ILoopBackTransmitter
-            var transmitterInterface = typeof(ILoopBackTransmitter);
+            // Discover all types that implement ILoopBackTransmitter from loaded assemblies
+            var transmitterTypes = PluginService.DiscoverTypes<ILoopBackTransmitter>(settings.Transmitters);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
-                : throw new Exception("Error loading modules: plugins folder not found.");
-
-            foreach (var assembly in assemblies)
+            foreach (var transmitterType in transmitterTypes)
             {
-                var receiverTypes = assembly.GetTypes().Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var transmitterType in receiverTypes)
+                var transmitter = PluginService.CreateInstance<ILoopBackTransmitter>(transmitterType);
+                if (transmitter != null)
                 {
-                    // transmitters may or may not implement external ILoopBackTransmitter
-                    if (transmitterType != null)
-                    {
-                        dynamic transmitterObject = Activator.CreateInstance(transmitterType);
-                        var transmitter = transmitterObject as ILoopBackTransmitter;
-                        LoopBackTransmitters.Instance.Pool.Add(transmitter);
-                    }
+                    LoopBackTransmitters.Instance.Pool.Add(transmitter);
                 }
             }
         }
