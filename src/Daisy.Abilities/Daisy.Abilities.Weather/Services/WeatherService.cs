@@ -26,12 +26,12 @@ namespace Daisy.Abilities.Weather.Services
         }
 
 
-        public async Task<string?> GetWeatherAsync(string city)
+        public async Task<string> GetWeatherAsync(string city)
         {
             var response = await _httpClient.GetAsync($"{city}?format=3");
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                return "Weather information unavailable";
             }
 
             return await response.Content.ReadAsStringAsync();

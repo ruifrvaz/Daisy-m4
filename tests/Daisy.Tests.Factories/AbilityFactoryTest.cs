@@ -14,8 +14,8 @@ namespace Daisy.Tests.Factory.Path
     [TestClass]
     public class AbilityFactoryTest
     {
-        private static IServiceProvider ServiceProvider;
-        static ApplicationSettings Settings { get; set; }
+        private static IServiceProvider? ServiceProvider;
+        static ApplicationSettings? Settings { get; set; }
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -28,10 +28,10 @@ namespace Daisy.Tests.Factory.Path
         [TestMethod]
         public void load_only_paths_that_are_in_traverse_settings()
         {
-            AbilityFactory.LoadAbilities(Settings, ServiceProvider);
+            AbilityFactory.LoadAbilities(Settings!, ServiceProvider!);
 
             var pathInterface = typeof(IPath);
-            var abilities = AppDomain.CurrentDomain.GetAssemblies().Where(ass => Settings.Abilities.Contains(ass.GetName().Name)).ToList();
+            var abilities = AppDomain.CurrentDomain.GetAssemblies().Where(ass => Settings!.Abilities.Contains(ass.GetName().Name)).ToList();
             abilities.Should().NotBeEmpty();
 
             var pathTypes = new List<Type>();
@@ -42,7 +42,7 @@ namespace Daisy.Tests.Factory.Path
 
             var paths = Paths.Instance.Pool.Select(p => p.GetType());
 
-            paths.Count().Should().Be(Settings.PathTraverseOrder.Count());
+            paths.Count().Should().Be(Settings!.PathTraverseOrder.Count());
             Settings.PathTraverseOrder.Select(to => to.Key).ToList().Should().Contain(paths.First().Name);
         }
 

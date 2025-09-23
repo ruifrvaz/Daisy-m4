@@ -15,8 +15,8 @@ namespace Daisy.Tests.Factory.Receiver
     [TestClass]
     public class ReceiverFactoryTest
     {
-        private static IServiceProvider ServiceProvider;
-        private static ApplicationSettings Settings { get; set; }
+        private static IServiceProvider? ServiceProvider;
+        private static ApplicationSettings? Settings { get; set; }
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -36,13 +36,13 @@ namespace Daisy.Tests.Factory.Receiver
         [TestMethod]
         public void receivers_are_being_loaded_into_the_pool()
         {
-            ReceiverFactory.LoadExternalReceivers(Settings, ServiceProvider);
+            ReceiverFactory.LoadExternalReceivers(Settings!, ServiceProvider!);
 
             var receiverInterface = typeof(IExternalReceiver);
 
             var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
             var receiverAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings!.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             receiverAssemblies.Should().NotBeEmpty();
 
@@ -61,13 +61,13 @@ namespace Daisy.Tests.Factory.Receiver
         [TestMethod]
         public void loopback_receivers_are_being_loaded_into_the_pool()
         {
-            ReceiverFactory.LoadLoopBackReceivers(Settings, ServiceProvider);
+            ReceiverFactory.LoadLoopBackReceivers(Settings!, ServiceProvider!);
 
             var receiverInterface = typeof(ILoopBackReceiver);
 
             var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
             var receiverAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings!.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             receiverAssemblies.Should().NotBeEmpty();
 

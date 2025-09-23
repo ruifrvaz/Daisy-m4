@@ -5,6 +5,6 @@ namespace Daisy.Abilities.Weather.Services
 {
     public interface IWeatherService : IDaisyService
     {
-        public Task<string?> GetWeatherAsync(string city);
+        public Task<string> GetWeatherAsync(string city);
     }
 }
