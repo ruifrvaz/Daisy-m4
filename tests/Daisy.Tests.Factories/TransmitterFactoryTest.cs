@@ -2,13 +2,13 @@ using Daisy.Factories;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Services;
-using Daisy.Resources.Startup;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Daisy.Tests.Factory.Transmitter
 {
@@ -27,6 +27,33 @@ namespace Daisy.Tests.Factory.Transmitter
                 Abilities = new List<string>()
             };
             ServiceProvider = StartupFactory.LoadServices(Settings);
+
+            // Load plugin assemblies into the AppDomain so they can be discovered
+            LoadPluginAssemblies();
+        }
+
+        private static void LoadPluginAssemblies()
+        {
+            var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
+            if (Directory.Exists(pluginsRoot))
+            {
+                foreach (var pluginDir in Directory.GetDirectories(pluginsRoot))
+                {
+                    var pluginName = System.IO.Path.GetFileName(pluginDir);
+                    var mainDll = System.IO.Path.Combine(pluginDir, $"{pluginName}.dll");
+                    if (File.Exists(mainDll))
+                    {
+                        try
+                        {
+                            Assembly.LoadFrom(mainDll);
+                        }
+                        catch
+                        {
+                            // Ignore load failures for test purposes
+                        }
+                    }
+                }
+            }
         }
 
         [TestMethod]
@@ -34,19 +61,10 @@ namespace Daisy.Tests.Factory.Transmitter
         {
             TransmitterFactory.LoadExternalTransmitters(Settings!, ServiceProvider!);
 
+            // Discover expected transmitter types using the new PluginService
+            var transmitterTypes = PluginService.DiscoverTypes<IExternalTransmitter>(Settings!.Transmitters).ToList();
 
-            var transmitterInterface = typeof(IExternalTransmitter);
-            var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
-            var transmitterAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings!.Transmitters).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
-
-            transmitterAssemblies.Should().NotBeEmpty();
-
-            var transmitterTypes = new List<Type>();
-            foreach (var assembly in transmitterAssemblies)
-            {
-                transmitterTypes.AddRange(assembly.GetTypes().Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass));
-            }
+            transmitterTypes.Should().NotBeEmpty();
 
             var transmitters = Resources.Pools.ExternalTransmitters.Instance.Pool.Select(p => p.GetType().Name);
 

@@ -53,25 +53,22 @@ namespace Daisy
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 
-            var serviceInterface = typeof(IDaisyService);
-
             var configuredAssemblies = new List<string>();
             configuredAssemblies.AddRange(settings.Abilities);
             configuredAssemblies.AddRange(settings.Receivers.Keys);
             configuredAssemblies.AddRange(settings.Transmitters);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                            ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, configuredAssemblies).ToList()
-                            : throw new Exception("Error loading assemblies: plugins folder not found.");
-            foreach (var daisyAssembly in assemblies)
-            {
-                var serviceTypes = daisyAssembly.GetTypes().Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass);
+            // Load plugin assemblies into AppDomain first
+            LoadPluginAssemblies(configuredAssemblies);
 
-                foreach (var serviceType in serviceTypes)
+            // Discover service types using the new PluginService
+            var serviceTypes = PluginService.DiscoverTypes<IDaisyService>(configuredAssemblies);
+
+            foreach (var serviceType in serviceTypes)
+            {
+                var service = PluginService.CreateInstance<IDaisyService>(serviceType, settings);
+                if (service != null)
                 {
-                    dynamic pathObject = Activator.CreateInstance(serviceType, settings);
-                    var service = pathObject as IDaisyService;
                     ServiceContainer.Instance.Services.Add(service);
                 }
             }
@@ -81,6 +78,33 @@ namespace Daisy
             ServiceContainer.Instance.AddServiceProvider(serviceProvider);
 
             return serviceProvider;
+        }
+
+        private static void LoadPluginAssemblies(IEnumerable<string> configuredAssemblies)
+        {
+            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
+            if (!Directory.Exists(pluginsRoot))
+                throw new Exception("Error loading assemblies: plugins folder not found.");
+
+            foreach (var assemblyName in configuredAssemblies)
+            {
+                var pluginDir = Path.Combine(pluginsRoot, assemblyName);
+                if (Directory.Exists(pluginDir))
+                {
+                    var mainDll = Path.Combine(pluginDir, $"{assemblyName}.dll");
+                    if (File.Exists(mainDll))
+                    {
+                        try
+                        {
+                            Assembly.LoadFrom(mainDll);
+                        }
+                        catch
+                        {
+                            // Ignore load failures - some assemblies may already be loaded
+                        }
+                    }
+                }
+            }
         }
     }
 }
