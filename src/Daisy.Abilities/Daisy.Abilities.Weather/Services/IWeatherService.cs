@@ -1,4 +1,5 @@
-﻿using Daisy.Resources.Interfaces;
+﻿#nullable enable
+using Daisy.Resources.Interfaces;
 using System.Threading.Tasks;
 
 namespace Daisy.Abilities.Weather.Services

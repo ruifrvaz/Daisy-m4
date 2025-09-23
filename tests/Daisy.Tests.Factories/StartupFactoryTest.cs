@@ -10,7 +10,7 @@ namespace Daisy.Tests.Factory.Path
     [TestClass]
     public class StartupFactoryTest
     {
-        private static ApplicationSettings _settings;
+        private static ApplicationSettings? _settings;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -21,7 +21,7 @@ namespace Daisy.Tests.Factory.Path
         [TestMethod]
         public void serviceProvider_should_load_only_once()
         {
-            var firstServiceProvider = StartupFactory.LoadServices(_settings);
+            var firstServiceProvider = StartupFactory.LoadServices(_settings!);
 
             var serviceProvider = ServiceContainer.Instance.GetServiceProvider();
 
@@ -31,7 +31,7 @@ namespace Daisy.Tests.Factory.Path
 
             ServiceContainer.Instance.AddServiceProvider(secondServiceProvider);
 
-            var _httpClient = serviceProvider.GetService<IHttpClientFactory>().CreateClient("DefaultClient");
+            var _httpClient = serviceProvider.GetService<IHttpClientFactory>()?.CreateClient("DefaultClient");
 
             _httpClient.Should().NotBeNull();
         }

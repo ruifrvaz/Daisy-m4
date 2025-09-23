@@ -15,8 +15,8 @@ namespace Daisy.Tests.Factory.Transmitter
     [TestClass]
     public class TransmitterFactoryTest
     {
-        private static IServiceProvider ServiceProvider;
-        static ApplicationSettings Settings { get; set; }
+        private static IServiceProvider? ServiceProvider;
+        static ApplicationSettings? Settings { get; set; }
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -32,13 +32,13 @@ namespace Daisy.Tests.Factory.Transmitter
         [TestMethod]
         public void transmitters_are_being_loaded_into_the_pool()
         {
-            TransmitterFactory.LoadExternalTransmitters(Settings, ServiceProvider);
+            TransmitterFactory.LoadExternalTransmitters(Settings!, ServiceProvider!);
 
 
             var transmitterInterface = typeof(IExternalTransmitter);
             var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
             var transmitterAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings.Transmitters).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings!.Transmitters).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
 
             transmitterAssemblies.Should().NotBeEmpty();
 
