@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +16,7 @@ namespace Daisy.Resources.Startup
         public AssemblyPluginsLoader(string pluginMainAssemblyPath)
             : base(isCollectible: true) => _resolver = new AssemblyDependencyResolver(pluginMainAssemblyPath);
 
-        protected override Assembly? Load(AssemblyName assemblyName)
+        protected override Assembly Load(AssemblyName assemblyName)
         {
             try
             {

@@ -1,4 +1,3 @@
-#nullable enable
 using Daisy.Abilities.Weather.Models;
 using Daisy.Abilities.Weather.Services;
 using Daisy.Resources.Models;
@@ -12,7 +11,7 @@ namespace Daisy.Abilities.Weather.Services
     public class WeatherService : IWeatherService
     {
         private readonly WeatherSettings _settings;
-        private HttpClient? _httpClient;
+        private HttpClient _httpClient;
 
         public WeatherService(ApplicationSettings settings)
         {
@@ -27,15 +26,12 @@ namespace Daisy.Abilities.Weather.Services
         }
 
 
-        public async Task<string?> GetWeatherAsync(string city)
+        public async Task<string> GetWeatherAsync(string city)
         {
-            if (_httpClient == null)
-                return null;
-
             var response = await _httpClient.GetAsync($"{city}?format=3");
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                return "Weather information unavailable";
             }
 
             return await response.Content.ReadAsStringAsync();
