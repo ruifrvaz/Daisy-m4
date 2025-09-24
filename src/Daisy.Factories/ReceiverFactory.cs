@@ -1,8 +1,6 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
-using Daisy.Resources.Startup;
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -16,20 +14,33 @@ namespace Daisy.Factories
             // and load them into receiver pool
             var receiverInterface = typeof(IExternalReceiver);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && a.GetName().Name.StartsWith("Daisy.Receivers."))
+                .ToList();
 
             foreach (var receiverAssembly in assemblies)
             {
-                var assemblySettings = settings.Receivers[receiverAssembly.GetName().Name!];
-                var receiverTypes = receiverAssembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var receiverType in receiverTypes)
+                try
                 {
-                    dynamic receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
-                    var receiver = receiverObject as IExternalReceiver;
+                    var assemblyName = receiverAssembly.GetName().Name!;
+                    if (!settings.Receivers.ContainsKey(assemblyName)) continue;
 
-                    Resources.Pools.ExternalReceivers.Instance.Pool.Add(receiver);
+                    var assemblySettings = settings.Receivers[assemblyName];
+                    var receiverTypes = receiverAssembly.GetTypes()
+                        .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
+                        .ToList();
+
+                    foreach (var receiverType in receiverTypes)
+                    {
+                        dynamic receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
+                        var receiver = receiverObject as IExternalReceiver;
+
+                        Resources.Pools.ExternalReceivers.Instance.Pool.Add(receiver);
+                    }
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    Console.WriteLine($"Warning: Could not load all types from assembly {receiverAssembly.GetName().Name}: {ex.Message}");
                 }
             }
         }
@@ -40,21 +51,30 @@ namespace Daisy.Factories
             // and load them into receiver pool
             var receiverInterface = typeof(ILoopBackReceiver);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && a.GetName().Name.StartsWith("Daisy.Receivers."))
+                .ToList();
 
             foreach (var assembly in assemblies)
             {
-                var receiverTypes = assembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var receiverType in receiverTypes)
+                try
                 {
-                    // receivers may or may not implement ILoopBackReceiver receivers
+                    var receiverTypes = assembly.GetTypes()
+                        .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
+                        .ToList();
 
-                    dynamic receiverObject = Activator.CreateInstance(receiverType);
-                    var receiver = receiverObject as ILoopBackReceiver;
+                    foreach (var receiverType in receiverTypes)
+                    {
+                        // receivers may or may not implement ILoopBackReceiver receivers
+                        dynamic receiverObject = Activator.CreateInstance(receiverType);
+                        var receiver = receiverObject as ILoopBackReceiver;
 
-                    Resources.Pools.LoopBackReceivers.Instance.Pool.Add(receiver);
+                        Resources.Pools.LoopBackReceivers.Instance.Pool.Add(receiver);
+                    }
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    Console.WriteLine($"Warning: Could not load all types from assembly {assembly.GetName().Name}: {ex.Message}");
                 }
             }
         }
@@ -64,21 +84,34 @@ namespace Daisy.Factories
             // find all assemblies that implement IEventReceiver, create an instance for each of them and load them into receiver pool
             var receiverInterface = typeof(IEventReceiver);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && a.GetName().Name.StartsWith("Daisy.Receivers."))
+                .ToList();
 
             foreach (var receiverAssembly in assemblies)
             {
-                var assemblySettings = settings.Receivers[receiverAssembly.GetName().Name!];
-                var receiverTypes = receiverAssembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var receiverType in receiverTypes)
+                try
                 {
-                    // receivers may or may not implement event receivers
-                    dynamic receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
-                    var receiver = receiverObject as IEventReceiver;
+                    var assemblyName = receiverAssembly.GetName().Name!;
+                    if (!settings.Receivers.ContainsKey(assemblyName)) continue;
 
-                    Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
+                    var assemblySettings = settings.Receivers[assemblyName];
+                    var receiverTypes = receiverAssembly.GetTypes()
+                        .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
+                        .ToList();
+
+                    foreach (var receiverType in receiverTypes)
+                    {
+                        // receivers may or may not implement event receivers
+                        dynamic receiverObject = Activator.CreateInstance(receiverType, [assemblySettings.RunOnCores]);
+                        var receiver = receiverObject as IEventReceiver;
+
+                        Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
+                    }
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    Console.WriteLine($"Warning: Could not load all types from assembly {receiverAssembly.GetName().Name}: {ex.Message}");
                 }
             }
         }

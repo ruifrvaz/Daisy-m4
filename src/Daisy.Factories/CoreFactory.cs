@@ -1,8 +1,6 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
-using Daisy.Resources.Startup;
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -15,21 +13,28 @@ namespace Daisy.Factories
         {
             var coreInterface = typeof(ICore);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Workflows).ToList()
-                : throw new Exception("Error loading modules: plugins folder not found.");
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && a.GetName().Name.StartsWith("Daisy.Workflows."))
+                .ToList();
+
             foreach (var assembly in assemblies)
             {
-                var coreTypes = assembly.GetTypes()
-                                            .Where(type => coreInterface.IsAssignableFrom(type) && type.IsClass)
-                                            .ToList();
-
-                foreach (var coreType in coreTypes)
+                try
                 {
-                    dynamic coreObject = Activator.CreateInstance(coreType);
-                    var core = coreObject as ICore;
-                    Resources.Pools.Cores.Instance.Pool.Add(core);
+                    var coreTypes = assembly.GetTypes()
+                        .Where(type => coreInterface.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
+                        .ToList();
+
+                    foreach (var coreType in coreTypes)
+                    {
+                        dynamic coreObject = Activator.CreateInstance(coreType);
+                        var core = coreObject as ICore;
+                        Resources.Pools.Cores.Instance.Pool.Add(core);
+                    }
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    Console.WriteLine($"Warning: Could not load all types from assembly {assembly.GetName().Name}: {ex.Message}");
                 }
             }
         }
