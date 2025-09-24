@@ -28,16 +28,30 @@ namespace Daisy.Tests.Factory.Path
         [TestMethod]
         public void load_only_paths_that_are_in_traverse_settings()
         {
+            // Force loading of ability assemblies by referencing types from them
+            _ = typeof(Daisy.Abilities.Operator.ListWorkflowsPath);
+            _ = typeof(Daisy.Abilities.OutputValidator.Paths.OutputValidatorPath);
+            _ = typeof(Daisy.Abilities.Terminate.TerminatePath);
+            _ = typeof(Daisy.Abilities.Weather.Paths.GetWeatherByCityPath);
+            
             AbilityFactory.LoadAbilities(Settings!, ServiceProvider!);
 
             var pathInterface = typeof(IPath);
-            var abilities = AppDomain.CurrentDomain.GetAssemblies().Where(ass => Settings!.Abilities.Contains(ass.GetName().Name)).ToList();
+            
+            // With direct assembly scanning, we check loaded assemblies that start with Daisy.Abilities.
+            var abilities = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && a.GetName().Name.StartsWith("Daisy.Abilities."))
+                .ToList();
             abilities.Should().NotBeEmpty();
 
             var pathTypes = new List<Type>();
             foreach (var ability in abilities)
             {
-                pathTypes.AddRange(ability.GetTypes().Where(type => pathInterface.IsAssignableFrom(type) && type.IsClass));
+                pathTypes.AddRange(ability.GetExportedTypes()
+                    .Where(type => pathInterface.IsAssignableFrom(type) 
+                                  && type.IsClass 
+                                  && !type.IsAbstract
+                                  && Settings!.PathTraverseOrder.ContainsKey(type.Name)));
             }
 
             var paths = Paths.Instance.Pool.Select(p => p.GetType());

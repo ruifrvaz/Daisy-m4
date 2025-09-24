@@ -9,9 +9,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <!-- Ensures that plugins are loaded into the binary folder to allow ingestion during runtime -->
+  <!-- Plugin collector no longer needed - using direct project references -->
   <PropertyGroup>
-    <DaisyPluginCollector>true</DaisyPluginCollector>
+    <DaisyPluginCollector>false</DaisyPluginCollector>
   </PropertyGroup>
   
   <ItemGroup>
@@ -30,6 +30,17 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Daisy.Factories\Daisy.Factories.csproj" />
     <ProjectReference Include="..\..\src\Daisy.Resources\Daisy.Resources.csproj" />
+    <!-- Plugin Project References - Direct dependencies for testing -->
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.OutputValidator\Daisy.Abilities.OutputValidator.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Terminate\Daisy.Abilities.Terminate.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Abilities\Daisy.Abilities.Weather\Daisy.Abilities.Weather.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.Console\Daisy.Receivers.Console.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.WeatherEvent\Daisy.Receivers.WeatherEvent.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Transmitters\Daisy.Transmitters.Console\Daisy.Transmitters.Console.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Transmitters\Daisy.Transmitters.WorkflowTrigger\Daisy.Transmitters.WorkflowTrigger.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Workflows\Daisy.Workflows.Starter\Daisy.Workflows.Starter.csproj" />
+    <ProjectReference Include="..\..\src\Daisy.Workflows\Daisy.Workflows.TryMe\Daisy.Workflows.Weather.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appconfig.json">
