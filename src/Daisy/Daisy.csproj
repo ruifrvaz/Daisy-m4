@@ -9,16 +9,28 @@
     <RepositoryUrl>https://github.com/ruifrvaz/Daisy-m4</RepositoryUrl>
   </PropertyGroup>
 
-  <!-- Ensures that plugins are loaded into the binary folder to allow ingestion during runtime -->
-  <PropertyGroup>
-    <DaisyPluginCollector>true</DaisyPluginCollector>
-  </PropertyGroup>
-
-  <ItemGroup>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Daisy.Resources\Daisy.Resources.csproj" />
     <ProjectReference Include="..\Daisy.Factories\Daisy.Factories.csproj" />
+    
+    <!-- Plugin Projects - Direct References -->
+    <!-- Abilities -->
+    <ProjectReference Include="..\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj" />
+    <ProjectReference Include="..\Daisy.Abilities\Daisy.Abilities.Terminate\Daisy.Abilities.Terminate.csproj" />
+    <ProjectReference Include="..\Daisy.Abilities\Daisy.Abilities.OutputValidator\Daisy.Abilities.OutputValidator.csproj" />
+    <ProjectReference Include="..\Daisy.Abilities\Daisy.Abilities.Weather\Daisy.Abilities.Weather.csproj" />
+    
+    <!-- Receivers -->
+    <ProjectReference Include="..\Daisy.Receivers\Daisy.Receivers.Console\Daisy.Receivers.Console.csproj" />
+    <ProjectReference Include="..\Daisy.Receivers\Daisy.Receivers.WeatherEvent\Daisy.Receivers.WeatherEvent.csproj" />
+    
+    <!-- Transmitters -->
+    <ProjectReference Include="..\Daisy.Transmitters\Daisy.Transmitters.Console\Daisy.Transmitters.Console.csproj" />
+    <ProjectReference Include="..\Daisy.Transmitters\Daisy.Transmitters.WorkflowTrigger\Daisy.Transmitters.WorkflowTrigger.csproj" />
+    
+    <!-- Workflows -->
+    <ProjectReference Include="..\Daisy.Workflows\Daisy.Workflows.Starter\Daisy.Workflows.Starter.csproj" />
+    <ProjectReference Include="..\Daisy.Workflows\Daisy.Workflows.TryMe\Daisy.Workflows.Weather.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appconfig.json">

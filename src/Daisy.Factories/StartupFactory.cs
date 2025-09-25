@@ -5,7 +5,6 @@ using Daisy.Resources.Startup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -53,34 +52,44 @@ namespace Daisy
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 
-            var serviceInterface = typeof(IDaisyService);
-
-            var configuredAssemblies = new List<string>();
-            configuredAssemblies.AddRange(settings.Abilities);
-            configuredAssemblies.AddRange(settings.Receivers.Keys);
-            configuredAssemblies.AddRange(settings.Transmitters);
-
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                            ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, configuredAssemblies).ToList()
-                            : throw new Exception("Error loading assemblies: plugins folder not found.");
-            foreach (var daisyAssembly in assemblies)
-            {
-                var serviceTypes = daisyAssembly.GetTypes().Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass);
-
-                foreach (var serviceType in serviceTypes)
-                {
-                    dynamic pathObject = Activator.CreateInstance(serviceType, settings);
-                    var service = pathObject as IDaisyService;
-                    ServiceContainer.Instance.Services.Add(service);
-                }
-            }
+            // Register IDaisyService implementations directly from loaded assemblies
+            RegisterServicesFromLoadedAssemblies(serviceCollection, settings);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
             ServiceContainer.Instance.Services.ForEach(s => s.Initialize(serviceProvider));
             ServiceContainer.Instance.AddServiceProvider(serviceProvider);
 
             return serviceProvider;
+        }
+
+        private static void RegisterServicesFromLoadedAssemblies(IServiceCollection serviceCollection, ApplicationSettings settings)
+        {
+            var serviceInterface = typeof(IDaisyService);
+            
+            // Get all loaded assemblies that contain plugin types
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => assembly.GetName().Name.StartsWith("Daisy."))
+                .ToList();
+
+            foreach (var assembly in loadedAssemblies)
+            {
+                var serviceTypes = assembly.GetTypes()
+                    .Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract);
+
+                foreach (var serviceType in serviceTypes)
+                {
+                    try
+                    {
+                        var service = (IDaisyService)Activator.CreateInstance(serviceType, settings);
+                        ServiceContainer.Instance.Services.Add(service);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the error but continue loading other services
+                        Console.WriteLine($"Failed to register service {serviceType.Name}: {ex.Message}");
+                    }
+                }
+            }
         }
     }
 }
