@@ -30,8 +30,11 @@ Always reference these instructions first and fallback to search or bash command
   2. Application displays menu with options to type "start", "bye", or workflow names
   3. Type individual commands (each on a new line) to test functionality
   4. Type `bye` to terminate gracefully
-- ALWAYS run `dotnet format` to fix code formatting before committing (required due to whitespace formatting rules)
+- ALWAYS run `dotnet format` to fix code formatting before committing (required due to strict whitespace formatting rules)
+- ALWAYS use `dotnet format --verify-no-changes` to validate formatting compliance before submitting
 - ALWAYS run complete build and test cycle before publishing changes
+
+**CRITICAL**: Code formatting failures will cause CI pipeline failures. The PR validation workflow runs `dotnet format --verify-no-changes` and will reject improperly formatted code.
 
 ### Build Validation
 - Solution builds with warnings only (nullable reference type warnings are expected)
