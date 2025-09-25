@@ -19,7 +19,7 @@ namespace Daisy.Factories
         {
             var coreInterface = typeof(ICore);
             var coreType = typeof(T);
-            
+
             if (coreInterface.IsAssignableFrom(coreType) && coreType.IsClass)
             {
                 var core = new T() as ICore;

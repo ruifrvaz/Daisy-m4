@@ -44,7 +44,7 @@ namespace Daisy.Tests.Factory.Transmitter
             var transmitters = Resources.Pools.ExternalTransmitters.Instance.Pool.Select(p => p.GetType());
 
             transmitters.Count().Should().BeGreaterThanOrEqualTo(expectedTransmitterTypes.Count);
-            
+
             foreach (var expectedType in expectedTransmitterTypes)
             {
                 transmitters.Should().Contain(t => t == expectedType);

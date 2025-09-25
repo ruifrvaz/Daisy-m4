@@ -18,7 +18,7 @@ namespace Daisy.Factories
         {
             var transmitterInterface = typeof(IExternalTransmitter);
             var transmitterType = typeof(T);
-            
+
             if (transmitterInterface.IsAssignableFrom(transmitterType) && transmitterType.IsClass)
             {
                 var transmitter = new T() as IExternalTransmitter;
@@ -36,7 +36,7 @@ namespace Daisy.Factories
         {
             var transmitterInterface = typeof(ILoopBackTransmitter);
             var transmitterType = typeof(T);
-            
+
             if (transmitterInterface.IsAssignableFrom(transmitterType) && transmitterType.IsClass)
             {
                 var transmitter = new T() as ILoopBackTransmitter;

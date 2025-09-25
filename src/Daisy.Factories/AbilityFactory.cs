@@ -57,7 +57,7 @@ namespace Daisy.Factories
         private static void LoadAbilityPath<T>(ApplicationSettings settings, IServiceProvider serviceProvider, Type abilityInterface, Type traverseRuleInterface) where T : class
         {
             var abilityPath = typeof(T);
-            
+
             if (!abilityInterface.IsAssignableFrom(abilityPath) || !abilityPath.IsClass || abilityPath.IsAbstract)
                 return;
 

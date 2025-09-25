@@ -48,7 +48,7 @@ namespace Daisy.Tests.Factory.Receiver
             var receivers = Resources.Pools.ExternalReceivers.Instance.Pool.Select(p => p.GetType());
 
             receivers.Count().Should().BeGreaterThanOrEqualTo(expectedReceiverTypes.Count);
-            
+
             foreach (var expectedType in expectedReceiverTypes)
             {
                 receivers.Should().Contain(r => r == expectedType);
@@ -72,7 +72,7 @@ namespace Daisy.Tests.Factory.Receiver
             // Since we only load types that actually implement the interface, 
             // the count should match exactly
             receivers.Count().Should().Be(expectedReceiverTypes.Count);
-            
+
             foreach (var expectedType in expectedReceiverTypes)
             {
                 receivers.Should().Contain(r => r == expectedType);

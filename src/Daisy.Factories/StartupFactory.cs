@@ -65,7 +65,7 @@ namespace Daisy
         private static void RegisterServicesFromLoadedAssemblies(IServiceCollection serviceCollection, ApplicationSettings settings)
         {
             var serviceInterface = typeof(IDaisyService);
-            
+
             // Get all loaded assemblies that contain plugin types
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(assembly => assembly.GetName().Name.StartsWith("Daisy."))
