@@ -88,7 +88,7 @@ namespace Daisy.Resources.Services
             if (_serviceProvider == null)
             {
                 throw new Exception("Service provider not initialized.");
-            };
+            }
 
             return _serviceProvider;
         }
@@ -115,7 +115,7 @@ namespace Daisy.Resources.Services
 
                 _serviceProvider.Dispose();
                 _serviceProvider = null;
-            };
+            }
         }
     }
 }
