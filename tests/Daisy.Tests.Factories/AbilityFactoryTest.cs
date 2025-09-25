@@ -22,6 +22,12 @@ namespace Daisy.Tests.Factory.Path
         {
             Settings = StartupFactory.AppSettingsConfiguration.LoadApplicationSettings();
 
+            // Force load ability assemblies by referencing types from each
+            var operatorType = typeof(Daisy.Abilities.Operator.ListWorkflowsPath);
+            var terminateType = typeof(Daisy.Abilities.Terminate.TerminatePath);
+            var validatorType = typeof(Daisy.Abilities.OutputValidator.Paths.OutputValidatorPath);
+            var weatherType = typeof(Daisy.Abilities.Weather.Paths.GetWeatherByCityPath);
+
             ServiceProvider = StartupFactory.LoadServices(Settings);
         }
 

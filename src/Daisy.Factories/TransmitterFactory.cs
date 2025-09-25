@@ -10,37 +10,59 @@ namespace Daisy.Factories
     {
         public static void LoadExternalTransmitters(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            // Load known external transmitter types directly
-            LoadExternalTransmitter<Daisy.Transmitters.Console.ConsoleTransmitter>();
-        }
-
-        private static void LoadExternalTransmitter<T>() where T : class, new()
-        {
+            // look in assemblies and find all classes that implement IExternalTransmitter
             var transmitterInterface = typeof(IExternalTransmitter);
-            var transmitterType = typeof(T);
 
-            if (transmitterInterface.IsAssignableFrom(transmitterType) && transmitterType.IsClass)
+            // Get all loaded assemblies that match the configured transmitter names
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => settings.Transmitters.Any(transmitterName => 
+                    assembly.GetName().Name.Equals(transmitterName, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+
+            foreach (var assembly in loadedAssemblies)
             {
-                var transmitter = new T() as IExternalTransmitter;
-                ExternalTransmitters.Instance.Pool.Add(transmitter);
+                var transmitterTypes = assembly.GetTypes()
+                    .Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass)
+                    .ToList();
+
+                foreach (var transmitterType in transmitterTypes)
+                {
+                    // transmitters may or may not implement external IExternalTransmitter
+                    if (transmitterType != null)
+                    {
+                        var transmitter = (IExternalTransmitter)Activator.CreateInstance(transmitterType);
+                        ExternalTransmitters.Instance.Pool.Add(transmitter);
+                    }
+                }
             }
         }
 
         public static void LoadLoopBackTransmitters(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            // Load known loopback transmitter types directly
-            LoadLoopBackTransmitter<Daisy.Transmitters.WorkflowTrigger.WorkflowTriggerLoopbackTransmitter>();
-        }
-
-        private static void LoadLoopBackTransmitter<T>() where T : class, new()
-        {
+            // look in assemblies and find all classes that implement ILoopBackTransmitter
             var transmitterInterface = typeof(ILoopBackTransmitter);
-            var transmitterType = typeof(T);
 
-            if (transmitterInterface.IsAssignableFrom(transmitterType) && transmitterType.IsClass)
+            // Get all loaded assemblies that match the configured transmitter names
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => settings.Transmitters.Any(transmitterName => 
+                    assembly.GetName().Name.Equals(transmitterName, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+
+            foreach (var assembly in loadedAssemblies)
             {
-                var transmitter = new T() as ILoopBackTransmitter;
-                LoopBackTransmitters.Instance.Pool.Add(transmitter);
+                var transmitterTypes = assembly.GetTypes()
+                    .Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass)
+                    .ToList();
+
+                foreach (var transmitterType in transmitterTypes)
+                {
+                    // transmitters may or may not implement external ILoopBackTransmitter
+                    if (transmitterType != null)
+                    {
+                        var transmitter = (ILoopBackTransmitter)Activator.CreateInstance(transmitterType);
+                        LoopBackTransmitters.Instance.Pool.Add(transmitter);
+                    }
+                }
             }
         }
     }
