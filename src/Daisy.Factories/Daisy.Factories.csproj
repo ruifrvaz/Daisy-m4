@@ -15,23 +15,17 @@
   <ItemGroup>
     <ProjectReference Include="..\Daisy.Resources\Daisy.Resources.csproj" />
     
-    <!-- Plugin Projects - Direct References for Type Loading -->
+    <!-- Plugin Projects - Direct References for Type Loading Using Wildcards -->
     <!-- Abilities -->
-    <ProjectReference Include="..\Daisy.Abilities\Daisy.Abilities.Operator\Daisy.Abilities.Operator.csproj" />
-    <ProjectReference Include="..\Daisy.Abilities\Daisy.Abilities.Terminate\Daisy.Abilities.Terminate.csproj" />
-    <ProjectReference Include="..\Daisy.Abilities\Daisy.Abilities.OutputValidator\Daisy.Abilities.OutputValidator.csproj" />
-    <ProjectReference Include="..\Daisy.Abilities\Daisy.Abilities.Weather\Daisy.Abilities.Weather.csproj" />
+    <ProjectReference Include="..\Daisy.Abilities\*\*.csproj" />
     
     <!-- Receivers -->
-    <ProjectReference Include="..\Daisy.Receivers\Daisy.Receivers.Console\Daisy.Receivers.Console.csproj" />
-    <ProjectReference Include="..\Daisy.Receivers\Daisy.Receivers.WeatherEvent\Daisy.Receivers.WeatherEvent.csproj" />
+    <ProjectReference Include="..\Daisy.Receivers\*\*.csproj" />
     
     <!-- Transmitters -->
-    <ProjectReference Include="..\Daisy.Transmitters\Daisy.Transmitters.Console\Daisy.Transmitters.Console.csproj" />
-    <ProjectReference Include="..\Daisy.Transmitters\Daisy.Transmitters.WorkflowTrigger\Daisy.Transmitters.WorkflowTrigger.csproj" />
+    <ProjectReference Include="..\Daisy.Transmitters\*\*.csproj" />
     
     <!-- Workflows -->
-    <ProjectReference Include="..\Daisy.Workflows\Daisy.Workflows.Starter\Daisy.Workflows.Starter.csproj" />
-    <ProjectReference Include="..\Daisy.Workflows\Daisy.Workflows.TryMe\Daisy.Workflows.Weather.csproj" />
+    <ProjectReference Include="..\Daisy.Workflows\*\*.csproj" />
   </ItemGroup>
 </Project>
