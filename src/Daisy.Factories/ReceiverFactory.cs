@@ -15,7 +15,7 @@ namespace Daisy.Factories
 
             // Get all loaded assemblies that match the configured receiver names
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Receivers.Keys.Any(receiverName => 
+                .Where(assembly => settings.Receivers.Keys.Any(receiverName =>
                     assembly.GetName().Name.Equals(receiverName, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 
@@ -46,7 +46,7 @@ namespace Daisy.Factories
 
             // Get all loaded assemblies that match the configured receiver names
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Receivers.Keys.Any(receiverName => 
+                .Where(assembly => settings.Receivers.Keys.Any(receiverName =>
                     assembly.GetName().Name.Equals(receiverName, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 
@@ -72,7 +72,7 @@ namespace Daisy.Factories
 
             // Get all loaded assemblies that match the configured receiver names
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Receivers.Keys.Any(receiverName => 
+                .Where(assembly => settings.Receivers.Keys.Any(receiverName =>
                     assembly.GetName().Name.Equals(receiverName, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 

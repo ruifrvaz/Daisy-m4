@@ -48,7 +48,7 @@ namespace Daisy.Factories
 
             // Get all loaded assemblies that match the configured ability names
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Abilities.Any(abilityName => 
+                .Where(assembly => settings.Abilities.Any(abilityName =>
                     assembly.GetName().Name.Equals(abilityName, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 

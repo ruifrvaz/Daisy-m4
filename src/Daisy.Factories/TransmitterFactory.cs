@@ -15,7 +15,7 @@ namespace Daisy.Factories
 
             // Get all loaded assemblies that match the configured transmitter names
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Transmitters.Any(transmitterName => 
+                .Where(assembly => settings.Transmitters.Any(transmitterName =>
                     assembly.GetName().Name.Equals(transmitterName, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 
@@ -44,7 +44,7 @@ namespace Daisy.Factories
 
             // Get all loaded assemblies that match the configured transmitter names
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Transmitters.Any(transmitterName => 
+                .Where(assembly => settings.Transmitters.Any(transmitterName =>
                     assembly.GetName().Name.Equals(transmitterName, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 

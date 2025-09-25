@@ -14,7 +14,7 @@ namespace Daisy.Factories
 
             // Get all loaded assemblies that match the configured workflow names
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Workflows.Any(workflowName => 
+                .Where(assembly => settings.Workflows.Any(workflowName =>
                     assembly.GetName().Name.Equals(workflowName, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 
