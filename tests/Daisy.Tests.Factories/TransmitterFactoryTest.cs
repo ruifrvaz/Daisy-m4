@@ -34,24 +34,21 @@ namespace Daisy.Tests.Factory.Transmitter
         {
             TransmitterFactory.LoadExternalTransmitters(Settings!, ServiceProvider!);
 
-
-            var transmitterInterface = typeof(IExternalTransmitter);
-            var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
-            var transmitterAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings!.Transmitters).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
-
-            transmitterAssemblies.Should().NotBeEmpty();
-
-            var transmitterTypes = new List<Type>();
-            foreach (var assembly in transmitterAssemblies)
+            // Check that expected transmitter types were loaded directly
+            var expectedTransmitterTypes = new[]
             {
-                transmitterTypes.AddRange(assembly.GetTypes().Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass));
+                typeof(Daisy.Transmitters.Console.ConsoleTransmitter),
+                // WorkflowTriggerLoopbackTransmitter implements ILoopBackTransmitter, not IExternalTransmitter
+            }.Where(t => typeof(IExternalTransmitter).IsAssignableFrom(t)).ToList();
+
+            var transmitters = Resources.Pools.ExternalTransmitters.Instance.Pool.Select(p => p.GetType());
+
+            transmitters.Count().Should().BeGreaterThanOrEqualTo(expectedTransmitterTypes.Count);
+
+            foreach (var expectedType in expectedTransmitterTypes)
+            {
+                transmitters.Should().Contain(t => t == expectedType);
             }
-
-            var transmitters = Resources.Pools.ExternalTransmitters.Instance.Pool.Select(p => p.GetType().Name);
-
-            transmitters.Count().Should().BeGreaterThanOrEqualTo(transmitterTypes.Count());
-            transmitters.Except(transmitterTypes.Select(tt => tt.Name).ToList()).Should().BeEmpty();
         }
 
         [ClassCleanup]

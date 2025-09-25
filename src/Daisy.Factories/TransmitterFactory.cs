@@ -1,11 +1,8 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
-using Daisy.Resources.Startup;
 using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Daisy.Factories
 {
@@ -13,23 +10,27 @@ namespace Daisy.Factories
     {
         public static void LoadExternalTransmitters(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
-                : throw new Exception("Error loading modules: plugins folder not found.");
-
-            // look in the assembly and find all classes that implement IExternalTransmitter
+            // look in assemblies and find all classes that implement IExternalTransmitter
             var transmitterInterface = typeof(IExternalTransmitter);
-            foreach (var assembly in assemblies)
+
+            // Get all loaded assemblies that match the configured transmitter names
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => settings.Transmitters.Any(transmitterName =>
+                    assembly.GetName().Name.Equals(transmitterName, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+
+            foreach (var assembly in loadedAssemblies)
             {
-                var transmitterTypes = assembly.GetTypes().Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass).ToList();
+                var transmitterTypes = assembly.GetTypes()
+                    .Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass)
+                    .ToList();
+
                 foreach (var transmitterType in transmitterTypes)
                 {
                     // transmitters may or may not implement external IExternalTransmitter
                     if (transmitterType != null)
                     {
-                        dynamic transmitterObject = Activator.CreateInstance(transmitterType);
-                        var transmitter = transmitterObject as IExternalTransmitter;
+                        var transmitter = (IExternalTransmitter)Activator.CreateInstance(transmitterType);
                         ExternalTransmitters.Instance.Pool.Add(transmitter);
                     }
                 }
@@ -38,24 +39,27 @@ namespace Daisy.Factories
 
         public static void LoadLoopBackTransmitters(ApplicationSettings settings, IServiceProvider serviceProvider)
         {
-            // look in the assembly and find all classes that implement ILoopBackTransmitter
+            // look in assemblies and find all classes that implement ILoopBackTransmitter
             var transmitterInterface = typeof(ILoopBackTransmitter);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Transmitters).ToList()
-                : throw new Exception("Error loading modules: plugins folder not found.");
+            // Get all loaded assemblies that match the configured transmitter names
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => settings.Transmitters.Any(transmitterName =>
+                    assembly.GetName().Name.Equals(transmitterName, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
 
-            foreach (var assembly in assemblies)
+            foreach (var assembly in loadedAssemblies)
             {
-                var receiverTypes = assembly.GetTypes().Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass).ToList();
-                foreach (var transmitterType in receiverTypes)
+                var transmitterTypes = assembly.GetTypes()
+                    .Where(type => transmitterInterface.IsAssignableFrom(type) && type.IsClass)
+                    .ToList();
+
+                foreach (var transmitterType in transmitterTypes)
                 {
                     // transmitters may or may not implement external ILoopBackTransmitter
                     if (transmitterType != null)
                     {
-                        dynamic transmitterObject = Activator.CreateInstance(transmitterType);
-                        var transmitter = transmitterObject as ILoopBackTransmitter;
+                        var transmitter = (ILoopBackTransmitter)Activator.CreateInstance(transmitterType);
                         LoopBackTransmitters.Instance.Pool.Add(transmitter);
                     }
                 }

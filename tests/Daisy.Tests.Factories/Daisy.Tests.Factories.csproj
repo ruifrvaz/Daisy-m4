@@ -8,11 +8,6 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <!-- Ensures that plugins are loaded into the binary folder to allow ingestion during runtime -->
-  <PropertyGroup>
-    <DaisyPluginCollector>true</DaisyPluginCollector>
-  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.0.0" />
@@ -30,6 +25,19 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Daisy.Factories\Daisy.Factories.csproj" />
     <ProjectReference Include="..\..\src\Daisy.Resources\Daisy.Resources.csproj" />
+    
+    <!-- Plugin Projects - Direct References for Testing Using Wildcards -->
+    <!-- Abilities -->
+    <ProjectReference Include="..\..\src\Daisy.Abilities\*\*.csproj" />
+    
+    <!-- Receivers -->
+    <ProjectReference Include="..\..\src\Daisy.Receivers\*\*.csproj" />
+    
+    <!-- Transmitters -->
+    <ProjectReference Include="..\..\src\Daisy.Transmitters\*\*.csproj" />
+    
+    <!-- Workflows -->
+    <ProjectReference Include="..\..\src\Daisy.Workflows\*\*.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appconfig.json">

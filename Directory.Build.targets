@@ -3,34 +3,6 @@
     <!-- Works in VS and dotnet CLI -->
     <RepoRoot>$([MSBuild]::EnsureTrailingSlash('$(MSBuildThisFileDirectory)'))</RepoRoot>
   </PropertyGroup>
-
-  <!-- Run once per TFM, only for your host project (adjust the Condition to your host name) -->
-  <Target Name="PublishPlugins"
-          AfterTargets="Build"
-          Condition="'$(TargetFramework)' != '' and '$(DaisyPluginCollector)' == 'true'">
-    
-    <ItemGroup>
-      <!-- All plugin projects -->
-      <PluginProjects Include="$(RepoRoot)**/Daisy.Abilities.*/*.csproj" />
-      <PluginProjects Include="$(RepoRoot)**/Daisy.Receivers.*/*.csproj" />
-      <PluginProjects Include="$(RepoRoot)**/Daisy.Transmitters.*/*.csproj" />
-      <PluginProjects Include="$(RepoRoot)**/Daisy.Workflows.*/*.csproj" />
-
-      <!-- Just in case the host matches any pattern -->
-      <PluginProjects Remove="$(MSBuildProjectFullPath)" />
-    </ItemGroup>
-
-    <!-- Publish each plugin into its own folder under /plugins -->
-    <MSBuild Projects="@(PluginProjects)"
-             Targets="Publish"
-             Properties="
-               Configuration=$(Configuration);
-               TargetFramework=$(TargetFramework);
-               SelfContained=false;
-               PublishSingleFile=false;
-               PublishDir=$(TargetDir)plugins\%(PluginProjects.Filename)\"
-    />
-
-    <Message Importance="High" Text="Published @(PluginProjects->'%(Filename)') to $(TargetDir)plugins\" />
-  </Target>
+  
+  <!-- Plugin publishing logic removed - plugins now use direct project references -->
 </Project>

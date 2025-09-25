@@ -2,10 +2,8 @@ using Daisy.Resources.Attributes;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
-using Daisy.Resources.Startup;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -48,14 +46,15 @@ namespace Daisy.Factories
             var abilityInterface = typeof(IPath);
             var traverseRuleInterface = typeof(ITraverseRule);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Abilities).ToList()
-                : throw new Exception("Error loading modules: plugins folder not found.");
+            // Get all loaded assemblies that match the configured ability names
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => settings.Abilities.Any(abilityName =>
+                    assembly.GetName().Name.Equals(abilityName, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
 
-            foreach (var assembly in assemblies)
+            foreach (var assembly in loadedAssemblies)
             {
-                var types = AssemblyPluginsLoader.SafeGetExportedTypes(assembly);
+                var types = GetExportedTypesFromAssembly(assembly);
 
                 var abilityPaths = types
                     .Where(t => t is { IsClass: true, IsAbstract: false }
@@ -73,12 +72,26 @@ namespace Daisy.Factories
                     var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
 
                     // ctor: (IServiceProvider, traverseRules, hasBeenTraversedRules, name, order, settings)
-                    dynamic instance = Activator.CreateInstance(
+                    var instance = (IPath)Activator.CreateInstance(
                         abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules,
                         abilityPath.Name, traverseOrder, settings)!;
 
-                    Paths.Instance.Pool.Add((IPath)instance);
+                    Paths.Instance.Pool.Add(instance);
                 }
+            }
+        }
+
+
+        private static Type[] GetExportedTypesFromAssembly(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetExportedTypes();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting types from assembly {assembly.GetName().Name}: {ex.Message}");
+                return new Type[0];
             }
         }
 

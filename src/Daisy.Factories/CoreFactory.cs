@@ -1,10 +1,7 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
-using Daisy.Resources.Startup;
 using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Daisy.Factories
 {
@@ -15,20 +12,21 @@ namespace Daisy.Factories
         {
             var coreInterface = typeof(ICore);
 
-            var pluginsRoot = Path.Combine(AppContext.BaseDirectory, "plugins");
-            var assemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, settings.Workflows).ToList()
-                : throw new Exception("Error loading modules: plugins folder not found.");
-            foreach (var assembly in assemblies)
+            // Get all loaded assemblies that match the configured workflow names
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => settings.Workflows.Any(workflowName =>
+                    assembly.GetName().Name.Equals(workflowName, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+
+            foreach (var assembly in loadedAssemblies)
             {
                 var coreTypes = assembly.GetTypes()
-                                            .Where(type => coreInterface.IsAssignableFrom(type) && type.IsClass)
-                                            .ToList();
+                    .Where(type => coreInterface.IsAssignableFrom(type) && type.IsClass)
+                    .ToList();
 
                 foreach (var coreType in coreTypes)
                 {
-                    dynamic coreObject = Activator.CreateInstance(coreType);
-                    var core = coreObject as ICore;
+                    var core = (ICore)Activator.CreateInstance(coreType);
                     Resources.Pools.Cores.Instance.Pool.Add(core);
                 }
             }

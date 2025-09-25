@@ -9,16 +9,22 @@
     <RepositoryUrl>https://github.com/ruifrvaz/Daisy-m4</RepositoryUrl>
   </PropertyGroup>
 
-  <!-- Ensures that plugins are loaded into the binary folder to allow ingestion during runtime -->
-  <PropertyGroup>
-    <DaisyPluginCollector>true</DaisyPluginCollector>
-  </PropertyGroup>
-
-  <ItemGroup>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Daisy.Resources\Daisy.Resources.csproj" />
     <ProjectReference Include="..\Daisy.Factories\Daisy.Factories.csproj" />
+    
+    <!-- Plugin Projects - Direct References Using Wildcards -->
+    <!-- Abilities -->
+    <ProjectReference Include="..\Daisy.Abilities\*\*.csproj" />
+    
+    <!-- Receivers -->
+    <ProjectReference Include="..\Daisy.Receivers\*\*.csproj" />
+    
+    <!-- Transmitters -->
+    <ProjectReference Include="..\Daisy.Transmitters\*\*.csproj" />
+    
+    <!-- Workflows -->
+    <ProjectReference Include="..\Daisy.Workflows\*\*.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appconfig.json">

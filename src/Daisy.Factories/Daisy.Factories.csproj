@@ -14,5 +14,18 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Daisy.Resources\Daisy.Resources.csproj" />
+    
+    <!-- Plugin Projects - Direct References for Type Loading Using Wildcards -->
+    <!-- Abilities -->
+    <ProjectReference Include="..\Daisy.Abilities\*\*.csproj" />
+    
+    <!-- Receivers -->
+    <ProjectReference Include="..\Daisy.Receivers\*\*.csproj" />
+    
+    <!-- Transmitters -->
+    <ProjectReference Include="..\Daisy.Transmitters\*\*.csproj" />
+    
+    <!-- Workflows -->
+    <ProjectReference Include="..\Daisy.Workflows\*\*.csproj" />
   </ItemGroup>
 </Project>

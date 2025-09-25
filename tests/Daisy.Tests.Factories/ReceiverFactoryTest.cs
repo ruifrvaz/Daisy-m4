@@ -38,24 +38,21 @@ namespace Daisy.Tests.Factory.Receiver
         {
             ReceiverFactory.LoadExternalReceivers(Settings!, ServiceProvider!);
 
-            var receiverInterface = typeof(IExternalReceiver);
-
-            var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
-            var receiverAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings!.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
-
-            receiverAssemblies.Should().NotBeEmpty();
-
-            var receiverTypes = new List<Type>();
-            foreach (var assembly in receiverAssemblies)
+            // Check that expected receiver types were loaded directly
+            var expectedReceiverTypes = new[]
             {
-                receiverTypes.AddRange(assembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass));
+                typeof(Daisy.Receivers.Console.ConsoleReceiver),
+                // WeatherEventReceiver doesn't implement IExternalReceiver, so it won't be in this pool
+            }.Where(t => typeof(IExternalReceiver).IsAssignableFrom(t)).ToList();
+
+            var receivers = Resources.Pools.ExternalReceivers.Instance.Pool.Select(p => p.GetType());
+
+            receivers.Count().Should().BeGreaterThanOrEqualTo(expectedReceiverTypes.Count);
+
+            foreach (var expectedType in expectedReceiverTypes)
+            {
+                receivers.Should().Contain(r => r == expectedType);
             }
-
-            var receivers = Resources.Pools.ExternalReceivers.Instance.Pool.Select(p => p.GetType().Name);
-
-            receivers.Count().Should().BeGreaterThanOrEqualTo(receiverTypes.Count());
-            receivers.Except(receiverTypes.Select(rt => rt.Name).ToList()).Should().BeEmpty();
         }
 
         [TestMethod]
@@ -63,24 +60,23 @@ namespace Daisy.Tests.Factory.Receiver
         {
             ReceiverFactory.LoadLoopBackReceivers(Settings!, ServiceProvider!);
 
-            var receiverInterface = typeof(ILoopBackReceiver);
-
-            var pluginsRoot = System.IO.Path.Combine(AppContext.BaseDirectory, "plugins");
-            var receiverAssemblies = Directory.Exists(pluginsRoot)
-                ? AssemblyPluginsLoader.LoadFromPluginsFolder(pluginsRoot, Settings!.Receivers.Keys).ToList() : throw new Exception("Error loading modules: plugins folder not found.");
-
-            receiverAssemblies.Should().NotBeEmpty();
-
-            var receiverTypes = new List<Type>();
-            foreach (var assembly in receiverAssemblies)
+            // Check if any of our known receivers implement ILoopBackReceiver
+            var expectedReceiverTypes = new[]
             {
-                receiverTypes.AddRange(assembly.GetTypes().Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass));
-            }
+                typeof(Daisy.Receivers.Console.ConsoleReceiver),
+                typeof(Daisy.Receivers.WeatherEvent.WeatherEventReceiver)
+            }.Where(t => typeof(ILoopBackReceiver).IsAssignableFrom(t)).ToList();
 
             var receivers = Resources.Pools.LoopBackReceivers.Instance.Pool.Select(p => p.GetType());
 
-            receivers.Count().Should().BeGreaterThanOrEqualTo(receiverTypes.Count());
-            receivers.Except(receiverTypes).Should().BeEmpty();
+            // Since we only load types that actually implement the interface, 
+            // the count should match exactly
+            receivers.Count().Should().Be(expectedReceiverTypes.Count);
+
+            foreach (var expectedType in expectedReceiverTypes)
+            {
+                receivers.Should().Contain(r => r == expectedType);
+            }
         }
 
         [ClassCleanup]
