@@ -23,3 +23,20 @@ Workflows run inside **Cores** and can share state or communicate through **Pool
 - When the solution does not provide clear design, follow the best practices of .NET Core development.  
 - Ensure modules respect Daisy’s traversal mechanics (`Impulse`, `Paths`, `TraverseRules`, `HasBeenTraversedRules`).  
 - Register modules via Dependency Injection and use attribute-based discovery when extending.
+
+## Code Formatting Requirements
+**CRITICAL**: All code must pass formatting validation before submission. This is enforced by the CI pipeline.
+
+- **Run formatting**: Execute `dotnet format` to apply consistent code formatting before committing any changes
+- **Verify formatting**: Use `dotnet format --verify-no-changes` to check if code meets formatting standards
+- **Required compliance**: The CI pipeline will fail if code does not pass formatting validation
+- **Apply early and often**: Format code as soon as changes are made to avoid CI failures
+
+Example workflow:
+```bash
+# After making code changes
+dotnet format              # Apply formatting
+dotnet build              # Build to ensure no issues  
+dotnet test               # Run tests
+dotnet format --verify-no-changes  # Verify formatting compliance
+```
