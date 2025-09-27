@@ -1,8 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <!-- Works in VS and dotnet CLI -->
-    <RepoRoot>$([MSBuild]::EnsureTrailingSlash('$(MSBuildThisFileDirectory)'))</RepoRoot>
-  </PropertyGroup>
-  
-  <!-- Plugin publishing logic removed - plugins now use direct project references -->
-</Project>
