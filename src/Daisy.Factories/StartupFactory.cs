@@ -5,6 +5,7 @@ using Daisy.Resources.Startup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -40,6 +41,53 @@ namespace Daisy
                 var service = pathObject as IDaisyService;
                 service.Initialize(serviceProvider);
                 ServiceContainer.Instance.Services.Add(service);
+            }
+        }
+
+        public static void ForceLoadPluginAssemblies(ApplicationSettings settings)
+        {
+            // Force load plugin assemblies based on configuration to ensure they are loaded into AppDomain
+            // This ensures the factory classes can find them via AppDomain.CurrentDomain.GetAssemblies()
+
+            var assemblyNames = new List<string>();
+
+            // Add all configured plugin assemblies
+            assemblyNames.AddRange(settings.Abilities);
+            assemblyNames.AddRange(settings.Receivers.Keys);
+            assemblyNames.AddRange(settings.Transmitters);
+            assemblyNames.AddRange(settings.Workflows);
+
+            foreach (var assemblyName in assemblyNames.Distinct())
+            {
+                try
+                {
+                    // Check if assembly is already loaded
+                    var existingAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                        .FirstOrDefault(a => a.GetName().Name.Equals(assemblyName, StringComparison.OrdinalIgnoreCase));
+
+                    if (existingAssembly == null)
+                    {
+                        // Try to load using the assembly name first (this works for referenced assemblies)
+                        try
+                        {
+                            Assembly.Load(assemblyName);
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            // Fallback: try loading from file path
+                            var assemblyPath = Path.Combine(AppContext.BaseDirectory, $"{assemblyName}.dll");
+                            if (File.Exists(assemblyPath))
+                            {
+                                Assembly.LoadFrom(assemblyPath);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but continue loading other assemblies
+                    Console.WriteLine($"Warning: Could not load plugin assembly {assemblyName}: {ex.Message}");
+                }
             }
         }
 
