@@ -4,6 +4,7 @@ using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -46,37 +47,60 @@ namespace Daisy.Factories
             var abilityInterface = typeof(IPath);
             var traverseRuleInterface = typeof(ITraverseRule);
 
-            // Get all loaded assemblies that match the configured ability names
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Abilities.Any(abilityName =>
-                    assembly.GetName().Name.Equals(abilityName, StringComparison.OrdinalIgnoreCase)))
-                .ToList();
-
-            foreach (var assembly in loadedAssemblies)
+            // Load each configured ability assembly individually
+            foreach (var abilityName in settings.Abilities)
             {
-                var types = GetExportedTypesFromAssembly(assembly);
-
-                var abilityPaths = types
-                    .Where(t => t is { IsClass: true, IsAbstract: false }
-                                && abilityInterface.IsAssignableFrom(t)
-                                && settings.PathTraverseOrder.ContainsKey(t.Name));
-
-                foreach (var abilityPath in abilityPaths)
+                try
                 {
-                    var traverseRuleTypes = types
+                    Assembly assembly;
+                    try
+                    {
+                        // Try to load using the assembly name first (this works for referenced assemblies)
+                        assembly = Assembly.Load(abilityName);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // Fallback: try loading from file path
+                        var assemblyPath = Path.Combine(AppContext.BaseDirectory, $"{abilityName}.dll");
+                        if (File.Exists(assemblyPath))
+                        {
+                            assembly = Assembly.LoadFrom(assemblyPath);
+                        }
+                        else
+                        {
+                            continue; // Skip if assembly cannot be found
+                        }
+                    }
+
+                    var types = GetExportedTypesFromAssembly(assembly);
+
+                    var abilityPaths = types
                         .Where(t => t is { IsClass: true, IsAbstract: false }
-                                    && traverseRuleInterface.IsAssignableFrom(t));
+                                    && abilityInterface.IsAssignableFrom(t)
+                                    && settings.PathTraverseOrder.ContainsKey(t.Name));
 
-                    var traverseRules = LoadCanTraverseRules(traverseRuleTypes, abilityPath, settings);
-                    var hasBeenTraversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
-                    var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
+                    foreach (var abilityPath in abilityPaths)
+                    {
+                        var traverseRuleTypes = types
+                            .Where(t => t is { IsClass: true, IsAbstract: false }
+                                        && traverseRuleInterface.IsAssignableFrom(t));
 
-                    // ctor: (IServiceProvider, traverseRules, hasBeenTraversedRules, name, order, settings)
-                    var instance = (IPath)Activator.CreateInstance(
-                        abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules,
-                        abilityPath.Name, traverseOrder, settings)!;
+                        var traverseRules = LoadCanTraverseRules(traverseRuleTypes, abilityPath, settings);
+                        var hasBeenTraversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
+                        var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
 
-                    Paths.Instance.Pool.Add(instance);
+                        // ctor: (IServiceProvider, traverseRules, hasBeenTraversedRules, name, order, settings)
+                        var instance = (IPath)Activator.CreateInstance(
+                            abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules,
+                            abilityPath.Name, traverseOrder, settings)!;
+
+                        Paths.Instance.Pool.Add(instance);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but continue loading other assemblies
+                    Console.WriteLine($"Warning: Could not load ability assembly {abilityName}: {ex.Message}");
                 }
             }
         }

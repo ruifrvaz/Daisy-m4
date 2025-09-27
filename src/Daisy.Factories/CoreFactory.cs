@@ -1,7 +1,9 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Daisy.Factories
 {
@@ -12,22 +14,45 @@ namespace Daisy.Factories
         {
             var coreInterface = typeof(ICore);
 
-            // Get all loaded assemblies that match the configured workflow names
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Workflows.Any(workflowName =>
-                    assembly.GetName().Name.Equals(workflowName, StringComparison.OrdinalIgnoreCase)))
-                .ToList();
-
-            foreach (var assembly in loadedAssemblies)
+            // Load each configured workflow assembly individually
+            foreach (var workflowName in settings.Workflows)
             {
-                var coreTypes = assembly.GetTypes()
-                    .Where(type => coreInterface.IsAssignableFrom(type) && type.IsClass)
-                    .ToList();
-
-                foreach (var coreType in coreTypes)
+                try
                 {
-                    var core = (ICore)Activator.CreateInstance(coreType);
-                    Resources.Pools.Cores.Instance.Pool.Add(core);
+                    Assembly assembly;
+                    try
+                    {
+                        // Try to load using the assembly name first (this works for referenced assemblies)
+                        assembly = Assembly.Load(workflowName);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // Fallback: try loading from file path
+                        var assemblyPath = Path.Combine(AppContext.BaseDirectory, $"{workflowName}.dll");
+                        if (File.Exists(assemblyPath))
+                        {
+                            assembly = Assembly.LoadFrom(assemblyPath);
+                        }
+                        else
+                        {
+                            continue; // Skip if assembly cannot be found
+                        }
+                    }
+
+                    var coreTypes = assembly.GetTypes()
+                        .Where(type => coreInterface.IsAssignableFrom(type) && type.IsClass)
+                        .ToList();
+
+                    foreach (var coreType in coreTypes)
+                    {
+                        var core = (ICore)Activator.CreateInstance(coreType);
+                        Resources.Pools.Cores.Instance.Pool.Add(core);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but continue loading other assemblies
+                    Console.WriteLine($"Warning: Could not load workflow assembly {workflowName}: {ex.Message}");
                 }
             }
         }
