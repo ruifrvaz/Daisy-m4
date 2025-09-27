@@ -44,53 +44,6 @@ namespace Daisy
             }
         }
 
-        public static void ForceLoadPluginAssemblies(ApplicationSettings settings)
-        {
-            // Force load plugin assemblies based on configuration to ensure they are loaded into AppDomain
-            // This ensures the factory classes can find them via AppDomain.CurrentDomain.GetAssemblies()
-
-            var assemblyNames = new List<string>();
-
-            // Add all configured plugin assemblies
-            assemblyNames.AddRange(settings.Abilities);
-            assemblyNames.AddRange(settings.Receivers.Keys);
-            assemblyNames.AddRange(settings.Transmitters);
-            assemblyNames.AddRange(settings.Workflows);
-
-            foreach (var assemblyName in assemblyNames.Distinct())
-            {
-                try
-                {
-                    // Check if assembly is already loaded
-                    var existingAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                        .FirstOrDefault(a => a.GetName().Name.Equals(assemblyName, StringComparison.OrdinalIgnoreCase));
-
-                    if (existingAssembly == null)
-                    {
-                        // Try to load using the assembly name first (this works for referenced assemblies)
-                        try
-                        {
-                            Assembly.Load(assemblyName);
-                        }
-                        catch (FileNotFoundException)
-                        {
-                            // Fallback: try loading from file path
-                            var assemblyPath = Path.Combine(AppContext.BaseDirectory, $"{assemblyName}.dll");
-                            if (File.Exists(assemblyPath))
-                            {
-                                Assembly.LoadFrom(assemblyPath);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Log the error but continue loading other assemblies
-                    Console.WriteLine($"Warning: Could not load plugin assembly {assemblyName}: {ex.Message}");
-                }
-            }
-        }
-
         public static IServiceProvider LoadServices(ApplicationSettings settings)
         {
             var serviceCollection = new ServiceCollection();
@@ -114,28 +67,58 @@ namespace Daisy
         {
             var serviceInterface = typeof(IDaisyService);
 
-            // Get all loaded assemblies that contain plugin types
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => assembly.GetName().Name.StartsWith("Daisy."))
-                .ToList();
+            // Get all configured plugin assembly names
+            var assemblyNames = new List<string>();
+            assemblyNames.AddRange(settings.Abilities);
+            assemblyNames.AddRange(settings.Receivers.Keys);
+            assemblyNames.AddRange(settings.Transmitters);
+            assemblyNames.AddRange(settings.Workflows);
 
-            foreach (var assembly in loadedAssemblies)
+            foreach (var assemblyName in assemblyNames.Distinct())
             {
-                var serviceTypes = assembly.GetTypes()
-                    .Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract);
-
-                foreach (var serviceType in serviceTypes)
+                try
                 {
+                    Assembly assembly;
                     try
                     {
-                        var service = (IDaisyService)Activator.CreateInstance(serviceType, settings);
-                        ServiceContainer.Instance.Services.Add(service);
+                        // Try to load using the assembly name first (this works for referenced assemblies)
+                        assembly = Assembly.Load(assemblyName);
                     }
-                    catch (Exception ex)
+                    catch (FileNotFoundException)
                     {
-                        // Log the error but continue loading other services
-                        Console.WriteLine($"Failed to register service {serviceType.Name}: {ex.Message}");
+                        // Fallback: try loading from file path
+                        var assemblyPath = Path.Combine(AppContext.BaseDirectory, $"{assemblyName}.dll");
+                        if (File.Exists(assemblyPath))
+                        {
+                            assembly = Assembly.LoadFrom(assemblyPath);
+                        }
+                        else
+                        {
+                            continue; // Skip if assembly cannot be found
+                        }
                     }
+
+                    var serviceTypes = assembly.GetTypes()
+                        .Where(type => serviceInterface.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract);
+
+                    foreach (var serviceType in serviceTypes)
+                    {
+                        try
+                        {
+                            var service = (IDaisyService)Activator.CreateInstance(serviceType, settings);
+                            ServiceContainer.Instance.Services.Add(service);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log the error but continue loading other services
+                            Console.WriteLine($"Failed to register service {serviceType.Name}: {ex.Message}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but continue loading other assemblies
+                    Console.WriteLine($"Warning: Could not load plugin assembly {assemblyName}: {ex.Message}");
                 }
             }
         }

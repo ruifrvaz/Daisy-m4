@@ -15,9 +15,6 @@ namespace Daisy
         {
             var settings = StartupFactory.AppSettingsConfiguration.LoadApplicationSettings();
 
-            // Force load plugin assemblies based on configuration to ensure they are available for plugin discovery
-            StartupFactory.ForceLoadPluginAssemblies(settings);
-
             var serviceProvider = StartupFactory.LoadServices(settings);
 
             AbilityFactory.LoadAbilities(settings, serviceProvider);

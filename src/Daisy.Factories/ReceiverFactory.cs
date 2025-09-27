@@ -1,7 +1,9 @@
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Daisy.Factories
 {
@@ -13,27 +15,50 @@ namespace Daisy.Factories
             // and load them into receiver pool
             var receiverInterface = typeof(IExternalReceiver);
 
-            // Get all loaded assemblies that match the configured receiver names
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Receivers.Keys.Any(receiverName =>
-                    assembly.GetName().Name.Equals(receiverName, StringComparison.OrdinalIgnoreCase)))
-                .ToList();
-
-            foreach (var receiverAssembly in loadedAssemblies)
+            // Load each configured receiver assembly individually
+            foreach (var receiverName in settings.Receivers.Keys)
             {
-                var assemblyName = receiverAssembly.GetName().Name!;
-                if (!settings.Receivers.ContainsKey(assemblyName))
-                    continue;
-
-                var assemblySettings = settings.Receivers[assemblyName];
-                var receiverTypes = receiverAssembly.GetTypes()
-                    .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass)
-                    .ToList();
-
-                foreach (var receiverType in receiverTypes)
+                try
                 {
-                    var receiver = (IExternalReceiver)Activator.CreateInstance(receiverType, assemblySettings.RunOnCores);
-                    Resources.Pools.ExternalReceivers.Instance.Pool.Add(receiver);
+                    Assembly assembly;
+                    try
+                    {
+                        // Try to load using the assembly name first (this works for referenced assemblies)
+                        assembly = Assembly.Load(receiverName);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // Fallback: try loading from file path
+                        var assemblyPath = Path.Combine(AppContext.BaseDirectory, $"{receiverName}.dll");
+                        if (File.Exists(assemblyPath))
+                        {
+                            assembly = Assembly.LoadFrom(assemblyPath);
+                        }
+                        else
+                        {
+                            continue; // Skip if assembly cannot be found
+                        }
+                    }
+
+                    var assemblyName = assembly.GetName().Name!;
+                    if (!settings.Receivers.ContainsKey(assemblyName))
+                        continue;
+
+                    var assemblySettings = settings.Receivers[assemblyName];
+                    var receiverTypes = assembly.GetTypes()
+                        .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass)
+                        .ToList();
+
+                    foreach (var receiverType in receiverTypes)
+                    {
+                        var receiver = (IExternalReceiver)Activator.CreateInstance(receiverType, assemblySettings.RunOnCores);
+                        Resources.Pools.ExternalReceivers.Instance.Pool.Add(receiver);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but continue loading other assemblies
+                    Console.WriteLine($"Warning: Could not load receiver assembly {receiverName}: {ex.Message}");
                 }
             }
         }
@@ -44,23 +69,46 @@ namespace Daisy.Factories
             // and load them into receiver pool
             var receiverInterface = typeof(ILoopBackReceiver);
 
-            // Get all loaded assemblies that match the configured receiver names
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Receivers.Keys.Any(receiverName =>
-                    assembly.GetName().Name.Equals(receiverName, StringComparison.OrdinalIgnoreCase)))
-                .ToList();
-
-            foreach (var assembly in loadedAssemblies)
+            // Load each configured receiver assembly individually
+            foreach (var receiverName in settings.Receivers.Keys)
             {
-                var receiverTypes = assembly.GetTypes()
-                    .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass)
-                    .ToList();
-
-                foreach (var receiverType in receiverTypes)
+                try
                 {
-                    // receivers may or may not implement ILoopBackReceiver receivers
-                    var receiver = (ILoopBackReceiver)Activator.CreateInstance(receiverType);
-                    Resources.Pools.LoopBackReceivers.Instance.Pool.Add(receiver);
+                    Assembly assembly;
+                    try
+                    {
+                        // Try to load using the assembly name first (this works for referenced assemblies)
+                        assembly = Assembly.Load(receiverName);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // Fallback: try loading from file path
+                        var assemblyPath = Path.Combine(AppContext.BaseDirectory, $"{receiverName}.dll");
+                        if (File.Exists(assemblyPath))
+                        {
+                            assembly = Assembly.LoadFrom(assemblyPath);
+                        }
+                        else
+                        {
+                            continue; // Skip if assembly cannot be found
+                        }
+                    }
+
+                    var receiverTypes = assembly.GetTypes()
+                        .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass)
+                        .ToList();
+
+                    foreach (var receiverType in receiverTypes)
+                    {
+                        // receivers may or may not implement ILoopBackReceiver receivers
+                        var receiver = (ILoopBackReceiver)Activator.CreateInstance(receiverType);
+                        Resources.Pools.LoopBackReceivers.Instance.Pool.Add(receiver);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but continue loading other assemblies
+                    Console.WriteLine($"Warning: Could not load receiver assembly {receiverName}: {ex.Message}");
                 }
             }
         }
@@ -70,28 +118,51 @@ namespace Daisy.Factories
             // find all assemblies that implement IEventReceiver, create an instance for each of them and load them into receiver pool
             var receiverInterface = typeof(IEventReceiver);
 
-            // Get all loaded assemblies that match the configured receiver names
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => settings.Receivers.Keys.Any(receiverName =>
-                    assembly.GetName().Name.Equals(receiverName, StringComparison.OrdinalIgnoreCase)))
-                .ToList();
-
-            foreach (var receiverAssembly in loadedAssemblies)
+            // Load each configured receiver assembly individually
+            foreach (var receiverName in settings.Receivers.Keys)
             {
-                var assemblyName = receiverAssembly.GetName().Name!;
-                if (!settings.Receivers.ContainsKey(assemblyName))
-                    continue;
-
-                var assemblySettings = settings.Receivers[assemblyName];
-                var receiverTypes = receiverAssembly.GetTypes()
-                    .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass)
-                    .ToList();
-
-                foreach (var receiverType in receiverTypes)
+                try
                 {
-                    // receivers may or may not implement event receivers
-                    var receiver = (IEventReceiver)Activator.CreateInstance(receiverType, assemblySettings.RunOnCores);
-                    Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
+                    Assembly assembly;
+                    try
+                    {
+                        // Try to load using the assembly name first (this works for referenced assemblies)
+                        assembly = Assembly.Load(receiverName);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // Fallback: try loading from file path
+                        var assemblyPath = Path.Combine(AppContext.BaseDirectory, $"{receiverName}.dll");
+                        if (File.Exists(assemblyPath))
+                        {
+                            assembly = Assembly.LoadFrom(assemblyPath);
+                        }
+                        else
+                        {
+                            continue; // Skip if assembly cannot be found
+                        }
+                    }
+
+                    var assemblyName = assembly.GetName().Name!;
+                    if (!settings.Receivers.ContainsKey(assemblyName))
+                        continue;
+
+                    var assemblySettings = settings.Receivers[assemblyName];
+                    var receiverTypes = assembly.GetTypes()
+                        .Where(type => receiverInterface.IsAssignableFrom(type) && type.IsClass)
+                        .ToList();
+
+                    foreach (var receiverType in receiverTypes)
+                    {
+                        // receivers may or may not implement event receivers
+                        var receiver = (IEventReceiver)Activator.CreateInstance(receiverType, assemblySettings.RunOnCores);
+                        Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but continue loading other assemblies
+                    Console.WriteLine($"Warning: Could not load receiver assembly {receiverName}: {ex.Message}");
                 }
             }
         }
