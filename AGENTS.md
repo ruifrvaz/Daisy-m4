@@ -16,6 +16,7 @@ Workflows run inside **Cores** and can share state or communicate through **Pool
 - The `README.md` file contains the high-level overview of the solution.  
 - The `workflows.md` file lists available workflows and the modules that compose them.  
 - The `engine_design.md` file describes the orchestration design, traversal rules, factories, and startup initialization.  
+- The `plugin_injection.md` file provides comprehensive documentation of the plugin injection system, assembly loading, and factory patterns.  
 
 ## Rules
 - When generating code, always follow the design and patterns of the solution.  

@@ -86,7 +86,9 @@ Updating `appconfig.json` changes which modules are available at runtime.
 
 ### Dependency Injection & Reflection
 - All modules are registered via DI.  
-- Attributes (e.g., `[TraverseRule]`) enable reflection-based discovery and traversal.  
+- Attributes (e.g., `[TraverseRule]`) enable reflection-based discovery and traversal.
+
+> **Note**: For comprehensive details on the plugin injection system, including assembly loading strategies, reflection-based discovery, pool management, and factory patterns, see [`plugin_injection.md`](plugin_injection.md).  
 
 ---
 
