@@ -58,36 +58,58 @@ jobs:
     - name: Verify plugin deployment
       run: |
         echo "Checking plugin deployment..."
-        if [ ! -d "src/Daisy/bin/Release/net8.0/plugins" ]; then
-          echo "❌ Plugins directory not found"
+        build_dir="src/Daisy/bin/Release/net8.0"
+        
+        if [ ! -d "$build_dir" ]; then
+          echo "❌ Build output directory not found"
           exit 1
         fi
         
-        echo "✅ Plugins directory exists"
-        echo "Expected plugins:"
-        echo "- Daisy.Abilities.Operator"
-        echo "- Daisy.Abilities.OutputValidator" 
-        echo "- Daisy.Abilities.Terminate"
-        echo "- Daisy.Abilities.Weather"
-        echo "- Daisy.Receivers.Console"
-        echo "- Daisy.Receivers.WeatherEvent"
-        echo "- Daisy.Transmitters.Console"
-        echo "- Daisy.Transmitters.WorkflowTrigger"
-        echo "- Daisy.Workflows.Starter"
-        echo "- Daisy.Workflows.Weather"
+        echo "✅ Build output directory exists: $build_dir"
+        echo "Expected plugin assemblies:"
+        echo "- Daisy.Abilities.Operator.dll"
+        echo "- Daisy.Abilities.OutputValidator.dll" 
+        echo "- Daisy.Abilities.Terminate.dll"
+        echo "- Daisy.Abilities.Weather.dll"
+        echo "- Daisy.Receivers.Console.dll"
+        echo "- Daisy.Receivers.WeatherEvent.dll"
+        echo "- Daisy.Transmitters.Console.dll"
+        echo "- Daisy.Transmitters.WorkflowTrigger.dll"
+        echo "- Daisy.Workflows.Starter.dll"
+        echo "- Daisy.Workflows.Weather.dll"
         
         echo ""
-        echo "Actual plugins found:"
-        ls -la src/Daisy/bin/Release/net8.0/plugins/
+        echo "Checking for plugin assemblies in build directory:"
         
-        # Check for expected plugin count (should be 10)
-        plugin_count=$(ls -1 src/Daisy/bin/Release/net8.0/plugins/ | wc -l)
-        if [ "$plugin_count" -ne 10 ]; then
-          echo "❌ Expected 10 plugins, found $plugin_count"
+        plugins=(
+          "Daisy.Abilities.Operator.dll"
+          "Daisy.Abilities.OutputValidator.dll"
+          "Daisy.Abilities.Terminate.dll"
+          "Daisy.Abilities.Weather.dll"
+          "Daisy.Receivers.Console.dll"
+          "Daisy.Receivers.WeatherEvent.dll"
+          "Daisy.Transmitters.Console.dll"
+          "Daisy.Transmitters.WorkflowTrigger.dll"
+          "Daisy.Workflows.Starter.dll"
+          "Daisy.Workflows.Weather.dll"
+        )
+        
+        missing_plugins=()
+        for plugin in "${plugins[@]}"; do
+          if [ -f "$build_dir/$plugin" ]; then
+            echo "✅ Found: $plugin"
+          else
+            echo "❌ Missing: $plugin"
+            missing_plugins+=("$plugin")
+          fi
+        done
+        
+        if [ ${#missing_plugins[@]} -ne 0 ]; then
+          echo "❌ Missing ${#missing_plugins[@]} plugin assemblies"
           exit 1
         fi
         
-        echo "✅ All 10 plugins deployed successfully"
+        echo "✅ All 10 plugin assemblies deployed successfully"
 
     - name: Test application startup (basic smoke test)
       timeout-minutes: 2
