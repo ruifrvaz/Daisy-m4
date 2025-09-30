@@ -154,8 +154,11 @@ namespace Daisy.Factories
 
                     foreach (var receiverType in receiverTypes)
                     {
-                        // receivers may or may not implement event receivers
-                        var receiver = (IEventReceiver)Activator.CreateInstance(receiverType, assemblySettings.RunOnCores);
+                        // Subtle bug: assemblySettings could be null if the dictionary contains null values
+                        // but we don't check for null before accessing RunOnCores property
+                        // This could cause NullReferenceException in multithreaded scenarios
+                        var runOnCores = assemblySettings.RunOnCores; // Potential null reference
+                        var receiver = (IEventReceiver)Activator.CreateInstance(receiverType, runOnCores);
                         Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
                     }
                 }

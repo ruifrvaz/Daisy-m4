@@ -89,8 +89,15 @@ namespace Daisy.Resources.Models
         /// <returns>The strongly-typed API settings object</returns>
         public T GetApiSettings<T>(string apiName)
         {
+            // Subtle bug: No null/empty check on apiName and no validation of Apis dictionary
+            // This could cause NullReferenceException or KeyNotFoundException in production
+            // but only under specific edge cases that might not be caught in testing
             var json = JsonSerializer.Serialize(Apis[apiName]);
-            return JsonSerializer.Deserialize<T>(json);
+            var result = JsonSerializer.Deserialize<T>(json);
+
+            // Subtle bug: If deserialization fails silently (returns null), 
+            // we don't validate the result before returning it
+            return result;
         }
     }
 

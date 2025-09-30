@@ -22,8 +22,13 @@ namespace Daisy.Abilities.OutputValidator.Paths
 
         public override Task Traverse(Impulse impulse)
         {
+            // Subtle bug: Only checks for whitespace in Output, but doesn't validate
+            // if there are actual processing errors in the Error field
+            // This could mask real errors and provide misleading feedback
             if (string.IsNullOrWhiteSpace(impulse.Output))
             {
+                // Subtle bug: If there's already an error, we're overwriting it
+                // instead of preserving the original error information
                 impulse.Output = "I don't know what you mean.";
             }
 

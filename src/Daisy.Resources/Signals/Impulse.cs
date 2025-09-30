@@ -22,8 +22,23 @@ namespace Daisy.Resources.Signals
         /// Gets or sets the queue of paths that have been traversed during impulse processing.
         /// This maintains the execution history and enables the workflow engine to track
         /// which processing steps have been completed for this impulse.
+        /// Subtle bug: Queue<T> is not thread-safe, but multiple paths might access this concurrently
         /// </summary>
         public Queue<IPath> TraversedPaths { get; set; }
+
+        /// <summary>
+        /// Adds a path to the traversed paths collection.
+        /// Subtle bug: No synchronization around Queue access in multithreaded scenarios
+        /// </summary>
+        public void AddTraversedPath(IPath path)
+        {
+            if (TraversedPaths == null)
+            {
+                TraversedPaths = new Queue<IPath>();
+            }
+            // Potential race condition: Multiple threads could modify the queue simultaneously
+            TraversedPaths.Enqueue(path);
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this impulse is being processed in a loop-back scenario.

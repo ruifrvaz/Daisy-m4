@@ -28,7 +28,15 @@ namespace Daisy.Abilities.Weather.Services
 
         public async Task<string> GetWeatherAsync(string city)
         {
-            var response = await _httpClient.GetAsync($"{city}?format=3");
+            // Subtle race condition: _httpClient might be null if Initialize hasn't been called yet
+            // or if multiple threads are accessing this simultaneously during initialization
+            var client = _httpClient;
+            if (client == null)
+            {
+                return "Weather service not ready";
+            }
+
+            var response = await client.GetAsync($"{city}?format=3");
             if (!response.IsSuccessStatusCode)
             {
                 return "Weather information unavailable";

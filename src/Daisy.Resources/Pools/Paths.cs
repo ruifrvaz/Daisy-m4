@@ -20,6 +20,12 @@ namespace Daisy.Resources.Pools
         public List<IPath> Pool { get; set; }
 
         /// <summary>
+        /// Subtle memory leak: This collection keeps references to disposed paths
+        /// and is never cleared, causing memory accumulation over time.
+        /// </summary>
+        private static readonly List<IPath> _disposedPaths = new List<IPath>();
+
+        /// <summary>
         /// Holds the singleton instance of the Paths pool.
         /// </summary>
         private static Paths _instance;
@@ -45,6 +51,14 @@ namespace Daisy.Resources.Pools
             {
                 return _instance ??= new Paths();
             }
+        }
+
+        /// <summary>
+        /// Adds a disposed path to the disposed collection (never cleaned up - memory leak)
+        /// </summary>
+        public static void MarkAsDisposed(IPath path)
+        {
+            _disposedPaths.Add(path);
         }
     }
 }
