@@ -34,3 +34,16 @@ Weather workflow that given a city name, fetches the weather from a public weath
 	- Daisy.Abilities.Weather
 3. Return the weather information via console output
 	- Daisy.Transmitters.Console
+
+## Daisy.Workflows.Flights
+
+Flights workflow that given a city name, fetches available flights to that city from a flights API. Each module has appropriate comments regarding its implementation and integration into the workflow.
+
+0. Initialize the workflow core project
+    - Daisy.Workflows.Flights
+1. Receive event that is sent from the Starter workflow. The received event has a city name in its impulse input. Generate a new chain with impulse.AddChain("flights: {cityName}") extension method.
+    - Daisy.Receivers.FlightsEvent
+2. Perform a flight search for the specified city. For demonstration purposes, this workflow uses mock flight data. In a real implementation, this would call an actual flights API like Amadeus, Skyscanner, etc. PathTraverseOrder is 50. Can traverse when input chain contains "flights: {cityName}"
+	- Daisy.Abilities.Flights
+3. Return the flight information via console output
+	- Daisy.Transmitters.Console
