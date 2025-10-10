@@ -28,13 +28,18 @@ namespace Daisy.Abilities.Flights.Services
 
         public async Task<string> GetFlightsAsync(string city)
         {
-            var response = await _httpClient.GetAsync($"flights?destination={city}");
+            // AviationStack API - search for flights by arrival city (IATA code or city name)
+            var response = await _httpClient.GetAsync($"flights?access_key={_settings.ApiKey}&arr_iata={city}&limit=3");
             if (!response.IsSuccessStatusCode)
             {
                 return string.Empty;
             }
 
-            return await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync();
+            
+            // For demonstration, return the raw JSON response
+            // In production, you might want to parse and format this nicely
+            return content;
         }
     }
 }
