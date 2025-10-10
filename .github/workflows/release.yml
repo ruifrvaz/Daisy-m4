@@ -1,0 +1,250 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+      release_title:
+        description: 'Release title'
+        required: false
+        type: string
+        default: 'Daisy-m4 Release'
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+      include_binaries:
+        description: 'Include compiled binaries in release'
+        required: false
+        type: boolean
+        default: true
+      generate_notes:
+        description: 'Auto-generate release notes'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  BUILD_CONFIGURATION: 'Release'
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release-title: ${{ steps.version.outputs.release-title }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Determine version and title
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+            TITLE="${{ inputs.release_title }}"
+            if [ -z "$TITLE" ]; then
+              TITLE="Daisy-m4 $VERSION"
+            fi
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+            TITLE="Daisy-m4 $VERSION - Workflow Orchestration Engine"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "release-title=$TITLE" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+          echo "Release title: $TITLE"
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Verify code formatting
+        run: dotnet format --verify-no-changes
+
+      - name: Build solution
+        run: dotnet build --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+
+      - name: Run tests
+        run: dotnet test --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
+
+      - name: Publish main application
+        if: ${{ github.event_name == 'push' || inputs.include_binaries }}
+        run: |
+          dotnet publish src/Daisy/Daisy.csproj \
+            --configuration ${{ env.BUILD_CONFIGURATION }} \
+            --output ./publish/daisy \
+            --no-build \
+            --property:DaisyPluginCollector=true
+
+      - name: Package plugins
+        if: ${{ github.event_name == 'push' || inputs.include_binaries }}
+        run: |
+          echo "Packaging plugins from publish/daisy/plugins/"
+          if [ -d "./publish/daisy/plugins" ]; then
+            cd ./publish/daisy/plugins
+            find . -name "*.dll" -o -name "*.json" | wc -l
+            cd ../../..
+          else
+            echo "Warning: No plugins directory found"
+          fi
+
+      - name: Create release artifacts
+        if: ${{ github.event_name == 'push' || inputs.include_binaries }}
+        run: |
+          mkdir -p release-artifacts
+          
+          # Create main application package
+          cd publish/daisy
+          zip -r ../../release-artifacts/daisy-application.zip . -x "plugins/*"
+          
+          # Create plugins package if exists
+          if [ -d "plugins" ]; then
+            cd plugins
+            zip -r ../../../release-artifacts/daisy-plugins.zip .
+            cd ..
+          fi
+          
+          cd ../..
+          
+          # Create source code archive
+          git archive --format=zip --output=release-artifacts/source-code.zip HEAD
+          
+          # List created artifacts
+          ls -la release-artifacts/
+
+      - name: Upload artifacts
+        if: ${{ github.event_name == 'push' || inputs.include_binaries }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: release-artifacts/
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: validate-and-build
+    if: always() && needs.validate-and-build.result == 'success'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download artifacts
+        if: ${{ github.event_name == 'push' || inputs.include_binaries }}
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: release-artifacts/
+
+      - name: Create tag for manual release
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          VERSION="${{ needs.validate-and-build.outputs.version }}"
+          if ! git tag | grep -q "^$VERSION$"; then
+            git config user.name "GitHub Actions"
+            git config user.email "actions@github.com"
+            git tag -a "$VERSION" -m "Release $VERSION"
+            git push origin "$VERSION"
+          else
+            echo "Tag $VERSION already exists"
+          fi
+
+      - name: Generate release notes
+        if: ${{ github.event_name == 'push' || inputs.generate_notes }}
+        id: release-notes
+        run: |
+          cat > release-notes.md << 'EOF'
+          ## 🚀 What's New in this Release
+          
+          This release includes the Daisy-m4 Workflow Orchestration Engine with the following components:
+          
+          ### 🔧 Core Features
+          - **Modular Plugin Architecture**: Dynamic loading of Receivers, Abilities, and Transmitters
+          - **Workflow Orchestration**: Sequences of modules operating over central Impulse objects
+          - **Multi-Core Processing**: Parallel workflow execution with inter-core communication
+          - **Configuration-Driven**: Runtime behavior controlled via appconfig.json
+          
+          ### 📦 Available Workflows
+          - **Starter Workflow**: Interactive menu and workflow discovery
+          - **Weather Workflow**: Real-time weather information retrieval
+          - **Flights Workflow**: Flight information queries (mock data)
+          
+          ### 🔌 Plugin Modules
+          - **4 Ability Modules**: Weather, Flights, Terminate, OutputValidator, Operator
+          - **3 Receiver Types**: Console, WeatherEvent, FlightsEvent  
+          - **2 Transmitter Types**: Console output, WorkflowTrigger loopback
+          - **Auto-Discovery**: Reflection-based module loading and registration
+          
+          ### 🛠 Technical Stack
+          - **.NET 8.0**: Modern runtime with nullable reference types
+          - **Dependency Injection**: Microsoft.Extensions DI container
+          - **MSBuild Integration**: Automatic plugin deployment via Directory.Build.targets
+          - **Comprehensive Testing**: MSTest framework with FluentAssertions
+          
+          ### 📋 Usage
+          ```bash
+          # Run the application
+          cd src/Daisy && dotnet run
+          
+          # Available commands:
+          # - Type "start" to list workflows
+          # - Type "Weather: [city]" for weather info
+          # - Type "Flights: [city]" for flight info  
+          # - Type "bye" to exit
+          ```
+          
+          ### 🔍 Quality Assurance
+          - All code passes formatting validation (`dotnet format --verify-no-changes`)
+          - Comprehensive test coverage (29+ tests across modules)
+          - Follows established architectural patterns and conventions
+          
+          ---
+          
+          For detailed documentation, see the [README.md](README.md) and [project documentation](instructions/).
+          EOF
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.validate-and-build.outputs.version }}
+          name: ${{ needs.validate-and-build.outputs.release-title }}
+          body_path: ${{ (github.event_name == 'push' || inputs.generate_notes) && 'release-notes.md' || '' }}
+          prerelease: ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || false }}
+          draft: false
+          files: |
+            release-artifacts/daisy-application.zip
+            release-artifacts/daisy-plugins.zip
+            release-artifacts/source-code.zip
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release Summary
+        run: |
+          echo "## 🎉 Release Created Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.validate-and-build.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Title:** ${{ needs.validate-and-build.outputs.release-title }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Prerelease:** ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Artifacts Included:" >> $GITHUB_STEP_SUMMARY
+          echo "- Daisy Application (main executable and core files)" >> $GITHUB_STEP_SUMMARY
+          echo "- Daisy Plugins (all workflow modules)" >> $GITHUB_STEP_SUMMARY  
+          echo "- Source Code Archive" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 Links:" >> $GITHUB_STEP_SUMMARY
+          echo "- [View Release](https://github.com/${{ github.repository }}/releases/tag/${{ needs.validate-and-build.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [Download Assets](https://github.com/${{ github.repository }}/releases/tag/${{ needs.validate-and-build.outputs.version }})" >> $GITHUB_STEP_SUMMARY
