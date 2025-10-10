@@ -70,50 +70,45 @@ jobs:
         for config in "${configs[@]}"; do
           echo ""
           echo "Checking $config configuration..."
-          plugin_dir="src/Daisy/bin/$config/net8.0/plugins"
+          build_dir="src/Daisy/bin/$config/net8.0"
           
-          if [ ! -d "$plugin_dir" ]; then
-            echo "❌ Plugins directory not found for $config configuration"
+          if [ ! -d "$build_dir" ]; then
+            echo "❌ Build output directory not found for $config configuration"
             exit 1
           fi
           
-          echo "✅ Plugins directory exists for $config"
+          echo "✅ Build output directory exists for $config"
           
-          # Expected plugins
+          # Expected plugin assemblies (reflection-based loading from flat output directory)
           expected_plugins=(
-            "Daisy.Abilities.Operator"
-            "Daisy.Abilities.OutputValidator"
-            "Daisy.Abilities.Terminate"
-            "Daisy.Abilities.Weather"
-            "Daisy.Receivers.Console"
-            "Daisy.Receivers.WeatherEvent"
-            "Daisy.Transmitters.Console"
-            "Daisy.Transmitters.WorkflowTrigger"
-            "Daisy.Workflows.Starter"
-            "Daisy.Workflows.Weather"
+            "Daisy.Abilities.Operator.dll"
+            "Daisy.Abilities.OutputValidator.dll"
+            "Daisy.Abilities.Terminate.dll"
+            "Daisy.Abilities.Weather.dll"
+            "Daisy.Receivers.Console.dll"
+            "Daisy.Receivers.WeatherEvent.dll"
+            "Daisy.Transmitters.Console.dll"
+            "Daisy.Transmitters.WorkflowTrigger.dll"
+            "Daisy.Workflows.Starter.dll"
+            "Daisy.Workflows.Weather.dll"
           )
           
-          echo "Validating plugin deployment for $config..."
+          echo "Validating plugin assembly deployment for $config..."
           missing_plugins=()
           for plugin in "${expected_plugins[@]}"; do
-            if [ ! -d "$plugin_dir/$plugin" ]; then
+            if [ ! -f "$build_dir/$plugin" ]; then
               missing_plugins+=("$plugin")
-            else
-              # Check if the plugin has the expected DLL
-              if [ ! -f "$plugin_dir/$plugin/$plugin.dll" ]; then
-                echo "⚠️ Warning: $plugin directory exists but DLL not found"
-              fi
             fi
           done
           
           if [ ${#missing_plugins[@]} -ne 0 ]; then
-            echo "❌ Missing plugins in $config:"
+            echo "❌ Missing plugin assemblies in $config:"
             printf '%s\n' "${missing_plugins[@]}"
             exit 1
           fi
           
-          plugin_count=$(ls -1 "$plugin_dir" | wc -l)
-          echo "✅ All $plugin_count plugins deployed successfully for $config"
+          plugin_count=${#expected_plugins[@]}
+          echo "✅ All $plugin_count plugin assemblies deployed successfully for $config"
         done
 
   integration-test:
