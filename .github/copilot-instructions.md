@@ -1,0 +1,1 @@
+Refer to AGENTS.md for instructions on how to use AI agents in this repository.
