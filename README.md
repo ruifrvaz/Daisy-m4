@@ -43,6 +43,13 @@ Abilities (1-N): Process or mutate the Impulse.
 - Add your workflow to the workflows.md file.
 - Instruct your coding agent of choice to analyze the documentation and implement the workflow, step-by-step.
 
+## Configuration
+
+### API Keys
+Some workflows require external API keys to be configured in `src/Daisy/appconfig.json`:
+
+- **Flights API**: Uses AviationStack API (https://aviationstack.com/). Get a free API key and add it to the `Apis.Flights.ApiKey` setting. If no API key is configured, the workflow falls back to mock data for demonstration purposes.
+
 ## Testing and Validation
 
 This project includes comprehensive automated testing and validation workflows:

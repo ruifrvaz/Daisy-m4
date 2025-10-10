@@ -43,7 +43,7 @@ Flights workflow that given a city name, fetches available flights to that city 
     - Daisy.Workflows.Flights
 1. Receive event that is sent from the Starter workflow. The received event has a city name in its impulse input. Generate a new chain with impulse.AddChain("flights: {cityName}") extension method.
     - Daisy.Receivers.FlightsEvent
-2. Perform a flight search for the specified city. For demonstration purposes, this workflow uses mock flight data. In a real implementation, this would call an actual flights API like Amadeus, Skyscanner, etc. PathTraverseOrder is 50. Can traverse when input chain contains "flights: {cityName}"
+2. Perform a flight search for the specified city using AviationStack API. Falls back to mock data if API key is not configured. PathTraverseOrder is 50. Can traverse when input chain contains "flights: {cityName}"
 	- Daisy.Abilities.Flights
 3. Return the flight information via console output
 	- Daisy.Transmitters.Console

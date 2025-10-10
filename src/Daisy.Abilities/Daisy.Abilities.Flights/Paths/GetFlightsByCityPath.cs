@@ -13,7 +13,7 @@ namespace Daisy.Abilities.Flights.Paths
 {
     public class GetFlightsByCityPath : APath
     {
-        private readonly IFlightsService _flightsService;
+        private readonly IFlightsService? _flightsService;
 
         public GetFlightsByCityPath(IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
@@ -29,6 +29,14 @@ namespace Daisy.Abilities.Flights.Paths
         public override async Task Traverse(Impulse impulse)
         {
             var cityName = impulse.GetChainByKey("flights");
+
+            if (_flightsService == null)
+            {
+                impulse.Error = "Flights service is not available.";
+                await Emit(impulse);
+                return;
+            }
+
             var flights = cityName == null ? null : await _flightsService.GetFlightsAsync(cityName);
 
             if (string.IsNullOrWhiteSpace(flights))
