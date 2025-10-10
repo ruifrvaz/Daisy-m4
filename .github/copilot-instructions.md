@@ -43,15 +43,6 @@ Always reference these instructions first and fallback to search or bash command
 
 ## Architecture Overview
 
-### Core Concepts
-- **Impulse**: Central data object carrying state through the workflow (.Input, .Output, .Error)
-- **Receivers**: Entry points that initialize Impulse objects (Console, WeatherEvent)
-- **Abilities**: Processing modules that enrich/transform Impulses via Paths (Weather, Terminate, OutputValidator, Operator)
-- **Transmitters**: Output processors that consume Impulse.Output (Console, WorkflowTrigger)
-- **Cores**: Workflow containers that run in parallel
-- **Pools**: Singleton collections for inter-core communication
-- **Paths**: Execution units within Abilities with traverse rules and ordering
-
 ### Plugin Architecture
 - All modules are loaded dynamically from the `plugins/` directory at runtime
 - Modules are registered via Dependency Injection with reflection-based discovery
@@ -77,11 +68,19 @@ Always reference these instructions first and fallback to search or bash command
 - `src/Daisy.Receivers/` - Input handlers (Console, WeatherEvent)  
 - `src/Daisy.Transmitters/` - Output handlers (Console, WorkflowTrigger)
 
+### Test Projects
+- `tests/Daisy.Tests.Abilities/` - Unit tests for ability modules and paths
+- `tests/Daisy.Tests.Receivers/` - Unit tests for receiver modules
+- `tests/Daisy.Tests.Transmitters/` - Unit tests for transmitter modules
+- `tests/Daisy.Tests.Workflows/` - Integration tests for complete workflows
+- `tests/Daisy.Tests.Factories/` - Factory and dependency injection tests
+- `tests/Daisy.Tests.Extensions/` - Extension method tests
+
 ### Documentation
 - `README.md` - High-level system architecture and features
 - `instructions/engine_design.md` - Technical design, startup initialization, extension guidance
 - `instructions/workflows.md` - Available workflows and their module composition
-- `agents.md` - Guidelines for AI agents working with the codebase
+- `AGENTS.md` - **CRITICAL**: Guidelines for AI agents including testing requirements, code formatting, and development rules
 
 ## Build System
 
@@ -98,15 +97,9 @@ Always reference these instructions first and fallback to search or bash command
 
 ## Common Patterns and Rules
 
-### Module Development
-- All modules implement specific interfaces (IPath, IReceiver, ITransmitter, etc.)
-- Use `[TraverseRule]` attributes for path discovery and execution control
-- `TraverseOrder` property controls execution priority (lower numbers execute first)
-- `HasBeenTraversedRules` prevent re-processing of the same path
-
 ### Code Quality
 - Build produces nullable reference type warnings - these are expected
-- Use `dotnet format` for consistent code formatting
+- Use `dotnet format` for consistent code formatting (see AGENTS.md for detailed requirements)
 - Follow existing patterns when extending functionality
 - Respect the modular plugin architecture
 
