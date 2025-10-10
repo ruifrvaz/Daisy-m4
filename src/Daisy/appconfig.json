@@ -47,7 +47,7 @@
       "TerminatePath": 2,
       "WorkflowTriggerPath": 3,
       "GetWeatherByCityPath": 50,
-      "GetFlightsByCityPath": 50,
+      "GetFlightsByCityPath": 55,
       "OutputValidatorPath": 9999
     }
   }
