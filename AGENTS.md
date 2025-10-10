@@ -22,8 +22,50 @@ Workflows run inside **Cores** and can share state or communicate through **Pool
 - When generating code, always follow the design and patterns of the solution.  
 - When documentation does not provide enough information, follow existing implementations.  
 - When the solution does not provide clear design, follow the best practices of .NET Core development.  
-- Ensure modules respect Daisy’s traversal mechanics (`Impulse`, `Paths`, `TraverseRules`, `HasBeenTraversedRules`).  
+- Ensure modules respect Daisy's traversal mechanics (`Impulse`, `Paths`, `TraverseRules`, `HasBeenTraversedRules`).  
 - Register modules via Dependency Injection and use attribute-based discovery when extending.
+
+## Testing Requirements
+**MANDATORY**: All new modules and workflows must include comprehensive test coverage. This is enforced by the build pipeline.
+
+### Test Structure Standards
+- **Unit Tests**: Create dedicated test projects following the pattern `Daisy.Tests.[ModuleType].[ModuleName]`
+- **Integration Tests**: Include end-to-end workflow tests that exercise complete module sequences
+- **Framework**: Use MSTest with FluentAssertions (following existing patterns)
+- **Coverage**: Test all paths, traversal rules, and error conditions
+
+### Required Test Types for New Workflows
+When creating new workflows, you MUST create:
+
+1. **Workflow Integration Tests**: 
+   - Test complete workflow execution from Receiver → Abilities → Transmitters
+   - Validate Impulse transformation through the entire pipeline
+   - Test both successful and error scenarios
+
+2. **Module Unit Tests**:
+   - **Receiver Tests**: Input validation, Impulse initialization
+   - **Ability/Path Tests**: TraverseRule evaluation, HasBeenTraversedRules, Impulse enrichment
+   - **Transmitter Tests**: Output processing, external integrations (with mocking)
+
+3. **Rule Tests**:
+   - Test TraverseRule conditions for all paths
+   - Validate HasBeenTraversedRules prevent re-execution
+   - Test TraverseOrder priority execution
+
+### Test Project Structure
+```
+tests/
+├── Daisy.Tests.Workflows.{WorkflowName}/     # Integration tests
+├── Daisy.Tests.Abilities.{AbilityName}/      # Ability unit tests  
+├── Daisy.Tests.Receivers.{ReceiverName}/     # Receiver unit tests
+└── Daisy.Tests.Transmitters.{TransmitterName}/ # Transmitter unit tests
+```
+
+### Test Implementation Requirements
+- Use `[TestInitialize]` to reset Pools (Cores, Paths, Transmitters) before each test
+- Mock external dependencies (APIs, file systems, databases)
+- Test with realistic Impulse data matching actual workflow scenarios
+- Include negative test cases (invalid inputs, network failures, etc.)
 
 ## Code Formatting Requirements
 **CRITICAL**: All code must pass formatting validation before submission. This is enforced by the CI pipeline.
