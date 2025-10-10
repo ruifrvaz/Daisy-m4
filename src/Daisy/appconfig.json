@@ -11,6 +11,11 @@
         "RunOnCores": [
           "Daisy.Workflows.Weather"
         ]
+      },
+      "Daisy.Receivers.FlightsEvent": {
+        "RunOnCores": [
+          "Daisy.Workflows.Flights"
+        ]
       }
     },
     "Transmitters": [
@@ -21,15 +26,20 @@
       "Daisy.Abilities.Operator",
       "Daisy.Abilities.Terminate",
       "Daisy.Abilities.OutputValidator",
-      "Daisy.Abilities.Weather"
+      "Daisy.Abilities.Weather",
+      "Daisy.Abilities.Flights"
     ],
     "Workflows": [
       "Daisy.Workflows.Starter",
-      "Daisy.Workflows.Weather"
+      "Daisy.Workflows.Weather",
+      "Daisy.Workflows.Flights"
     ],
     "Apis": {
       "Weather": {
         "Url": "https://wttr.in/"
+      },
+      "Flights": {
+        "Url": "https://mock-flights-api.com/"
       }
     },
     "PathTraverseOrder": {
@@ -37,6 +47,7 @@
       "TerminatePath": 2,
       "WorkflowTriggerPath": 3,
       "GetWeatherByCityPath": 50,
+      "GetFlightsByCityPath": 55,
       "OutputValidatorPath": 9999
     }
   }

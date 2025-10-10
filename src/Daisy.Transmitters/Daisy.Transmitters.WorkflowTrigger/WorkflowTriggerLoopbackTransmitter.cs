@@ -3,6 +3,8 @@ using Daisy.Resources.Extensions;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
+using System;
+using System.Linq;
 
 namespace Daisy.Transmitters.WorkflowTrigger
 {
@@ -40,7 +42,12 @@ namespace Daisy.Transmitters.WorkflowTrigger
 
             eventImpulse.AddChain(workflowInvocationChain);
 
-            EventReceivers.Instance.Pool.ForEach(receiver => receiver.RaiseEvent(eventImpulse));
+            // Only send event to receivers that are configured to run on the target workflow
+            var targetReceivers = EventReceivers.Instance.Pool
+                .Where(receiver => receiver.RunOnCores.ContainsWorkflowIdentifier(workflowIdentifier))
+                .ToList();
+
+            targetReceivers.ForEach(receiver => receiver.RaiseEvent(eventImpulse));
         }
     }
 }

@@ -217,7 +217,7 @@ namespace Daisy.Tests.Transmitters
 
         public bool IsActive { get; set; }
 
-        public IEnumerable<string> RunOnCores => new List<string> { "Test" };
+        public IEnumerable<string> RunOnCores => new List<string> { "Daisy.Workflows.Weather" };
 
         public void RaiseEvent(Impulse input)
         {
