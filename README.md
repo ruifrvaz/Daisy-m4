@@ -74,12 +74,6 @@ dotnet run
 - **CI Enforcement**: Pull requests will fail if formatting requirements are not met
 - **Best Practice**: Apply formatting early and often during development
 
-```bash
-# Recommended workflow
-dotnet format                    # Apply formatting
-dotnet format --verify-no-changes  # Verify formatting
-```
-
 For detailed testing information, see [.github/workflows/README.md](.github/workflows/README.md).
 
 ## License
