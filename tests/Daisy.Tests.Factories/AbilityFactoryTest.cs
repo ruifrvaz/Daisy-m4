@@ -27,6 +27,7 @@ namespace Daisy.Tests.Factory.Path
             var terminateType = typeof(Daisy.Abilities.Terminate.TerminatePath);
             var validatorType = typeof(Daisy.Abilities.OutputValidator.Paths.OutputValidatorPath);
             var weatherType = typeof(Daisy.Abilities.Weather.Paths.GetWeatherByCityPath);
+            var flightsType = typeof(Daisy.Abilities.Flights.Paths.GetFlightsByCityPath);
 
             ServiceProvider = StartupFactory.LoadServices(Settings);
         }

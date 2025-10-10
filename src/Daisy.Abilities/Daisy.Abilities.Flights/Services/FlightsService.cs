@@ -28,18 +28,13 @@ namespace Daisy.Abilities.Flights.Services
 
         public async Task<string> GetFlightsAsync(string city)
         {
-            // For demonstration purposes, we'll create a mock response since we don't have a real flights API
-            //TODO: In a real implementation, this would call an actual flights API like Amadeus, Skyscanner, etc.
-            await Task.Delay(500); // Simulate API call delay
-
-            var mockFlights = new[]
+            var response = await _httpClient.GetAsync($"flights?destination={city}");
+            if (!response.IsSuccessStatusCode)
             {
-                $"Flight AA101: New York to {city} - Departure 08:00, Arrival 11:30 - $299",
-                $"Flight UA205: Chicago to {city} - Departure 14:15, Arrival 17:45 - $245",
-                $"Flight DL890: Atlanta to {city} - Departure 19:30, Arrival 22:10 - $189"
-            };
+                return string.Empty;
+            }
 
-            return string.Join("\n", mockFlights);
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }
