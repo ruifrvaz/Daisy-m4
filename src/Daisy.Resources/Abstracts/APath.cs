@@ -28,6 +28,16 @@ namespace Daisy.Resources.Abstracts
         /// </summary>
         public ApplicationSettings Settings { get; set; }
 
+        /// <summary>
+        /// Gets or sets the service provider for dependency injection.
+        /// Enables access to registered services such as IPathFinder within receiver implementations.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; set; }
+
+        /// <summary>
+        /// Gets the path finder service for determining workflow traversal.
+        /// Initialized in the constructor.
+        /// </summary>
         protected IPathFinder PathFinder { get; set; }
 
         /// <summary>
@@ -71,6 +81,7 @@ namespace Daisy.Resources.Abstracts
             int traverseOrder,
             ApplicationSettings settings)
         {
+            ServiceProvider = serviceProvider;
             TraverseRules = traverseRules;
             TraversedRules = traversedRules;
             Settings = settings;

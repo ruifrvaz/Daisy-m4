@@ -42,6 +42,7 @@ namespace Daisy.Resources.Abstracts
         /// Enables access to registered services such as IPathFinder within receiver implementations.
         /// </summary>
         public IServiceProvider ServiceProvider { get; set; }
+
         /// <summary>
         /// Determines whether this receiver can process the given impulse.
         /// Must be implemented by derived classes to define specific reception criteria.
