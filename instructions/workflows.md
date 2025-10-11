@@ -47,3 +47,16 @@ Flights workflow that given a city name, fetches available flights to that city 
 	- Daisy.Abilities.Flights
 3. Return the flight information via console output
 	- Daisy.Transmitters.Console
+
+## Daisy.Workflows.LocalModel
+
+LocalModel workflow that given a user prompt, sends it to a local model API and returns the response. Each module has appropriate comments regarding its implementation and integration into the workflow.
+
+0. Initialize the workflow core project
+    - Daisy.Workflows.LocalModel
+1. Receive event that is sent from the Starter workflow. The received event has a user prompt in its impulse input. Generate a new chain with impulse.AddChain("localmodel: {prompt}") extension method.
+    - Daisy.Receivers.LocalModelEvent
+2. Perform an HTTP POST request to the local model API with the user prompt. Falls back to mock data if API URL is not configured. PathTraverseOrder is 60. Can traverse when input chain contains "localmodel: {prompt}"
+	- Daisy.Abilities.LocalModel
+3. Return the model response via console output
+	- Daisy.Transmitters.Console
