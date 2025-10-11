@@ -253,7 +253,7 @@ Plugin projects use wildcard references for automatic inclusion:
 ### Plugin Deployment
 - **Build-time**: Plugin assemblies are copied to the main application's output directory
 - **Runtime**: Factories discover and load plugins from the application directory
-- **Configuration**: `DaisyPluginCollector=true` property may control plugin collection behavior
+- **Configuration**: Plugin assembly loading is handled automatically by the factories
 - **References**: Wildcard patterns automatically include new plugin projects
 
 ---

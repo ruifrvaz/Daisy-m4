@@ -9,11 +9,6 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <!-- Ensures that plugins are loaded into the binary folder to allow ingestion during runtime -->
-  <PropertyGroup>
-    <DaisyPluginCollector>true</DaisyPluginCollector>
-  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.0.0" />
