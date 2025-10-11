@@ -67,6 +67,35 @@ tests/
 - Test with realistic Impulse data matching actual workflow scenarios
 - Include negative test cases (invalid inputs, network failures, etc.)
 
+## Documentation Maintenance Requirements
+**MANDATORY**: All new modules, workflows, and significant refactoring must include comprehensive documentation updates.
+
+### When to Update Documentation
+- **New Workflows**: Add workflow description to `instructions/workflows.md` with complete module breakdown
+- **New Modules**: Document module purpose, configuration, and integration points
+- **API Changes**: Update relevant documentation when adding/modifying external API integrations
+- **Configuration Changes**: Update `appconfig.json` documentation when adding new settings
+- **Architectural Changes**: Update `instructions/engine_design.md` and `instructions/plugin_injection.md` as needed
+
+### Required Documentation Standards
+- **Clarity**: Use clear, concise language that explains both what and why
+- **Completeness**: Include all necessary details for implementation and integration
+- **Consistency**: Follow existing documentation patterns and structure
+- **Examples**: Provide configuration examples and usage scenarios where applicable
+- **Maintenance**: Keep documentation synchronized with code changes
+
+### Documentation Files
+- `README.md`: High-level overview, quick start, and testing information
+- `AGENTS.md`: Development guidelines, testing requirements, and coding standards
+- `instructions/workflows.md`: Workflow specifications and module sequences
+- `instructions/engine_design.md`: Orchestration design and traversal mechanics
+- `instructions/plugin_injection.md`: Plugin system, assembly loading, and factory patterns
+
+### Validation
+- Documentation updates should be included in the same PR as code changes
+- Review documentation for accuracy before marking PR as ready
+- Ensure all referenced files and configurations exist and are correct
+
 ## Code Formatting Requirements
 **CRITICAL**: All code must pass formatting validation before submission. This is enforced by the CI pipeline.
 
