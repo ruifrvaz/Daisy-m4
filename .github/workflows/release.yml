@@ -83,25 +83,49 @@ jobs:
       - name: Run tests
         run: dotnet test --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
 
-      - name: Publish main application
+      - name: Publish Windows Self-Contained
         if: ${{ github.event_name == 'push' || inputs.include_binaries }}
         run: |
           dotnet publish src/Daisy/Daisy.csproj \
             --configuration ${{ env.BUILD_CONFIGURATION }} \
-            --output ./publish/daisy \
+            --runtime win-x64 \
+            --self-contained true \
+            --output ./publish/daisy-win-x64 \
             --no-build \
-            --property:DaisyPluginCollector=true
+            --property:PublishSingleFile=false \
+            --property:IncludeNativeLibrariesForSelfExtract=true
 
-      - name: Package plugins
+      - name: Publish Linux Self-Contained
         if: ${{ github.event_name == 'push' || inputs.include_binaries }}
         run: |
-          echo "Packaging plugins from publish/daisy/plugins/"
-          if [ -d "./publish/daisy/plugins" ]; then
-            cd ./publish/daisy/plugins
-            find . -name "*.dll" -o -name "*.json" | wc -l
-            cd ../../..
+          dotnet publish src/Daisy/Daisy.csproj \
+            --configuration ${{ env.BUILD_CONFIGURATION }} \
+            --runtime linux-x64 \
+            --self-contained true \
+            --output ./publish/daisy-linux-x64 \
+            --no-build \
+            --property:PublishSingleFile=false \
+            --property:IncludeNativeLibrariesForSelfExtract=true
+
+      - name: Verify plugins for both platforms
+        if: ${{ github.event_name == 'push' || inputs.include_binaries }}
+        run: |
+          echo "=== Windows Build Plugins ==="
+          if [ -d "./publish/daisy-win-x64/plugins" ]; then
+            echo "Windows plugins found:"
+            find ./publish/daisy-win-x64/plugins -name "*.dll" | wc -l
+            ls -la ./publish/daisy-win-x64/plugins/
           else
-            echo "Warning: No plugins directory found"
+            echo "Warning: No Windows plugins directory found"
+          fi
+          
+          echo "=== Linux Build Plugins ==="
+          if [ -d "./publish/daisy-linux-x64/plugins" ]; then
+            echo "Linux plugins found:"
+            find ./publish/daisy-linux-x64/plugins -name "*.dll" | wc -l
+            ls -la ./publish/daisy-linux-x64/plugins/
+          else
+            echo "Warning: No Linux plugins directory found"
           fi
 
       - name: Create release artifacts
@@ -109,24 +133,47 @@ jobs:
         run: |
           mkdir -p release-artifacts
           
-          # Create main application package
-          cd publish/daisy
-          zip -r ../../release-artifacts/daisy-application.zip . -x "plugins/*"
+          # Create Windows release package
+          cd publish/daisy-win-x64
+          zip -r ../../release-artifacts/daisy-win-x64.zip . \
+            -x "*.pdb" "*.xml" "ref/*" "runtimes/*/native/*"
+          cd ../..
           
-          # Create plugins package if exists
-          if [ -d "plugins" ]; then
-            cd plugins
-            zip -r ../../../release-artifacts/daisy-plugins.zip .
-            cd ..
-          fi
-          
+          # Create Linux release package  
+          cd publish/daisy-linux-x64
+          zip -r ../../release-artifacts/daisy-linux-x64.zip . \
+            -x "*.pdb" "*.xml" "ref/*" "runtimes/*/native/*"
           cd ../..
           
           # Create source code archive
           git archive --format=zip --output=release-artifacts/source-code.zip HEAD
           
-          # List created artifacts
-          ls -la release-artifacts/
+          # Create README for releases
+          cat > release-artifacts/README.txt << 'EOF'
+          Daisy-m4 Workflow Orchestration Engine
+          ====================================
+          
+          This release contains self-contained builds for Windows and Linux.
+          No .NET runtime installation is required.
+          
+          Windows (win-x64):
+          - Extract daisy-win-x64.zip
+          - Run: Daisy.exe
+          
+          Linux (linux-x64):  
+          - Extract daisy-linux-x64.zip
+          - Make executable: chmod +x Daisy
+          - Run: ./Daisy
+          
+          Both versions include all plugins and dependencies.
+          
+          For more information, visit:
+          https://github.com/ruifrvaz/Daisy-m4
+          EOF
+          
+          # List created artifacts with sizes
+          echo "=== Release Artifacts Created ==="
+          ls -lh release-artifacts/
 
       - name: Upload artifacts
         if: ${{ github.event_name == 'push' || inputs.include_binaries }}
@@ -198,16 +245,29 @@ jobs:
           - **Comprehensive Testing**: MSTest framework with FluentAssertions
           
           ### 📋 Usage
-          ```bash
-          # Run the application
-          cd src/Daisy && dotnet run
           
-          # Available commands:
-          # - Type "start" to list workflows
-          # - Type "Weather: [city]" for weather info
-          # - Type "Flights: [city]" for flight info  
-          # - Type "bye" to exit
+          **Windows:**
+          ```cmd
+          # Extract daisy-win-x64.zip
+          # Run the executable
+          Daisy.exe
           ```
+          
+          **Linux:**
+          ```bash
+          # Extract daisy-linux-x64.zip
+          # Make executable and run
+          chmod +x Daisy
+          ./Daisy
+          ```
+          
+          **Available commands:**
+          - Type `start` to list workflows
+          - Type `Weather: [city]` for weather info
+          - Type `Flights: [city]` for flight info  
+          - Type `bye` to exit
+          
+          **No .NET Runtime Required** - Both releases are self-contained.
           
           ### 🔍 Quality Assurance
           - All code passes formatting validation (`dotnet format --verify-no-changes`)
@@ -228,9 +288,10 @@ jobs:
           prerelease: ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || false }}
           draft: false
           files: |
-            release-artifacts/daisy-application.zip
-            release-artifacts/daisy-plugins.zip
+            release-artifacts/daisy-win-x64.zip
+            release-artifacts/daisy-linux-x64.zip
             release-artifacts/source-code.zip
+            release-artifacts/README.txt
           generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -244,9 +305,10 @@ jobs:
           echo "**Prerelease:** ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || 'false' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📦 Artifacts Included:" >> $GITHUB_STEP_SUMMARY
-          echo "- Daisy Application (main executable and core files)" >> $GITHUB_STEP_SUMMARY
-          echo "- Daisy Plugins (all workflow modules)" >> $GITHUB_STEP_SUMMARY  
-          echo "- Source Code Archive" >> $GITHUB_STEP_SUMMARY
+          echo "- **daisy-win-x64.zip**: Self-contained Windows executable (no .NET required)" >> $GITHUB_STEP_SUMMARY
+          echo "- **daisy-linux-x64.zip**: Self-contained Linux executable (no .NET required)" >> $GITHUB_STEP_SUMMARY  
+          echo "- **source-code.zip**: Complete source code archive" >> $GITHUB_STEP_SUMMARY
+          echo "- **README.txt**: Installation and usage instructions" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🔗 Links:" >> $GITHUB_STEP_SUMMARY
           echo "- [View Release](https://github.com/${{ github.repository }}/releases/tag/${{ needs.validate-and-build.outputs.version }})" >> $GITHUB_STEP_SUMMARY
