@@ -26,11 +26,6 @@ namespace Daisy.Resources.Abstracts
     public abstract class AEventReceiver : IEventReceiver
     {
         /// <summary>
-        /// Gets or sets the service provider for dependency injection.
-        /// Enables access to registered services such as IPathFinder within receiver implementations.
-        /// </summary>
-        public IServiceProvider ServiceProvider { get; set; }
-        /// <summary>
         /// Gets the collection of core namespaces where this event receiver should be active.
         /// Determines which workflow cores will load and execute this receiver instance.
         /// Must be implemented by derived classes to specify core targeting.

@@ -28,11 +28,7 @@ namespace Daisy.Resources.Abstracts
         /// </summary>
         public ApplicationSettings Settings { get; set; }
 
-        /// <summary>
-        /// Gets or sets the service provider for dependency injection.
-        /// Enables access to registered services and dependencies within path implementations.
-        /// </summary>
-        public IServiceProvider ServiceProvider { get; set; }
+        protected IPathFinder PathFinder { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of traverse rules that determine if this path can be executed.
@@ -68,19 +64,19 @@ namespace Daisy.Resources.Abstracts
         /// <param name="pathName">The unique name identifier for this path</param>
         /// <param name="traverseOrder">The execution priority order (lower executes first)</param>
         /// <param name="settings">The application settings configuration</param>
-        public APath(IServiceProvider serviceProvider,
-            IEnumerable<ITraverseRule> traverseRules,
+        public APath(IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> traversedRules,
             string pathName,
             int traverseOrder,
             ApplicationSettings settings)
         {
-            ServiceProvider = serviceProvider;
             TraverseRules = traverseRules;
             TraversedRules = traversedRules;
             Settings = settings;
             PathName = pathName;
             TraverseOrder = traverseOrder;
+
+            PathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
         }
 
         /// <summary>

@@ -25,11 +25,6 @@ namespace Daisy.Resources.Abstracts
     public abstract class AExternalReceiver : IExternalReceiver
     {
         /// <summary>
-        /// Gets or sets the service provider for dependency injection.
-        /// Enables access to registered services such as IPathFinder within receiver implementations.
-        /// </summary>
-        public IServiceProvider ServiceProvider { get; set; }
-        /// <summary>
         /// Gets or sets a value indicating whether this receiver is currently active and monitoring for input.
         /// Used to control the receiver lifecycle and processing loop.
         /// </summary>

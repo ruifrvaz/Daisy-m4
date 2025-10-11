@@ -33,7 +33,7 @@ The **PathFinder Service** (`IPathFinder`) manages traversal:
 - Filters out paths that were already traversed (`TraversedRules`)  
 - Executes qualified paths in priority (`TraverseOrder`)  
 
-The PathFinder is implemented as a registered service following .NET Core dependency injection patterns, making it testable, maintainable, and properly integrated into the solution architecture.  
+The PathFinder is implemented as a IDaisyService service and loaded into the application's custom ServiceCollection, making it testable, maintainable, and properly integrated into the solution architecture.  
 
 ---
 
