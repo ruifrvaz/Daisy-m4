@@ -14,11 +14,11 @@ namespace Daisy.Resources.Abstracts
     /// Abstract base class that defines the foundation for all path implementations in the Daisy workflow engine.
     /// Paths are execution units within Abilities that process and transform Impulse objects according to
     /// traverse rules and ordering constraints. This class implements the core rule-driven traversal architecture
-    /// by providing traverse and HasBeenTraversed rule evaluation, making paths failsafe and self-contained.
+    /// by providing traverse and Traversed rule evaluation, making paths failsafe and self-contained.
     /// 
-    /// The combination of traverse rules and HasBeenTraversed rules is a fundamental pillar of Daisy's architecture.
+    /// The combination of traverse rules and Traversed rules is a fundamental pillar of Daisy's architecture.
     /// Every path traversal performs dual validation: first checking if traversal is allowed (CanTraverse),
-    /// then verifying the path hasn't been processed already (HasBeenTraversed).
+    /// then verifying the path hasn't been processed already (Traversed).
     /// </summary>
     public abstract class APath : IPath
     {
@@ -42,9 +42,9 @@ namespace Daisy.Resources.Abstracts
 
         /// <summary>
         /// Gets or sets the collection of rules that determine if this path has already been traversed.
-        /// Prevents re-processing by checking if any HasBeenTraversed rule applies to the impulse.
+        /// Prevents re-processing by checking if any Traversed rule applies to the impulse.
         /// </summary>
-        public IEnumerable<ITraverseRule> HasBeenTraversedRules { get; set; }
+        public IEnumerable<ITraverseRule> TraversedRules { get; set; }
 
         /// <summary>
         /// Gets the execution priority order for this path.
@@ -64,20 +64,20 @@ namespace Daisy.Resources.Abstracts
         /// </summary>
         /// <param name="serviceProvider">The service provider for dependency injection</param>
         /// <param name="traverseRules">The rules that determine if this path can be traversed</param>
-        /// <param name="hasBeenTraversedRules">The rules that determine if this path has been traversed</param>
+        /// <param name="traversedRules">The rules that determine if this path has been traversed</param>
         /// <param name="pathName">The unique name identifier for this path</param>
         /// <param name="traverseOrder">The execution priority order (lower executes first)</param>
         /// <param name="settings">The application settings configuration</param>
         public APath(IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
-            IEnumerable<ITraverseRule> hasBeenTraversedRules,
+            IEnumerable<ITraverseRule> traversedRules,
             string pathName,
             int traverseOrder,
             ApplicationSettings settings)
         {
             ServiceProvider = serviceProvider;
             TraverseRules = traverseRules;
-            HasBeenTraversedRules = hasBeenTraversedRules;
+            TraversedRules = traversedRules;
             Settings = settings;
             PathName = pathName;
             TraverseOrder = traverseOrder;
@@ -93,13 +93,13 @@ namespace Daisy.Resources.Abstracts
 
         /// <summary>
         /// Determines whether this path has already been traversed for the given impulse.
-        /// Evaluates all HasBeenTraversed rules - if any rule applies, the path is considered traversed.
+        /// Evaluates all Traversed rules - if any rule applies, the path is considered traversed.
         /// </summary>
         /// <param name="impulse">The impulse to check for previous traversal</param>
-        /// <returns>True if any HasBeenTraversed rule applies, false otherwise</returns>
-        public virtual bool HasBeenTraversed(Impulse impulse)
+        /// <returns>True if any Traversed rule applies, false otherwise</returns>
+        public virtual bool Traversed(Impulse impulse)
         {
-            return HasBeenTraversedRules.Any(tr => tr.RuleApplies(impulse));
+            return TraversedRules.Any(tr => tr.RuleApplies(impulse));
         }
 
         /// <summary>
