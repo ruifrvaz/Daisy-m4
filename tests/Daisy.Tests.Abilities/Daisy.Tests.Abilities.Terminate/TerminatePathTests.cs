@@ -7,6 +7,7 @@ using Daisy.Abilities.Terminate;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -64,6 +65,10 @@ namespace Daisy.Tests.Abilities.Terminate
         {
             public object GetService(Type serviceType)
             {
+                if (serviceType == typeof(IPathFinder))
+                {
+                    return new PathFinderService();
+                }
                 return null!;
             }
         }

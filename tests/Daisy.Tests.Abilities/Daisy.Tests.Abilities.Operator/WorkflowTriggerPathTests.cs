@@ -9,6 +9,7 @@ using Daisy.Resources.Extensions;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -72,6 +73,10 @@ namespace Daisy.Tests.Abilities.Operator
         {
             public object? GetService(Type serviceType)
             {
+                if (serviceType == typeof(IPathFinder))
+                {
+                    return new PathFinderService();
+                }
                 return null;
             }
         }
