@@ -55,7 +55,7 @@ namespace Daisy
 
             // Register IDaisyService implementations directly from loaded assemblies
             RegisterServicesFromLoadedAssemblies(serviceCollection, settings);
-            
+
             // Register PathFinderService from Daisy.Resources assembly
             RegisterCoreServices(settings);
 

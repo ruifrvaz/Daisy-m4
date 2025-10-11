@@ -16,12 +16,13 @@ namespace Daisy.Abilities.Flights.Paths
         private readonly IFlightsService? _flightsService;
 
         public GetFlightsByCityPath(
+            IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> hasBeenTraversedRules,
             string pathName,
             int traverseOrder,
             ApplicationSettings settings)
-            : base(traverseRules, hasBeenTraversedRules, pathName, traverseOrder, settings)
+            : base(serviceProvider, traverseRules, hasBeenTraversedRules, pathName, traverseOrder, settings)
         {
             _flightsService = ServiceContainer.Instance.GetService<IFlightsService>() as IFlightsService;
         }

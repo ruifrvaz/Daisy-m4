@@ -56,7 +56,7 @@ namespace Daisy.Resources.Services
         public IPath FindNextPathToTraverse(Impulse impulse)
         {
             IPath nextPathToTraverse;
-            
+
             if (impulse.TraversedPaths.Any())
             {
                 // Continue from where we left off - only consider paths at or after the current position
