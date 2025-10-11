@@ -9,5 +9,6 @@ namespace Daisy.Abilities.Flights.Models
     public class FlightsSettings
     {
         public string Url { get; set; }
+        public string ApiKey { get; set; }
     }
 }
