@@ -10,11 +10,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <!-- Ensures that plugins are loaded into the binary folder to allow ingestion during runtime -->
-  <PropertyGroup>
-    <DaisyPluginCollector>true</DaisyPluginCollector>
-  </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
@@ -28,9 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.Console\Daisy.Receivers.Console.csproj" />
-    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.WeatherEvent\Daisy.Receivers.WeatherEvent.csproj" />
-    <ProjectReference Include="..\..\src\Daisy.Receivers\Daisy.Receivers.FlightsEvent\Daisy.Receivers.FlightsEvent.csproj" />
+    <ProjectReference Include="..\..\..\src\Daisy.Abilities\Daisy.Abilities.Flights\Daisy.Abilities.Flights.csproj" />
   </ItemGroup>
 
 </Project>

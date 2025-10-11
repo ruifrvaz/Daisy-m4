@@ -39,8 +39,8 @@
         "Url": "https://wttr.in/"
       },
       "Flights": {
-        "Url": "https://api.aviationstack.com/v1/flights",
-        "ApiKey": ""
+        "Url": "http://api.aviationstack.com/v1/",
+        "ApiKey": "YOUR_AVIATIONSTACK_API_KEY"
       }
     },
     "PathTraverseOrder": {
