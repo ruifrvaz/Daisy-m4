@@ -81,14 +81,17 @@ jobs:
           
           # Expected plugin assemblies (reflection-based loading from flat output directory)
           expected_plugins=(
+            "Daisy.Abilities.Flights.dll"
             "Daisy.Abilities.Operator.dll"
             "Daisy.Abilities.OutputValidator.dll"
             "Daisy.Abilities.Terminate.dll"
             "Daisy.Abilities.Weather.dll"
             "Daisy.Receivers.Console.dll"
+            "Daisy.Receivers.FlightsEvent.dll"
             "Daisy.Receivers.WeatherEvent.dll"
             "Daisy.Transmitters.Console.dll"
             "Daisy.Transmitters.WorkflowTrigger.dll"
+            "Daisy.Workflows.Flights.dll"
             "Daisy.Workflows.Starter.dll"
             "Daisy.Workflows.Weather.dll"
           )

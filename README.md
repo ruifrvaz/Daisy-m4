@@ -59,6 +59,18 @@ This project includes comprehensive automated testing and validation workflows:
 - **Manual Validation**: Flexible testing with configurable options and cross-platform support
 - **Scenario Testing**: Daily automated testing of various usage scenarios
 
+### Test Coverage
+
+The project maintains comprehensive unit test coverage for all abilities:
+
+- **Abilities**: Operator, OutputValidator, Terminate, Weather, Flights
+- **Receivers**: Console, WeatherEvent, FlightsEvent
+- **Transmitters**: Console, WorkflowTrigger
+- **Factories**: Ability, Transmitter, Receiver loading and initialization
+- **Extensions**: Impulse chain management and string utilities
+
+All ability tests follow the pattern of testing both TraverseRules (CanTraverse) and HasBeenTraversedRules (Traversed) to ensure proper rule-driven execution.
+
 ### Quick Start Testing
 ```bash
 # Restore dependencies and build
