@@ -7,7 +7,7 @@ using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
 using System.Linq;
 
-namespace Daisy.Abilities.Terminate.Rules
+namespace Daisy.Abilities.Weather.Rules
 {
     [TraversedRule(PathType = typeof(GetWeatherByCityPath))]
     public class GetWeatherByCityTraversed : ITraverseRule
