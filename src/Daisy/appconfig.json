@@ -16,6 +16,11 @@
         "RunOnCores": [
           "Daisy.Workflows.Flights"
         ]
+      },
+      "Daisy.Receivers.LocalModelEvent": {
+        "RunOnCores": [
+          "Daisy.Workflows.LocalModel"
+        ]
       }
     },
     "Transmitters": [
@@ -27,12 +32,14 @@
       "Daisy.Abilities.Terminate",
       "Daisy.Abilities.OutputValidator",
       "Daisy.Abilities.Weather",
-      "Daisy.Abilities.Flights"
+      "Daisy.Abilities.Flights",
+      "Daisy.Abilities.LocalModel"
     ],
     "Workflows": [
       "Daisy.Workflows.Starter",
       "Daisy.Workflows.Weather",
-      "Daisy.Workflows.Flights"
+      "Daisy.Workflows.Flights",
+      "Daisy.Workflows.LocalModel"
     ],
     "Apis": {
       "Weather": {
@@ -41,6 +48,10 @@
       "Flights": {
         "Url": "http://api.aviationstack.com/v1/",
         "ApiKey": "YOUR_AVIATIONSTACK_API_KEY"
+      },
+      "LocalModel": {
+        "Url": "http://localhost:11434",
+        "ApiKey": ""
       }
     },
     "PathTraverseOrder": {
@@ -49,6 +60,7 @@
       "WorkflowTriggerPath": 3,
       "GetWeatherByCityPath": 50,
       "GetFlightsByCityPath": 55,
+      "GetLocalModelResponsePath": 60,
       "OutputValidatorPath": 9999
     }
   }
