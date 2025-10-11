@@ -26,6 +26,18 @@ namespace Daisy.Resources.Abstracts
     public abstract class AEventReceiver : IEventReceiver
     {
         /// <summary>
+        /// Gets the path finder service for determining workflow traversal.
+        /// Initialized on first access from the ServiceContainer.
+        /// </summary>
+        protected IPathFinder PathFinder
+        {
+            get
+            {
+                return ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
+            }
+        }
+
+        /// <summary>
         /// Gets the collection of core namespaces where this event receiver should be active.
         /// Determines which workflow cores will load and execute this receiver instance.
         /// Must be implemented by derived classes to specify core targeting.
@@ -85,8 +97,7 @@ namespace Daisy.Resources.Abstracts
                 try
                 {
                     impulse = await ReceiveAsync();
-                    var pathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
-                    var nextPath = pathFinder.FindNextPathToTraverse(impulse);
+                    var nextPath = PathFinder.FindNextPathToTraverse(impulse);
                     if (nextPath != null)
                     {
                         impulse.TraversedPaths.Enqueue(nextPath);

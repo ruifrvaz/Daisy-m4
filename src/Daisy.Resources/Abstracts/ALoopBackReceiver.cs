@@ -23,6 +23,18 @@ namespace Daisy.Resources.Abstracts
     public abstract class ALoopBackReceiver : ILoopBackReceiver
     {
         /// <summary>
+        /// Gets the path finder service for determining workflow traversal.
+        /// Initialized on first access from the ServiceContainer.
+        /// </summary>
+        protected IPathFinder PathFinder
+        {
+            get
+            {
+                return ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the service provider for dependency injection.
         /// Enables access to registered services such as IPathFinder within receiver implementations.
         /// </summary>
@@ -50,8 +62,7 @@ namespace Daisy.Resources.Abstracts
         /// <returns>A task representing the asynchronous loop-back reception operation</returns>
         public async virtual Task ReceiveLoopBack(Impulse impulse)
         {
-            var pathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
-            var nextPath = pathFinder.FindNextPathToTraverse(impulse);
+            var nextPath = PathFinder.FindNextPathToTraverse(impulse);
             if (nextPath != null)
             {
                 impulse.TraversedPaths.Enqueue(nextPath);

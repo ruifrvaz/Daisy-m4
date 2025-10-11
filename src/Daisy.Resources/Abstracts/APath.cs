@@ -64,6 +64,32 @@ namespace Daisy.Resources.Abstracts
         /// <param name="pathName">The unique name identifier for this path</param>
         /// <param name="traverseOrder">The execution priority order (lower executes first)</param>
         /// <param name="settings">The application settings configuration</param>
+        public APath(IServiceProvider serviceProvider,
+            IEnumerable<ITraverseRule> traverseRules,
+            IEnumerable<ITraverseRule> traversedRules,
+            string pathName,
+            int traverseOrder,
+            ApplicationSettings settings)
+        {
+            TraverseRules = traverseRules;
+            TraversedRules = traversedRules;
+            Settings = settings;
+            PathName = pathName;
+            TraverseOrder = traverseOrder;
+
+            PathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the APath class with the specified configuration.
+        /// Sets up the path with necessary dependencies, rules, and configuration data.
+        /// This constructor variant doesn't require a service provider parameter.
+        /// </summary>
+        /// <param name="traverseRules">The rules that determine if this path can be traversed</param>
+        /// <param name="traversedRules">The rules that determine if this path has been traversed</param>
+        /// <param name="pathName">The unique name identifier for this path</param>
+        /// <param name="traverseOrder">The execution priority order (lower executes first)</param>
+        /// <param name="settings">The application settings configuration</param>
         public APath(IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> traversedRules,
             string pathName,
@@ -118,8 +144,7 @@ namespace Daisy.Resources.Abstracts
         protected virtual bool ReadyToTransmit(Impulse impulse)
         {
             //TODO: create a recovery mechanism instead of straight out transmitting the error when an ability fails
-            var pathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
-            return pathFinder.FindNextPathToTraverse(impulse) == null || !string.IsNullOrWhiteSpace(impulse.Error);
+            return PathFinder.FindNextPathToTraverse(impulse) == null || !string.IsNullOrWhiteSpace(impulse.Error);
         }
 
         /// <summary>
@@ -156,8 +181,7 @@ namespace Daisy.Resources.Abstracts
             }
             else
             {
-                var pathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
-                impulse.TraversedPaths.Enqueue(pathFinder.FindNextPathToTraverse(impulse));
+                impulse.TraversedPaths.Enqueue(PathFinder.FindNextPathToTraverse(impulse));
                 await impulse.TraversedPaths.Last().Traverse(impulse);
             }
         }

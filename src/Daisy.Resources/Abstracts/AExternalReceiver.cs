@@ -25,6 +25,18 @@ namespace Daisy.Resources.Abstracts
     public abstract class AExternalReceiver : IExternalReceiver
     {
         /// <summary>
+        /// Gets the path finder service for determining workflow traversal.
+        /// Initialized on first access from the ServiceContainer.
+        /// </summary>
+        protected IPathFinder PathFinder
+        {
+            get
+            {
+                return ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this receiver is currently active and monitoring for input.
         /// Used to control the receiver lifecycle and processing loop.
         /// </summary>
@@ -73,8 +85,7 @@ namespace Daisy.Resources.Abstracts
                 try
                 {
                     var impulse = await ReceiveAsync();
-                    var pathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
-                    var nextPath = pathFinder.FindNextPathToTraverse(impulse);
+                    var nextPath = PathFinder.FindNextPathToTraverse(impulse);
                     if (nextPath != null)
                     {
                         impulse.TraversedPaths.Enqueue(nextPath);
