@@ -39,16 +39,14 @@ Abilities (1-N): Process or mutate the Impulse.
 - Recursion or chaining across multiple receivers/abilities/transmitters.
 - External stimulus (e.g., webhooks, CI/CD) to kick off new Receivers.
 
-## How to create your workflows using prompt-driven development (PDD):
+## Create your own workflows with agentic coding:
 - Add your workflow to the workflows.md file.
-- Instruct your coding agent of choice to analyze the documentation and implement the workflow, step-by-step.
+- Instruct your coding agent of choice to analyze the documentation and implement the workflow. Create it all in one go or step-by-step for greater control.
 
 ## Configuration
 
 ### API Keys
-Some workflows require external API keys to be configured in `src/Daisy/appconfig.json`:
-
-- **Flights API**: Uses AviationStack API (https://aviationstack.com/). Get a free API key and add it to the `Apis.Flights.ApiKey` setting. If no API key is configured, the workflow falls back to mock data for demonstration purposes.
+Some workflows require external API keys. You can add them in the API section in `src/Daisy/appconfig.json`.
 
 ## Testing and Validation
 
@@ -84,6 +82,8 @@ dotnet test
 cd src/Daisy
 dotnet run
 ```
+
+
 
 ### Code Formatting Requirements
 **All contributors and coding agents must ensure code meets formatting standards:**
