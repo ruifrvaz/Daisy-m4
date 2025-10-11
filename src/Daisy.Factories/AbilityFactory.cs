@@ -143,9 +143,9 @@ namespace Daisy.Factories
         private static IEnumerable<ITraverseRule> LoadTraversedRules(IEnumerable<Type> traversedRuleTypes, Type pathType, ApplicationSettings settings)
         {
             var pathTraversedRuleTypes = from traversedRuleType in traversedRuleTypes
-                                                from attribute in traversedRuleType.GetCustomAttributes(typeof(TraversedRuleAttribute), false)
-                                                where ((TraversedRuleAttribute)attribute).PathType == pathType
-                                                select traversedRuleType;
+                                         from attribute in traversedRuleType.GetCustomAttributes(typeof(TraversedRuleAttribute), false)
+                                         where ((TraversedRuleAttribute)attribute).PathType == pathType
+                                         select traversedRuleType;
 
             var traversedRules = new List<ITraverseRule>();
             foreach (var traversedRuleType in pathTraversedRuleTypes)
