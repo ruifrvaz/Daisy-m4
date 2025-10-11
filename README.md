@@ -83,16 +83,6 @@ cd src/Daisy
 dotnet run
 ```
 
-
-
-### Code Formatting Requirements
-**All contributors and coding agents must ensure code meets formatting standards:**
-
-- **Required**: Run `dotnet format` before committing changes
-- **Validation**: Use `dotnet format --verify-no-changes` to verify compliance
-- **CI Enforcement**: Pull requests will fail if formatting requirements are not met
-- **Best Practice**: Apply formatting early and often during development
-
 For detailed testing information, see [.github/workflows/README.md](.github/workflows/README.md).
 
 ## License
