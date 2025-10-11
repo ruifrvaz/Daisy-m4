@@ -27,14 +27,17 @@ namespace Daisy.Resources.Abstracts
     {
         /// <summary>
         /// Gets the path finder service for determining workflow traversal.
-        /// Initialized on first access from the ServiceContainer.
+        /// Initialized in the constructor.
         /// </summary>
-        protected IPathFinder PathFinder
+        protected IPathFinder PathFinder { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the AEventReceiver class.
+        /// Sets up the path finder service from the ServiceContainer.
+        /// </summary>
+        protected AEventReceiver()
         {
-            get
-            {
-                return ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
-            }
+            PathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
         }
 
         /// <summary>
