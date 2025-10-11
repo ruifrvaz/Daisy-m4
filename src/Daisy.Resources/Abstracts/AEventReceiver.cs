@@ -1,8 +1,8 @@
 ﻿using Daisy.Resources.Extensions;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +90,7 @@ namespace Daisy.Resources.Abstracts
                 try
                 {
                     impulse = await ReceiveAsync();
-                    var pathFinder = ServiceProvider.GetRequiredService<IPathFinder>();
+                    var pathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
                     var nextPath = pathFinder.FindNextPathToTraverse(impulse);
                     if (nextPath != null)
                     {

@@ -25,6 +25,10 @@ namespace Daisy.Tests.Abilities.Terminate
             Paths.Instance.Pool.Clear();
             LoopBackTransmitters.Instance.Pool.Clear();
             ExternalTransmitters.Instance.Pool.Clear();
+            
+            // Clear and initialize ServiceContainer with PathFinderService
+            ServiceContainer.Instance.Services.Clear();
+            ServiceContainer.Instance.Services.Add(new PathFinderService(new ApplicationSettings()));
         }
 
         [TestMethod]
@@ -65,10 +69,6 @@ namespace Daisy.Tests.Abilities.Terminate
         {
             public object GetService(Type serviceType)
             {
-                if (serviceType == typeof(IPathFinder))
-                {
-                    return new PathFinderService();
-                }
                 return null!;
             }
         }

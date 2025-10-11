@@ -1,4 +1,5 @@
 using Daisy.Resources.Interfaces;
+using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
 using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
@@ -24,7 +25,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_WithNoTraversedPaths_ReturnsFirstEligiblePath()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 10, canTraverse: true, traversed: false);
@@ -44,7 +45,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_WithNoEligiblePaths_ReturnsNull()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 10, canTraverse: false, traversed: false);
@@ -64,7 +65,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_SkipsAlreadyTraversedPaths()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 10, canTraverse: true, traversed: true);
@@ -84,7 +85,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_WithTraversedPaths_ReturnsNextPathAfterLastTraversedOrder()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 10, canTraverse: true, traversed: false);
@@ -110,7 +111,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_WithMultipleTraversedPaths_ConsidersLastTraversedPath()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 10, canTraverse: true, traversed: false);
@@ -136,7 +137,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_OrdersByTraverseOrder_Ascending()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 50, canTraverse: true, traversed: false);
@@ -159,7 +160,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_WithSameTraverseOrder_ReturnsFirstMatching()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 10, canTraverse: true, traversed: false);
@@ -179,7 +180,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_WithEmptyPool_ReturnsNull()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
 
             // Act
@@ -193,7 +194,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_FiltersOutPathsThatCannotTraverse()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 10, canTraverse: false, traversed: false);
@@ -215,7 +216,7 @@ namespace Daisy.Tests.Services
         public void FindNextPathToTraverse_WithTraversedPaths_IncludesPathsWithSameOrder()
         {
             // Arrange
-            var pathFinder = new PathFinderService();
+            var pathFinder = new PathFinderService(new ApplicationSettings());
             var impulse = new Impulse();
             
             var path1 = new TestPath(traverseOrder: 10, canTraverse: true, traversed: false);

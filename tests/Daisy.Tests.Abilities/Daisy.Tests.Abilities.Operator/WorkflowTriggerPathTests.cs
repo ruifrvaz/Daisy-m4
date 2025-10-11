@@ -26,6 +26,10 @@ namespace Daisy.Tests.Abilities.Operator
             LoopBackTransmitters.Instance.Pool = new List<ILoopBackTransmitter>();
             ExternalTransmitters.Instance.Pool = new List<IExternalTransmitter>();
             Paths.Instance.Pool = new List<IPath>();
+            
+            // Clear and initialize ServiceContainer with PathFinderService
+            ServiceContainer.Instance.Services.Clear();
+            ServiceContainer.Instance.Services.Add(new PathFinderService(new ApplicationSettings()));
         }
 
         [TestMethod]
@@ -73,10 +77,6 @@ namespace Daisy.Tests.Abilities.Operator
         {
             public object? GetService(Type serviceType)
             {
-                if (serviceType == typeof(IPathFinder))
-                {
-                    return new PathFinderService();
-                }
                 return null;
             }
         }

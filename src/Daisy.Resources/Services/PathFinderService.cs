@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using Daisy.Resources.Interfaces;
+using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
 
@@ -13,6 +15,26 @@ namespace Daisy.Resources.Services
     /// </summary>
     public class PathFinderService : IPathFinder
     {
+        /// <summary>
+        /// Initializes a new instance of the PathFinderService class.
+        /// This constructor is required for the Daisy service loading pattern.
+        /// </summary>
+        /// <param name="settings">The application settings (not used by PathFinderService but required by the loading pattern)</param>
+        public PathFinderService(ApplicationSettings settings)
+        {
+            // PathFinderService doesn't need settings, but the constructor signature is required for service loading
+        }
+
+        /// <summary>
+        /// Initializes the service with the provided service provider for dependency injection.
+        /// PathFinderService doesn't require any dependencies from the service provider.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider containing registered dependencies</param>
+        public void Initialize(IServiceProvider serviceProvider)
+        {
+            // No initialization required - PathFinderService is stateless
+        }
+
         /// <summary>
         /// Finds the next eligible path that the impulse can traverse.
         /// 

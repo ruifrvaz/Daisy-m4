@@ -8,7 +8,7 @@ namespace Daisy.Resources.Interfaces
     /// based on traverse rules, traversed rules, and path ordering constraints.
     /// This is a core service that enables the rule-driven workflow architecture.
     /// </summary>
-    public interface IPathFinder
+    public interface IPathFinder : IDaisyService
     {
         /// <summary>
         /// Finds the next eligible path that the impulse can traverse.
