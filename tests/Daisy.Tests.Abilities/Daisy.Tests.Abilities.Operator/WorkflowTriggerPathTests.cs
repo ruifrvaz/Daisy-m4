@@ -9,6 +9,7 @@ using Daisy.Resources.Extensions;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -25,6 +26,10 @@ namespace Daisy.Tests.Abilities.Operator
             LoopBackTransmitters.Instance.Pool = new List<ILoopBackTransmitter>();
             ExternalTransmitters.Instance.Pool = new List<IExternalTransmitter>();
             Paths.Instance.Pool = new List<IPath>();
+
+            // Clear and initialize ServiceContainer with PathFinderService
+            ServiceContainer.Instance.Services.Clear();
+            ServiceContainer.Instance.Services.Add(new PathFinderService(new ApplicationSettings()));
         }
 
         [TestMethod]

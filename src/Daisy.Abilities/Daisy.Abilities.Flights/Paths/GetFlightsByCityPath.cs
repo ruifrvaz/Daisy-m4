@@ -15,7 +15,8 @@ namespace Daisy.Abilities.Flights.Paths
     {
         private readonly IFlightsService? _flightsService;
 
-        public GetFlightsByCityPath(IServiceProvider serviceProvider,
+        public GetFlightsByCityPath(
+            IServiceProvider serviceProvider,
             IEnumerable<ITraverseRule> traverseRules,
             IEnumerable<ITraverseRule> hasBeenTraversedRules,
             string pathName,

@@ -7,6 +7,7 @@ using Daisy.Abilities.Terminate;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,6 +25,10 @@ namespace Daisy.Tests.Abilities.Terminate
             Paths.Instance.Pool.Clear();
             LoopBackTransmitters.Instance.Pool.Clear();
             ExternalTransmitters.Instance.Pool.Clear();
+
+            // Clear and initialize ServiceContainer with PathFinderService
+            ServiceContainer.Instance.Services.Clear();
+            ServiceContainer.Instance.Services.Add(new PathFinderService(new ApplicationSettings()));
         }
 
         [TestMethod]

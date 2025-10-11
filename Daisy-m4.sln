@@ -80,6 +80,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Tests.Abilities.Weath
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Tests.Abilities.OutputValidator", "tests\Daisy.Tests.Abilities\Daisy.Tests.Abilities.OutputValidator\Daisy.Tests.Abilities.OutputValidator.csproj", "{82F6BB4A-AA31-4756-A99B-1BEF47CCA6DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisy.Tests.Services", "tests\Daisy.Tests.Services\Daisy.Tests.Services.csproj", "{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -390,6 +392,18 @@ Global
 		{82F6BB4A-AA31-4756-A99B-1BEF47CCA6DC}.Release|x64.Build.0 = Release|Any CPU
 		{82F6BB4A-AA31-4756-A99B-1BEF47CCA6DC}.Release|x86.ActiveCfg = Release|Any CPU
 		{82F6BB4A-AA31-4756-A99B-1BEF47CCA6DC}.Release|x86.Build.0 = Release|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Debug|x64.Build.0 = Debug|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Debug|x86.Build.0 = Debug|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Release|x64.ActiveCfg = Release|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Release|x64.Build.0 = Release|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Release|x86.ActiveCfg = Release|Any CPU
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -426,5 +440,6 @@ Global
 		{DBF735BC-7A25-431F-8F71-AECF4444B666} = {033AE17C-03ED-2064-7387-0C165E759803}
 		{C4C8E9FD-034C-44BC-86F6-0F328FACAAE3} = {033AE17C-03ED-2064-7387-0C165E759803}
 		{82F6BB4A-AA31-4756-A99B-1BEF47CCA6DC} = {033AE17C-03ED-2064-7387-0C165E759803}
+		{0B1D0781-AD81-4708-8AA9-B51E62D9F9FA} = {1E21ED11-9D7C-4680-A679-743FD5CE4500}
 	EndGlobalSection
 EndGlobal

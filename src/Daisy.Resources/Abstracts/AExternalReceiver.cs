@@ -1,6 +1,6 @@
-﻿using Daisy.Resources.Helpers;
-using Daisy.Resources.Interfaces;
+﻿using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
 using System;
 using System.Collections.Generic;
@@ -24,6 +24,21 @@ namespace Daisy.Resources.Abstracts
     /// </summary>
     public abstract class AExternalReceiver : IExternalReceiver
     {
+        /// <summary>
+        /// Gets the path finder service for determining workflow traversal.
+        /// Initialized in the constructor.
+        /// </summary>
+        protected IPathFinder PathFinder { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the AExternalReceiver class.
+        /// Sets up the path finder service from the ServiceContainer.
+        /// </summary>
+        protected AExternalReceiver()
+        {
+            PathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether this receiver is currently active and monitoring for input.
         /// Used to control the receiver lifecycle and processing loop.

@@ -26,12 +26,14 @@ They are singletons that:
 - Enable module reuse across cores.  
 - Support inter-core communication.  
 
-### 4. **Paths and PathFinder**
+### 4. **Paths and PathFinder Service**
 Abilities are traversed using `Paths`.  
-The **PathFinder** manages traversal:  
+The **PathFinder Service** (`IPathFinder`) manages traversal:  
 - Matches candidate paths via `TraverseRules`  
 - Filters out paths that were already traversed (`TraversedRules`)  
 - Executes qualified paths in priority (`TraverseOrder`)  
+
+The PathFinder is implemented as a IDaisyService service and loaded into the application's custom ServiceCollection, making it testable, maintainable, and properly integrated into the solution architecture.  
 
 ---
 

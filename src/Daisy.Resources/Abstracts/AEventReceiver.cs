@@ -1,7 +1,7 @@
 ﻿using Daisy.Resources.Extensions;
-using Daisy.Resources.Helpers;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,21 @@ namespace Daisy.Resources.Abstracts
     /// </summary>
     public abstract class AEventReceiver : IEventReceiver
     {
+        /// <summary>
+        /// Gets the path finder service for determining workflow traversal.
+        /// Initialized in the constructor.
+        /// </summary>
+        protected IPathFinder PathFinder { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the AEventReceiver class.
+        /// Sets up the path finder service from the ServiceContainer.
+        /// </summary>
+        protected AEventReceiver()
+        {
+            PathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
+        }
+
         /// <summary>
         /// Gets the collection of core namespaces where this event receiver should be active.
         /// Determines which workflow cores will load and execute this receiver instance.

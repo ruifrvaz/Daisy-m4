@@ -1,7 +1,7 @@
-using Daisy.Resources.Helpers;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
 using System;
 using System.Collections.Generic;
@@ -30,9 +30,15 @@ namespace Daisy.Resources.Abstracts
 
         /// <summary>
         /// Gets or sets the service provider for dependency injection.
-        /// Enables access to registered services and dependencies within path implementations.
+        /// Enables access to registered services such as IPathFinder within receiver implementations.
         /// </summary>
         public IServiceProvider ServiceProvider { get; set; }
+
+        /// <summary>
+        /// Gets the path finder service for determining workflow traversal.
+        /// Initialized in the constructor.
+        /// </summary>
+        protected IPathFinder PathFinder { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of traverse rules that determine if this path can be executed.
@@ -81,6 +87,33 @@ namespace Daisy.Resources.Abstracts
             Settings = settings;
             PathName = pathName;
             TraverseOrder = traverseOrder;
+
+            PathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the APath class with the specified configuration.
+        /// Sets up the path with necessary dependencies, rules, and configuration data.
+        /// This constructor variant doesn't require a service provider parameter.
+        /// </summary>
+        /// <param name="traverseRules">The rules that determine if this path can be traversed</param>
+        /// <param name="traversedRules">The rules that determine if this path has been traversed</param>
+        /// <param name="pathName">The unique name identifier for this path</param>
+        /// <param name="traverseOrder">The execution priority order (lower executes first)</param>
+        /// <param name="settings">The application settings configuration</param>
+        public APath(IEnumerable<ITraverseRule> traverseRules,
+            IEnumerable<ITraverseRule> traversedRules,
+            string pathName,
+            int traverseOrder,
+            ApplicationSettings settings)
+        {
+            TraverseRules = traverseRules;
+            TraversedRules = traversedRules;
+            Settings = settings;
+            PathName = pathName;
+            TraverseOrder = traverseOrder;
+
+            PathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
         }
 
         /// <summary>

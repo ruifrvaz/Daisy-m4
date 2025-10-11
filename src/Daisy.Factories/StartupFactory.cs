@@ -56,6 +56,9 @@ namespace Daisy
             // Register IDaisyService implementations directly from loaded assemblies
             RegisterServicesFromLoadedAssemblies(serviceCollection, settings);
 
+            // Register PathFinderService from Daisy.Resources assembly
+            RegisterCoreServices(settings);
+
             var serviceProvider = serviceCollection.BuildServiceProvider();
             ServiceContainer.Instance.Services.ForEach(s => s.Initialize(serviceProvider));
             ServiceContainer.Instance.AddServiceProvider(serviceProvider);
@@ -121,6 +124,13 @@ namespace Daisy
                     Console.WriteLine($"Warning: Could not load plugin assembly {assemblyName}: {ex.Message}");
                 }
             }
+        }
+
+        private static void RegisterCoreServices(ApplicationSettings settings)
+        {
+            // Register core services from Daisy.Resources assembly
+            var pathFinderService = new PathFinderService(settings);
+            ServiceContainer.Instance.Services.Add(pathFinderService);
         }
     }
 }

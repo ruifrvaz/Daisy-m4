@@ -1,7 +1,8 @@
-﻿using Daisy.Resources.Helpers;
-using Daisy.Resources.Interfaces;
+﻿using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
+using Daisy.Resources.Services;
 using Daisy.Resources.Signals;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,27 @@ namespace Daisy.Resources.Abstracts
     /// </summary>
     public abstract class ALoopBackReceiver : ILoopBackReceiver
     {
+        /// <summary>
+        /// Gets the path finder service for determining workflow traversal.
+        /// Initialized in the constructor.
+        /// </summary>
+        protected IPathFinder PathFinder { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the ALoopBackReceiver class.
+        /// Sets up the path finder service from the ServiceContainer.
+        /// </summary>
+        protected ALoopBackReceiver()
+        {
+            PathFinder = ServiceContainer.Instance.GetService<IPathFinder>() as IPathFinder;
+        }
+
+        /// <summary>
+        /// Gets or sets the service provider for dependency injection.
+        /// Enables access to registered services such as IPathFinder within receiver implementations.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; set; }
+
         /// <summary>
         /// Determines whether this receiver can process the given impulse.
         /// Must be implemented by derived classes to define specific reception criteria.
