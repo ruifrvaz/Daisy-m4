@@ -69,7 +69,7 @@ The project maintains comprehensive unit test coverage for all abilities:
 - **Factories**: Ability, Transmitter, Receiver loading and initialization
 - **Extensions**: Impulse chain management and string utilities
 
-All ability tests follow the pattern of testing both TraverseRules (CanTraverse) and HasBeenTraversedRules (Traversed) to ensure proper rule-driven execution.
+All ability tests follow the pattern of testing both TraverseRules (CanTraverse) and TraversedRules (Traversed) to ensure proper rule-driven execution.
 
 ### Quick Start Testing
 ```bash

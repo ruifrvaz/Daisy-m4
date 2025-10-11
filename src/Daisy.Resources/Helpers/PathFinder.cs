@@ -15,11 +15,11 @@ namespace Daisy.Resources.Helpers
             {
                 nextPathToTraverse = Paths.Instance.Pool.Where(path => path.TraverseOrder >= impulse.TraversedPaths.Last().TraverseOrder)
                                                         .OrderBy(path => path.TraverseOrder)
-                                                        .FirstOrDefault(path => path.CanTraverse(impulse) && !path.HasBeenTraversed(impulse));
+                                                        .FirstOrDefault(path => path.CanTraverse(impulse) && !path.Traversed(impulse));
             }
             else
             {
-                nextPathToTraverse = Paths.Instance.Pool.Where(path => path.CanTraverse(impulse) && !path.HasBeenTraversed(impulse))
+                nextPathToTraverse = Paths.Instance.Pool.Where(path => path.CanTraverse(impulse) && !path.Traversed(impulse))
                                                         .OrderBy(path => path.TraverseOrder)
                                                         .FirstOrDefault();
             }

@@ -31,11 +31,11 @@ namespace Daisy.Factories
 
                 var traverseRules = LoadCanTraverseRules(traverseRuleTypes, abilityPath, settings);
 
-                var hasBeenTraversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
+                var traversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
 
                 var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
 
-                dynamic pathObject = Activator.CreateInstance(abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules, abilityPath.Name, traverseOrder, settings);
+                dynamic pathObject = Activator.CreateInstance(abilityPath, serviceProvider, traverseRules, traversedRules, abilityPath.Name, traverseOrder, settings);
                 var path = pathObject as IPath;
                 Paths.Instance.Pool.Add(path);
             }
@@ -86,12 +86,12 @@ namespace Daisy.Factories
                                         && traverseRuleInterface.IsAssignableFrom(t));
 
                         var traverseRules = LoadCanTraverseRules(traverseRuleTypes, abilityPath, settings);
-                        var hasBeenTraversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
+                        var traversedRules = LoadTraversedRules(traverseRuleTypes, abilityPath, settings);
                         var traverseOrder = settings.PathTraverseOrder[abilityPath.Name];
 
-                        // ctor: (IServiceProvider, traverseRules, hasBeenTraversedRules, name, order, settings)
+                        // ctor: (IServiceProvider, traverseRules, traversedRules, name, order, settings)
                         var instance = (IPath)Activator.CreateInstance(
-                            abilityPath, serviceProvider, traverseRules, hasBeenTraversedRules,
+                            abilityPath, serviceProvider, traverseRules, traversedRules,
                             abilityPath.Name, traverseOrder, settings)!;
 
                         Paths.Instance.Pool.Add(instance);
@@ -140,24 +140,24 @@ namespace Daisy.Factories
             return traverseRules;
         }
 
-        private static IEnumerable<ITraverseRule> LoadTraversedRules(IEnumerable<Type> hasBeenTraversedRuleTypes, Type pathType, ApplicationSettings settings)
+        private static IEnumerable<ITraverseRule> LoadTraversedRules(IEnumerable<Type> traversedRuleTypes, Type pathType, ApplicationSettings settings)
         {
-            var pathHasBeenTraversedRuleTypes = from hasBeenTraversedRuleType in hasBeenTraversedRuleTypes
-                                                from attribute in hasBeenTraversedRuleType.GetCustomAttributes(typeof(TraversedRuleAttribute), false)
-                                                where ((TraversedRuleAttribute)attribute).PathType == pathType
-                                                select hasBeenTraversedRuleType;
+            var pathTraversedRuleTypes = from traversedRuleType in traversedRuleTypes
+                                         from attribute in traversedRuleType.GetCustomAttributes(typeof(TraversedRuleAttribute), false)
+                                         where ((TraversedRuleAttribute)attribute).PathType == pathType
+                                         select traversedRuleType;
 
-            var hasBeenTraversedRules = new List<ITraverseRule>();
-            foreach (var hasBeenTraversedRuleType in pathHasBeenTraversedRuleTypes)
+            var traversedRules = new List<ITraverseRule>();
+            foreach (var traversedRuleType in pathTraversedRuleTypes)
             {
-                dynamic traverseRuleObject = Activator.CreateInstance(hasBeenTraversedRuleType, settings);
+                dynamic traverseRuleObject = Activator.CreateInstance(traversedRuleType, settings);
                 var traverseRule = traverseRuleObject as ITraverseRule;
                 if (traverseRule != null)
                 {
-                    hasBeenTraversedRules.Add(traverseRule);
+                    traversedRules.Add(traverseRule);
                 }
             }
-            return hasBeenTraversedRules;
+            return traversedRules;
         }
 
     }

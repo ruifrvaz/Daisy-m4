@@ -36,7 +36,7 @@ namespace Daisy.Tests.Abilities.Weather
         [TestMethod]
         public void Traversed_rule_applies_when_weather_in_output()
         {
-            var rule = new Daisy.Abilities.Terminate.Rules.GetWeatherByCityTraversed(new ApplicationSettings());
+            var rule = new GetWeatherByCityTraversed(new ApplicationSettings());
             var impulse = new Impulse();
             impulse.AddChain("weather: London", ImpulseExtensions.ImpulseField.Output);
 
@@ -48,7 +48,7 @@ namespace Daisy.Tests.Abilities.Weather
         [TestMethod]
         public void Traversed_rule_does_not_apply_when_no_weather_in_output()
         {
-            var rule = new Daisy.Abilities.Terminate.Rules.GetWeatherByCityTraversed(new ApplicationSettings());
+            var rule = new GetWeatherByCityTraversed(new ApplicationSettings());
             var impulse = new Impulse();
 
             var result = rule.RuleApplies(impulse);

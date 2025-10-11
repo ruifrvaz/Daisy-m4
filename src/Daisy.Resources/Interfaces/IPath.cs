@@ -33,11 +33,11 @@ namespace Daisy.Resources.Interfaces
 
         /// <summary>
         /// Determines whether this path has already been traversed for the given impulse.
-        /// Prevents re-processing by checking against HasBeenTraversed rules.
+        /// Prevents re-processing by checking against Traversed rules.
         /// </summary>
         /// <param name="impulse">The impulse object to check for previous traversal</param>
         /// <returns>True if the path has been traversed, false otherwise</returns>
-        bool HasBeenTraversed(Impulse impulse);
+        bool Traversed(Impulse impulse);
 
         /// <summary>
         /// Executes the core logic of this path, processing the impulse.

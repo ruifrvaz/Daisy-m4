@@ -30,7 +30,7 @@ They are singletons that:
 Abilities are traversed using `Paths`.  
 The **PathFinder** manages traversal:  
 - Matches candidate paths via `TraverseRules`  
-- Filters out paths that were already traversed (`HasBeenTraversedRules`)  
+- Filters out paths that were already traversed (`TraversedRules`)  
 - Executes qualified paths in priority (`TraverseOrder`)  
 
 ---
@@ -46,7 +46,7 @@ Examples:
 ### 2. **Abilities**
 Abilities contain one or more `Paths`. Each path includes:  
 - `TraverseRules`: Conditions for execution.  
-- `HasBeenTraversedRules`: Prevents re-processing.  
+- `TraversedRules`: Prevents re-processing.  
 - `TraverseOrder`: Optional execution priority.  
 - Processing logic to mutate or enrich the `Impulse`.  
 

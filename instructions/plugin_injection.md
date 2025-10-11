@@ -169,7 +169,7 @@ public class CustomTraverseRule : ITraverseRule
 
 **Key Attributes:**
 - `[TraverseRule]`: Links traverse rules to specific path types
-- Used for both `CanTraverse` and `HasBeenTraversed` rule discovery
+- Used for both `CanTraverse` and `Traversed` rule discovery
 
 ---
 
@@ -310,10 +310,10 @@ public class MyCustomPath : IPath
 {
     public string TraverseOrder { get; set; } = "100";
     public List<ITraverseRule> CanTraverseRules { get; set; } = new();
-    public List<ITraverseRule> HasBeenTraversedRules { get; set; } = new();
+    public List<ITraverseRule> TraversedRules { get; set; } = new();
 
     public bool CanTraverse(Impulse impulse) => /* logic */;
-    public bool HasBeenTraversed(Impulse impulse) => /* logic */;
+    public bool Traversed(Impulse impulse) => /* logic */;
     public Impulse Traverse(Impulse impulse) => /* processing logic */;
 }
 ```
