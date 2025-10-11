@@ -1,8 +1,8 @@
-using Daisy.Resources.Helpers;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -122,7 +122,8 @@ namespace Daisy.Resources.Abstracts
         protected virtual bool ReadyToTransmit(Impulse impulse)
         {
             //TODO: create a recovery mechanism instead of straight out transmitting the error when an ability fails
-            return PathFinder.FindNextPathToTraverse(impulse) == null || !string.IsNullOrWhiteSpace(impulse.Error);
+            var pathFinder = ServiceProvider.GetService<IPathFinder>();
+            return pathFinder.FindNextPathToTraverse(impulse) == null || !string.IsNullOrWhiteSpace(impulse.Error);
         }
 
         /// <summary>
@@ -159,7 +160,8 @@ namespace Daisy.Resources.Abstracts
             }
             else
             {
-                impulse.TraversedPaths.Enqueue(PathFinder.FindNextPathToTraverse(impulse));
+                var pathFinder = ServiceProvider.GetService<IPathFinder>();
+                impulse.TraversedPaths.Enqueue(pathFinder.FindNextPathToTraverse(impulse));
                 await impulse.TraversedPaths.Last().Traverse(impulse);
             }
         }

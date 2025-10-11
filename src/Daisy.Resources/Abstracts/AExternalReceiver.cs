@@ -1,7 +1,7 @@
-﻿using Daisy.Resources.Helpers;
-using Daisy.Resources.Interfaces;
+﻿using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +24,11 @@ namespace Daisy.Resources.Abstracts
     /// </summary>
     public abstract class AExternalReceiver : IExternalReceiver
     {
+        /// <summary>
+        /// Gets or sets the service provider for dependency injection.
+        /// Enables access to registered services such as IPathFinder within receiver implementations.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this receiver is currently active and monitoring for input.
         /// Used to control the receiver lifecycle and processing loop.
@@ -73,7 +78,8 @@ namespace Daisy.Resources.Abstracts
                 try
                 {
                     var impulse = await ReceiveAsync();
-                    var nextPath = PathFinder.FindNextPathToTraverse(impulse);
+                    var pathFinder = ServiceProvider?.GetService<IPathFinder>();
+                    var nextPath = pathFinder?.FindNextPathToTraverse(impulse);
                     if (nextPath != null)
                     {
                         impulse.TraversedPaths.Enqueue(nextPath);

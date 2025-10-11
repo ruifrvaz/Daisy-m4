@@ -1,7 +1,8 @@
-﻿using Daisy.Resources.Helpers;
-using Daisy.Resources.Interfaces;
+﻿using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,11 @@ namespace Daisy.Resources.Abstracts
     /// </summary>
     public abstract class ALoopBackReceiver : ILoopBackReceiver
     {
+        /// <summary>
+        /// Gets or sets the service provider for dependency injection.
+        /// Enables access to registered services such as IPathFinder within receiver implementations.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; set; }
         /// <summary>
         /// Determines whether this receiver can process the given impulse.
         /// Must be implemented by derived classes to define specific reception criteria.
@@ -44,7 +50,8 @@ namespace Daisy.Resources.Abstracts
         /// <returns>A task representing the asynchronous loop-back reception operation</returns>
         public async virtual Task ReceiveLoopBack(Impulse impulse)
         {
-            var nextPath = PathFinder.FindNextPathToTraverse(impulse);
+            var pathFinder = ServiceProvider?.GetService<IPathFinder>();
+            var nextPath = pathFinder?.FindNextPathToTraverse(impulse);
             if (nextPath != null)
             {
                 impulse.TraversedPaths.Enqueue(nextPath);

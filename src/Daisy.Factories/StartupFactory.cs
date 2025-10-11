@@ -53,6 +53,9 @@ namespace Daisy
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 
+            // Register core Daisy services
+            serviceCollection.AddSingleton<IPathFinder, PathFinderService>();
+
             // Register IDaisyService implementations directly from loaded assemblies
             RegisterServicesFromLoadedAssemblies(serviceCollection, settings);
 

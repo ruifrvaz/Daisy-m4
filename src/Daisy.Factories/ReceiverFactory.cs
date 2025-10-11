@@ -1,3 +1,4 @@
+using Daisy.Resources.Abstracts;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Models;
 using System;
@@ -52,6 +53,10 @@ namespace Daisy.Factories
                     foreach (var receiverType in receiverTypes)
                     {
                         var receiver = (IExternalReceiver)Activator.CreateInstance(receiverType, assemblySettings.RunOnCores);
+                        if (receiver is AExternalReceiver externalReceiver)
+                        {
+                            externalReceiver.ServiceProvider = serviceProvider;
+                        }
                         Resources.Pools.ExternalReceivers.Instance.Pool.Add(receiver);
                     }
                 }
@@ -102,6 +107,10 @@ namespace Daisy.Factories
                     {
                         // receivers may or may not implement ILoopBackReceiver receivers
                         var receiver = (ILoopBackReceiver)Activator.CreateInstance(receiverType);
+                        if (receiver is ALoopBackReceiver loopBackReceiver)
+                        {
+                            loopBackReceiver.ServiceProvider = serviceProvider;
+                        }
                         Resources.Pools.LoopBackReceivers.Instance.Pool.Add(receiver);
                     }
                 }
@@ -156,6 +165,10 @@ namespace Daisy.Factories
                     {
                         // receivers may or may not implement event receivers
                         var receiver = (IEventReceiver)Activator.CreateInstance(receiverType, assemblySettings.RunOnCores);
+                        if (receiver is AEventReceiver eventReceiver)
+                        {
+                            eventReceiver.ServiceProvider = serviceProvider;
+                        }
                         Resources.Pools.EventReceivers.Instance.Pool.Add(receiver);
                     }
                 }

@@ -1,8 +1,8 @@
 ﻿using Daisy.Resources.Extensions;
-using Daisy.Resources.Helpers;
 using Daisy.Resources.Interfaces;
 using Daisy.Resources.Pools;
 using Daisy.Resources.Signals;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +25,11 @@ namespace Daisy.Resources.Abstracts
     /// </summary>
     public abstract class AEventReceiver : IEventReceiver
     {
+        /// <summary>
+        /// Gets or sets the service provider for dependency injection.
+        /// Enables access to registered services such as IPathFinder within receiver implementations.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; set; }
         /// <summary>
         /// Gets the collection of core namespaces where this event receiver should be active.
         /// Determines which workflow cores will load and execute this receiver instance.
@@ -85,7 +90,8 @@ namespace Daisy.Resources.Abstracts
                 try
                 {
                     impulse = await ReceiveAsync();
-                    var nextPath = PathFinder.FindNextPathToTraverse(impulse);
+                    var pathFinder = ServiceProvider?.GetService<IPathFinder>();
+                    var nextPath = pathFinder?.FindNextPathToTraverse(impulse);
                     if (nextPath != null)
                     {
                         impulse.TraversedPaths.Enqueue(nextPath);
