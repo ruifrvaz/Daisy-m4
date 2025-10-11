@@ -91,7 +91,6 @@ jobs:
             --runtime win-x64 \
             --self-contained true \
             --output ./publish/daisy-win-x64 \
-            --no-build \
             --property:PublishSingleFile=false \
             --property:IncludeNativeLibrariesForSelfExtract=true
 
@@ -103,7 +102,6 @@ jobs:
             --runtime linux-x64 \
             --self-contained true \
             --output ./publish/daisy-linux-x64 \
-            --no-build \
             --property:PublishSingleFile=false \
             --property:IncludeNativeLibrariesForSelfExtract=true
 
