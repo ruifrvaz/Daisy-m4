@@ -50,8 +50,8 @@ namespace Daisy.Resources.Abstracts
         /// <returns>A task representing the asynchronous loop-back reception operation</returns>
         public async virtual Task ReceiveLoopBack(Impulse impulse)
         {
-            var pathFinder = ServiceProvider?.GetService<IPathFinder>();
-            var nextPath = pathFinder?.FindNextPathToTraverse(impulse);
+            var pathFinder = ServiceProvider.GetRequiredService<IPathFinder>();
+            var nextPath = pathFinder.FindNextPathToTraverse(impulse);
             if (nextPath != null)
             {
                 impulse.TraversedPaths.Enqueue(nextPath);

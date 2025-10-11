@@ -122,7 +122,7 @@ namespace Daisy.Resources.Abstracts
         protected virtual bool ReadyToTransmit(Impulse impulse)
         {
             //TODO: create a recovery mechanism instead of straight out transmitting the error when an ability fails
-            var pathFinder = ServiceProvider.GetService<IPathFinder>();
+            var pathFinder = ServiceProvider.GetRequiredService<IPathFinder>();
             return pathFinder.FindNextPathToTraverse(impulse) == null || !string.IsNullOrWhiteSpace(impulse.Error);
         }
 
@@ -160,7 +160,7 @@ namespace Daisy.Resources.Abstracts
             }
             else
             {
-                var pathFinder = ServiceProvider.GetService<IPathFinder>();
+                var pathFinder = ServiceProvider.GetRequiredService<IPathFinder>();
                 impulse.TraversedPaths.Enqueue(pathFinder.FindNextPathToTraverse(impulse));
                 await impulse.TraversedPaths.Last().Traverse(impulse);
             }

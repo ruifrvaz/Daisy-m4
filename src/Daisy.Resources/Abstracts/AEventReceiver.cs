@@ -90,8 +90,8 @@ namespace Daisy.Resources.Abstracts
                 try
                 {
                     impulse = await ReceiveAsync();
-                    var pathFinder = ServiceProvider?.GetService<IPathFinder>();
-                    var nextPath = pathFinder?.FindNextPathToTraverse(impulse);
+                    var pathFinder = ServiceProvider.GetRequiredService<IPathFinder>();
+                    var nextPath = pathFinder.FindNextPathToTraverse(impulse);
                     if (nextPath != null)
                     {
                         impulse.TraversedPaths.Enqueue(nextPath);
