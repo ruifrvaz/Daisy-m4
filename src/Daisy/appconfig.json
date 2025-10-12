@@ -16,23 +16,32 @@
         "RunOnCores": [
           "Daisy.Workflows.Flights"
         ]
+      },
+      "Daisy.Receivers.FootballEvent": {
+        "RunOnCores": [
+          "Daisy.Workflows.Football"
+        ]
       }
     },
     "Transmitters": [
       "Daisy.Transmitters.Console",
-      "Daisy.Transmitters.WorkflowTrigger"
+      "Daisy.Transmitters.WorkflowTrigger",
+      "Daisy.Transmitters.Email"
     ],
     "Abilities": [
       "Daisy.Abilities.Operator",
       "Daisy.Abilities.Terminate",
       "Daisy.Abilities.OutputValidator",
       "Daisy.Abilities.Weather",
-      "Daisy.Abilities.Flights"
+      "Daisy.Abilities.Flights",
+      "Daisy.Abilities.Football",
+      "Daisy.Abilities.DatabaseStorage"
     ],
     "Workflows": [
       "Daisy.Workflows.Starter",
       "Daisy.Workflows.Weather",
-      "Daisy.Workflows.Flights"
+      "Daisy.Workflows.Flights",
+      "Daisy.Workflows.Football"
     ],
     "Apis": {
       "Weather": {
@@ -41,6 +50,13 @@
       "Flights": {
         "Url": "http://api.aviationstack.com/v1/",
         "ApiKey": "YOUR_AVIATIONSTACK_API_KEY"
+      },
+      "Football": {
+        "Url": "https://api.football-data.org/v4/",
+        "ApiKey": "YOUR_FOOTBALL_API_KEY"
+      },
+      "Database": {
+        "ConnectionString": ""
       }
     },
     "PathTraverseOrder": {
@@ -49,6 +65,8 @@
       "WorkflowTriggerPath": 3,
       "GetWeatherByCityPath": 50,
       "GetFlightsByCityPath": 55,
+      "GetFootballScoresPath": 60,
+      "StoreFootballScoresPath": 65,
       "OutputValidatorPath": 9999
     }
   }

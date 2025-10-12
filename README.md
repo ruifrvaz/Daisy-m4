@@ -43,10 +43,22 @@ Abilities (1-N): Process or mutate the Impulse.
 - Add your workflow to the workflows.md file.
 - Instruct your coding agent of choice to analyze the documentation and implement the workflow. Create it all in one go or step-by-step for greater control.
 
+## Example Workflows
+
+The system includes several example workflows:
+
+- **Weather**: Fetches weather information for a city
+- **Flights**: Searches for flights to a destination  
+- **Football**: Fetches football scores, stores them in a SQL database, and sends via email (see [docs/FOOTBALL_WORKFLOW.md](docs/FOOTBALL_WORKFLOW.md))
+
 ## Configuration
 
 ### API Keys
 Some workflows require external API keys. You can add them in the API section in `src/Daisy/appconfig.json`.
+
+For the Football workflow, you can also configure:
+- Database connection string for storing scores
+- SMTP settings (via environment variables) for email notifications
 
 ## Testing and Validation
 

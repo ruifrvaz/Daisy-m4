@@ -47,3 +47,20 @@ Flights workflow that given a city name, fetches available flights to that city 
 	- Daisy.Abilities.Flights
 3. Return the flight information via console output
 	- Daisy.Transmitters.Console
+
+## Daisy.Workflows.Football
+
+Football workflow that given a football club name, checks for scores of a certain season, stores those scores in a SQL database, and sends the scores to console and email.
+
+0. Initialize the workflow core project
+    - Daisy.Workflows.Football
+1. Receive event that is sent from the Starter workflow. The received event has a club name in its impulse input. Generate a new chain with impulse.AddChain("football: {clubName}") extension method.
+    - Daisy.Receivers.FootballEvent
+2. Fetch football scores for the specified club using a football API. Falls back to mock data if API key is not configured. PathTraverseOrder is 60. Can traverse when input chain contains "football: {clubName}"
+	- Daisy.Abilities.Football
+3. Store the football scores in a SQL database. PathTraverseOrder is 65. Can traverse when output chain contains "footballScores: {scores}". After storing, adds "databaseStored: {message}" to output chain.
+	- Daisy.Abilities.DatabaseStorage
+4. Return the scores via console output
+	- Daisy.Transmitters.Console
+5. Send the scores via email
+	- Daisy.Transmitters.Email
