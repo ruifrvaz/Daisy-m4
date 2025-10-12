@@ -45,7 +45,7 @@ namespace Daisy.Abilities.DatabaseStorage.Paths
                 
                 if (stored)
                 {
-                    impulse.AddChain($"Scores stored in database for {clubName}", ImpulseExtensions.ImpulseField.Output);
+                    impulse.AddChain($"databaseStored: Scores stored for {clubName}", ImpulseExtensions.ImpulseField.Output);
                 }
                 else
                 {

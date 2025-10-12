@@ -58,7 +58,7 @@ Football workflow that given a football club name, checks for scores of a certai
     - Daisy.Receivers.FootballEvent
 2. Fetch football scores for the specified club using a football API. Falls back to mock data if API key is not configured. PathTraverseOrder is 60. Can traverse when input chain contains "football: {clubName}"
 	- Daisy.Abilities.Football
-3. Store the football scores in a SQL database. PathTraverseOrder is 65. Can traverse when input chain contains "footballScores: {scores}"
+3. Store the football scores in a SQL database. PathTraverseOrder is 65. Can traverse when output chain contains "footballScores: {scores}". After storing, adds "databaseStored: {message}" to output chain.
 	- Daisy.Abilities.DatabaseStorage
 4. Return the scores via console output
 	- Daisy.Transmitters.Console

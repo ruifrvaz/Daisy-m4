@@ -23,7 +23,7 @@ namespace Daisy.Abilities.DatabaseStorage.Rules
 
         public bool RuleApplies(Impulse impulse)
         {
-            var output = impulse.GetChainByKey("Scores stored in database", ImpulseExtensions.ImpulseField.Output);
+            var output = impulse.GetChainByKey("databaseStored", ImpulseExtensions.ImpulseField.Output);
             return !string.IsNullOrWhiteSpace(output);
         }
     }
