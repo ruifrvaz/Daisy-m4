@@ -85,6 +85,13 @@ dotnet run
 
 For detailed testing information, see [.github/workflows/README.md](.github/workflows/README.md).
 
+## Documentation
+
+For more information about the project's documentation and writing style:
+- [WRITING_STYLE.md](./WRITING_STYLE.md) - Learn about the project's writing style and how to customize it
+- [AGENTS.md](./AGENTS.md) - Guidelines for AI agents and developers
+- [instructions/](./instructions/) - Detailed technical documentation
+
 ## License
 Apache License 2.0 © 2025 Rui Filipe Rodrigues Vaz.  
 See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for details.
