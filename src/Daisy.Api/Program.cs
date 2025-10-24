@@ -132,3 +132,6 @@ static IEdmModel GetEdmModel()
     
     return modelBuilder.GetEdmModel();
 }
+
+// Make the Program class accessible to tests
+public partial class Program { }
