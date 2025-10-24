@@ -48,6 +48,28 @@ Abilities (1-N): Process or mutate the Impulse.
 ### API Keys
 Some workflows require external API keys. You can add them in the API section in `src/Daisy/appconfig.json`.
 
+## MCP-Compliant API
+
+Daisy now includes a Model Context Protocol (MCP) compliant REST API with OAuth 2.0 authentication and OData support. The API provides programmatic access to all workflow functionalities:
+
+- **Authentication**: OAuth 2.0 with JWT Bearer tokens
+- **OData Support**: Full query capabilities ($filter, $select, $orderby, etc.)
+- **Swagger Documentation**: Interactive API explorer at root URL
+- **Resources**: Impulses, Receivers, Abilities, Transmitters, Workflows
+
+### Quick Start with API
+
+```bash
+# Run the API
+cd src/Daisy.Api
+dotnet run
+
+# Access Swagger UI at http://localhost:5000
+```
+
+For detailed API documentation, see [src/Daisy.Api/README.md](src/Daisy.Api/README.md) and [src/Daisy.Api/MCP_COMPLIANCE.md](src/Daisy.Api/MCP_COMPLIANCE.md).
+
+
 ## Testing and Validation
 
 This project includes comprehensive automated testing and validation workflows:
