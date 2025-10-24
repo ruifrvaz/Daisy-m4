@@ -176,15 +176,24 @@ Edit `appsettings.json` to configure JWT authentication:
 }
 ```
 
-**Important:** Change the default credentials and secret key in production!
+**⚠️ CRITICAL SECURITY WARNING:** The default credentials (admin/admin) are for development only. In production:
+- Use environment variables or a secrets manager (Azure Key Vault, AWS Secrets Manager)
+- Never store credentials in configuration files
+- Implement proper user management with ASP.NET Core Identity
+- Use strong, cryptographically random JWT secret keys
 
 ## Security Considerations
 
-1. **Change Default Credentials**: Update the default username and password
-2. **Secure Secret Key**: Use a strong, randomly generated secret key
-3. **HTTPS Only**: Always use HTTPS in production
-4. **Token Expiration**: JWT tokens expire after 1 hour
-5. **User Store**: Implement proper user authentication against a database in production
+1. **Never Use Default Credentials in Production**: The admin/admin credentials are for development only
+2. **Use Secrets Management**: Store sensitive configuration in Azure Key Vault, AWS Secrets Manager, or environment variables
+3. **Secure Secret Key**: Generate a cryptographically random secret key of at least 32 characters
+4. **HTTPS Only**: Always use HTTPS in production, disable HTTP
+5. **Token Expiration**: JWT tokens expire after 1 hour by default
+6. **User Store**: Implement proper user authentication with database storage
+7. **Rate Limiting**: Add rate limiting to prevent brute force attacks
+8. **CORS Configuration**: Properly configure CORS for production origins
+9. **Audit Logging**: Enable comprehensive audit logging for all API operations
+10. **Regular Security Updates**: Keep all NuGet packages up to date
 
 ## Example Workflow
 

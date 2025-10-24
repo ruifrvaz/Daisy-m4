@@ -12,7 +12,7 @@ Successfully implemented a **Model Context Protocol (MCP) compliant** ASP.NET Co
 
 **Key Components**:
 - 6 Controllers (Auth, Impulses, Receivers, Abilities, Transmitters, Workflows)
-- 6 DTOs (Data Transfer Objects)
+- 5 DTO classes + ApiModels.cs for request/response types
 - 2 Services (ImpulseService, DaisyComponentService)
 - Comprehensive documentation
 
@@ -188,20 +188,24 @@ The API follows Model Context Protocol principles:
 - ASP.NET Core 8.0
 - Microsoft.AspNetCore.OData 8.2.5
 - Microsoft.AspNetCore.Authentication.JwtBearer 8.0.11
+- Microsoft.AspNetCore.OpenApi 8.0.20
 - Swashbuckle.AspNetCore 6.6.2
 - xUnit with WebApplicationFactory
 
 ## Security Considerations
 
-⚠️ **Important**: Before production deployment:
+⚠️ **CRITICAL**: Before production deployment:
 
-1. Change default credentials in `appsettings.json`
-2. Use a strong, random JWT secret key (at least 32 characters)
-3. Enable HTTPS only
-4. Implement proper user management with database
-5. Add rate limiting
-6. Set up API key rotation
-7. Enable audit logging
+1. **Never use default credentials** - The appsettings.json file contains default credentials (admin/admin) for development only
+2. **Use environment variables or secrets manager** - Store credentials in Azure Key Vault, AWS Secrets Manager, or environment variables instead of configuration files
+3. **Generate a strong JWT secret key** - Use a cryptographically random key of at least 32 characters
+4. **Enable HTTPS only** - Disable HTTP in production
+5. **Implement proper user management** - Use ASP.NET Core Identity with database storage
+6. **Add rate limiting** - Protect against brute force and DoS attacks
+7. **Set up API key rotation** - Regularly rotate JWT signing keys
+8. **Enable audit logging** - Track all API access and changes
+9. **Configure CORS properly** - Restrict origins in production
+10. **Use strong password policies** - Enforce complex passwords for user accounts
 
 ## Build & Test Results
 
