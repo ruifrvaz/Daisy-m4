@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Daisy.Api.Models;
 using Daisy.Api.Services;
+using Daisy.Api.Helpers;
 
 namespace Daisy.Api.Controllers
 {
@@ -52,7 +53,7 @@ namespace Daisy.Api.Controllers
         [EnableQuery]
         public async Task<ActionResult<WorkflowDto>> Get([FromRoute] string key)
         {
-            _logger.LogInformation("Getting workflow: {WorkflowName}", key);
+            _logger.LogInformation("Getting workflow: {WorkflowName}", LogSanitizer.Sanitize(key));
             var workflow = await _componentService.GetWorkflowAsync(key);
             
             if (workflow == null)
@@ -72,7 +73,7 @@ namespace Daisy.Api.Controllers
         [HttpGet("{key}/Status")]
         public async Task<ActionResult<WorkflowControlResponse>> GetStatus([FromRoute] string key)
         {
-            _logger.LogInformation("Getting workflow status: {WorkflowName}", key);
+            _logger.LogInformation("Getting workflow status: {WorkflowName}", LogSanitizer.Sanitize(key));
             
             var workflow = await _componentService.GetWorkflowAsync(key);
             if (workflow == null)

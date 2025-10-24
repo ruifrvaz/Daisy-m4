@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Daisy.Api.Models;
 using Daisy.Api.Services;
+using Daisy.Api.Helpers;
 
 namespace Daisy.Api.Controllers
 {
@@ -55,7 +56,7 @@ namespace Daisy.Api.Controllers
         [EnableQuery]
         public async Task<ActionResult<AbilityDto>> Get([FromRoute] string key)
         {
-            _logger.LogInformation("Getting ability: {AbilityName}", key);
+            _logger.LogInformation("Getting ability: {AbilityName}", LogSanitizer.Sanitize(key));
             var ability = await _componentService.GetAbilityAsync(key);
             
             if (ability == null)
@@ -76,7 +77,7 @@ namespace Daisy.Api.Controllers
         [HttpPost("{key}/Execute")]
         public async Task<ActionResult<ImpulseDto>> Execute([FromRoute] string key, [FromBody] ExecuteAbilityRequest request)
         {
-            _logger.LogInformation("Executing ability: {AbilityName} with impulse: {ImpulseId}", key, request.ImpulseId);
+            _logger.LogInformation("Executing ability: {AbilityName} with impulse: {ImpulseId}", LogSanitizer.Sanitize(key), LogSanitizer.Sanitize(request.ImpulseId));
             
             var ability = await _componentService.GetAbilityAsync(key);
             if (ability == null)
@@ -93,7 +94,7 @@ namespace Daisy.Api.Controllers
             impulse.Status = "Processing";
             impulse.UpdatedAt = DateTime.UtcNow;
 
-            _logger.LogInformation("Executing ability {AbilityName} on impulse {ImpulseId}", key, request.ImpulseId);
+            _logger.LogInformation("Executing ability {AbilityName} on impulse {ImpulseId}", LogSanitizer.Sanitize(key), LogSanitizer.Sanitize(request.ImpulseId));
             
             return Ok(impulse);
         }

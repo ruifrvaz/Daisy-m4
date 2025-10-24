@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Daisy.Api.Models;
 using Daisy.Api.Services;
+using Daisy.Api.Helpers;
 
 namespace Daisy.Api.Controllers
 {
@@ -55,7 +56,7 @@ namespace Daisy.Api.Controllers
         [EnableQuery]
         public async Task<ActionResult<ReceiverDto>> Get([FromRoute] string key)
         {
-            _logger.LogInformation("Getting receiver: {ReceiverName}", key);
+            _logger.LogInformation("Getting receiver: {ReceiverName}", LogSanitizer.Sanitize(key));
             var receiver = await _componentService.GetReceiverAsync(key);
             
             if (receiver == null)
@@ -76,7 +77,7 @@ namespace Daisy.Api.Controllers
         [HttpPost("{key}/Trigger")]
         public async Task<ActionResult<ImpulseDto>> Trigger([FromRoute] string key, [FromBody] TriggerReceiverRequest request)
         {
-            _logger.LogInformation("Triggering receiver: {ReceiverName}", key);
+            _logger.LogInformation("Triggering receiver: {ReceiverName}", LogSanitizer.Sanitize(key));
             
             var receiver = await _componentService.GetReceiverAsync(key);
             if (receiver == null)
@@ -87,7 +88,7 @@ namespace Daisy.Api.Controllers
             var impulse = await _impulseService.CreateImpulseAsync(request.Input, false);
             impulse.Status = "Processing";
 
-            _logger.LogInformation("Created impulse {ImpulseId} from receiver {ReceiverName}", impulse.Id, key);
+            _logger.LogInformation("Created impulse {ImpulseId} from receiver {ReceiverName}", LogSanitizer.Sanitize(impulse.Id), LogSanitizer.Sanitize(key));
             
             return Created($"/odata/Impulses/{impulse.Id}", impulse);
         }

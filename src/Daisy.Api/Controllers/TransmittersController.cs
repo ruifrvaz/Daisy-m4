@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Daisy.Api.Models;
 using Daisy.Api.Services;
+using Daisy.Api.Helpers;
 
 namespace Daisy.Api.Controllers
 {
@@ -55,7 +56,7 @@ namespace Daisy.Api.Controllers
         [EnableQuery]
         public async Task<ActionResult<TransmitterDto>> Get([FromRoute] string key)
         {
-            _logger.LogInformation("Getting transmitter: {TransmitterName}", key);
+            _logger.LogInformation("Getting transmitter: {TransmitterName}", LogSanitizer.Sanitize(key));
             var transmitter = await _componentService.GetTransmitterAsync(key);
             
             if (transmitter == null)
@@ -76,7 +77,7 @@ namespace Daisy.Api.Controllers
         [HttpPost("{key}/Transmit")]
         public async Task<ActionResult<ImpulseDto>> Transmit([FromRoute] string key, [FromBody] TransmitRequest request)
         {
-            _logger.LogInformation("Transmitting through transmitter: {TransmitterName} with impulse: {ImpulseId}", key, request.ImpulseId);
+            _logger.LogInformation("Transmitting through transmitter: {TransmitterName} with impulse: {ImpulseId}", LogSanitizer.Sanitize(key), LogSanitizer.Sanitize(request.ImpulseId));
             
             var transmitter = await _componentService.GetTransmitterAsync(key);
             if (transmitter == null)
@@ -93,7 +94,7 @@ namespace Daisy.Api.Controllers
             impulse.Status = "Transmitted";
             impulse.UpdatedAt = DateTime.UtcNow;
 
-            _logger.LogInformation("Transmitted impulse {ImpulseId} through transmitter {TransmitterName}", request.ImpulseId, key);
+            _logger.LogInformation("Transmitted impulse {ImpulseId} through transmitter {TransmitterName}", LogSanitizer.Sanitize(request.ImpulseId), LogSanitizer.Sanitize(key));
             
             return Ok(impulse);
         }

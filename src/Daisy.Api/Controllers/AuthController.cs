@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Daisy.Api.Helpers;
 
 namespace Daisy.Api.Controllers
 {
@@ -36,7 +37,7 @@ namespace Daisy.Api.Controllers
         [HttpPost("token")]
         public IActionResult GetToken([FromBody] LoginRequest request)
         {
-            _logger.LogInformation("Token request for user: {Username}", request.Username);
+            _logger.LogInformation("Token request for user: {Username}", LogSanitizer.Sanitize(request.Username));
 
             if (ValidateUser(request.Username, request.Password))
             {
