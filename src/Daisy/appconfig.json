@@ -27,7 +27,8 @@
       "Daisy.Abilities.Terminate",
       "Daisy.Abilities.OutputValidator",
       "Daisy.Abilities.Weather",
-      "Daisy.Abilities.Flights"
+      "Daisy.Abilities.Flights",
+      "Daisy.Abilities.CopilotSdk"
     ],
     "Workflows": [
       "Daisy.Workflows.Starter",
@@ -41,6 +42,11 @@
       "Flights": {
         "Url": "http://api.aviationstack.com/v1/",
         "ApiKey": "YOUR_AVIATIONSTACK_API_KEY"
+      },
+      "CopilotSdk": {
+        "Model": "gpt-4.1",
+        "Streaming": true,
+        "TimeoutSeconds": 30
       }
     },
     "PathTraverseOrder": {
@@ -49,6 +55,7 @@
       "WorkflowTriggerPath": 3,
       "GetWeatherByCityPath": 50,
       "GetFlightsByCityPath": 55,
+      "CopilotSdkPath": 60,
       "OutputValidatorPath": 9999
     }
   }

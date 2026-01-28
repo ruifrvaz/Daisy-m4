@@ -48,6 +48,12 @@ Abilities (1-N): Process or mutate the Impulse.
 ### API Keys
 Some workflows require external API keys. You can add them in the API section in `src/Daisy/appconfig.json`.
 
+### Copilot SDK Ability
+The CopilotSdk ability requires the GitHub Copilot CLI to be installed and authenticated:
+- **Installation**: Follow the [Copilot CLI installation guide](https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli)
+- **Subscription**: A GitHub Copilot subscription is required
+- **Graceful Degradation**: The ability will provide informative error messages if the CLI is not available
+
 ## Testing and Validation
 
 This project includes comprehensive automated testing and validation workflows:
@@ -61,7 +67,7 @@ This project includes comprehensive automated testing and validation workflows:
 
 The project maintains comprehensive unit test coverage for all abilities:
 
-- **Abilities**: Operator, OutputValidator, Terminate, Weather, Flights
+- **Abilities**: Operator, OutputValidator, Terminate, Weather, Flights, CopilotSdk
 - **Receivers**: Console, WeatherEvent, FlightsEvent
 - **Transmitters**: Console, WorkflowTrigger
 - **Factories**: Ability, Transmitter, Receiver loading and initialization

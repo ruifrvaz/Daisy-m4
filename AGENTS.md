@@ -72,7 +72,8 @@ tests/
 
 ### When to Update Documentation
 - **New Workflows**: Add workflow description to `instructions/workflows.md` with complete module breakdown
-- **New Modules**: Document module purpose, configuration, and integration points
+- **New Abilities**: Document ability purpose, configuration, and integration points in `instructions/abilities.md`
+- **New Receivers/Transmitters**: Document module purpose, configuration, and integration points in relevant documentation
 - **API Changes**: Update relevant documentation when adding/modifying external API integrations
 - **Configuration Changes**: Update `appconfig.json` documentation when adding new settings
 - **Architectural Changes**: Update `instructions/engine_design.md` and `instructions/plugin_injection.md` as needed
@@ -88,6 +89,7 @@ tests/
 - `README.md`: High-level overview, quick start, and testing information
 - `AGENTS.md`: Development guidelines, testing requirements, and coding standards
 - `instructions/workflows.md`: Workflow specifications and module sequences
+- `instructions/abilities.md`: Ability documentation including purpose, configuration, and integration
 - `instructions/engine_design.md`: Orchestration design and traversal mechanics
 - `instructions/plugin_injection.md`: Plugin system, assembly loading, and factory patterns
 
