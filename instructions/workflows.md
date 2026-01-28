@@ -47,3 +47,42 @@ Flights workflow that given a city name, fetches available flights to that city 
 	- Daisy.Abilities.Flights
 3. Return the flight information via console output
 	- Daisy.Transmitters.Console
+
+## Daisy.Abilities.CopilotSdk
+
+Copilot SDK ability that processes AI prompts using the GitHub Copilot SDK. This ability enables AI-powered agentic workflows by integrating Copilot's production-tested agent runtime for planning, tool invocation, and AI interactions.
+
+**Integration with Workflows:**
+
+The CopilotSdk ability can be used in any workflow by adding a "copilot:" chain to the impulse. It processes the prompt through the GitHub Copilot SDK and returns AI-generated responses.
+
+**Prerequisites:**
+- GitHub Copilot CLI must be installed and authenticated ([Installation guide](https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli))
+- GitHub Copilot subscription is required
+
+**Configuration (appconfig.json):**
+```json
+"CopilotSdk": {
+  "Model": "gpt-4.1",
+  "Streaming": true,
+  "TimeoutSeconds": 30
+}
+```
+
+**Usage Pattern:**
+- PathTraverseOrder: 60
+- Can traverse when input chain contains "copilot: {prompt}"
+- Adds response to output chain as "Copilot: {response}"
+
+**Example:**
+```csharp
+impulse.AddChain("copilot: Write a hello world program in C#");
+// After traversal:
+// impulse.Output contains "Copilot: Here is a hello world program..."
+```
+
+**Features:**
+- Streaming responses for real-time feedback
+- Configurable AI model selection
+- Graceful fallback when Copilot CLI is not available
+- Timeout protection for long-running requests
