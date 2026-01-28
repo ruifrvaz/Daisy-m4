@@ -24,7 +24,7 @@ namespace Daisy.Abilities.CopilotSdk.Rules
         public bool RuleApplies(Impulse impulse)
         {
             // Can traverse if there's a "copilot:" key in the input chain
-            return !string.IsNullOrEmpty(impulse.GetChainByKey("copilot"));
+            return !string.IsNullOrWhiteSpace(impulse.GetChainByKey("copilot"));
         }
     }
 }

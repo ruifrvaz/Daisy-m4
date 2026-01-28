@@ -1,3 +1,5 @@
+using System;
+
 namespace Daisy.Abilities.CopilotSdk.Models
 {
     /// <summary>
@@ -5,6 +7,8 @@ namespace Daisy.Abilities.CopilotSdk.Models
     /// </summary>
     public class CopilotSdkSettings
     {
+        private int _timeoutSeconds = 30;
+
         /// <summary>
         /// The AI model to use for Copilot sessions (e.g., "gpt-4.1", "gpt-4o").
         /// </summary>
@@ -16,8 +20,19 @@ namespace Daisy.Abilities.CopilotSdk.Models
         public bool Streaming { get; set; } = true;
 
         /// <summary>
-        /// Timeout in seconds for Copilot operations. Default is 30 seconds.
+        /// Timeout in seconds for Copilot operations. Must be a positive value. Default is 30 seconds.
         /// </summary>
-        public int TimeoutSeconds { get; set; } = 30;
+        public int TimeoutSeconds
+        {
+            get => _timeoutSeconds;
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("TimeoutSeconds must be a positive value.", nameof(value));
+                }
+                _timeoutSeconds = value;
+            }
+        }
     }
 }

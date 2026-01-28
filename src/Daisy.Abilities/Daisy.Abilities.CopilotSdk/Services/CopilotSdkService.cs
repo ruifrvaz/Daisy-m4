@@ -12,9 +12,10 @@ namespace Daisy.Abilities.CopilotSdk.Services
     /// Service implementation for GitHub Copilot SDK integration.
     /// Manages Copilot client lifecycle and provides AI capabilities to Daisy workflows.
     /// </summary>
-    public class CopilotSdkService : ICopilotSdkService
+    public class CopilotSdkService : ICopilotSdkService, IAsyncDisposable
     {
         private readonly CopilotSdkSettings _settings;
+        private readonly object _lock = new object();
         private CopilotClient _client;
         private bool _isInitialized;
 
@@ -52,30 +53,41 @@ namespace Daisy.Abilities.CopilotSdk.Services
                 return "Copilot SDK is not available. Please ensure Copilot CLI is installed and authenticated.";
             }
 
+            CopilotSession session = null;
             try
             {
+                // Create a cancellation token with timeout
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_settings.TimeoutSeconds));
+
                 // Create a new session with configured settings
-                await using var session = await _client.CreateSessionAsync(new SessionConfig
+                session = await _client.CreateSessionAsync(new SessionConfig
                 {
                     Model = _settings.Model,
                     Streaming = _settings.Streaming,
-                });
+                }, cts.Token);
 
                 // For streaming responses, collect the content
                 var responseBuilder = new StringBuilder();
                 var completionSource = new TaskCompletionSource<string>();
 
                 // Handle streaming events
+                // Note: The SDK guarantees sequential event delivery, so no explicit synchronization needed for StringBuilder
                 session.On(ev =>
                 {
                     if (ev is AssistantMessageDeltaEvent deltaEvent)
                     {
-                        responseBuilder.Append(deltaEvent.Data.DeltaContent);
+                        lock (_lock)
+                        {
+                            responseBuilder.Append(deltaEvent.Data.DeltaContent);
+                        }
                     }
                     else if (ev is SessionIdleEvent)
                     {
                         // Session is idle, response is complete
-                        completionSource.TrySetResult(responseBuilder.ToString());
+                        lock (_lock)
+                        {
+                            completionSource.TrySetResult(responseBuilder.ToString());
+                        }
                     }
                     else if (ev is SessionErrorEvent errorEvent)
                     {
@@ -86,30 +98,43 @@ namespace Daisy.Abilities.CopilotSdk.Services
                     }
                 });
 
-                // Send the prompt
-                await session.SendAsync(new MessageOptions { Prompt = prompt }, CancellationToken.None);
+                // Send the prompt with cancellation token
+                await session.SendAsync(new MessageOptions { Prompt = prompt }, cts.Token);
 
-                // Wait for the response with timeout
-                var timeoutTask = Task.Delay(TimeSpan.FromSeconds(_settings.TimeoutSeconds));
-                var completedTask = await Task.WhenAny(completionSource.Task, timeoutTask);
-
-                if (completedTask == timeoutTask)
-                {
-                    return "Request timed out waiting for Copilot response.";
-                }
-
+                // Wait for the response (timeout is handled by CancellationToken)
                 return await completionSource.Task;
+            }
+            catch (OperationCanceledException)
+            {
+                return "Request timed out waiting for Copilot response.";
             }
             catch (Exception ex)
             {
                 return $"Error communicating with Copilot SDK: {ex.Message}";
             }
+            finally
+            {
+                // Properly dispose the session to free resources
+                if (session != null)
+                {
+                    await session.DisposeAsync();
+                }
+            }
         }
 
         public void Dispose()
         {
-            _client?.DisposeAsync().AsTask().Wait();
-            _client = null;
+            // For synchronous dispose, use async dispose helper
+            DisposeAsync().AsTask().GetAwaiter().GetResult();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_client != null)
+            {
+                await _client.DisposeAsync();
+                _client = null;
+            }
             _isInitialized = false;
         }
     }
